@@ -1,11 +1,18 @@
-# 2504_2022_project1 - Polynomial Factorization
-# WARNING THIS IS FROM A PREVIOUS YEAR
+# 2504_2025_project1 - Polynomial Factorization
 
-This project implements polynomial arithmetic and polynomial factorization for polynomials with integer coefficients. 
+This project implements polynomial arithmetic and polynomial factorization for polynomials with integer coefficients.
 
-Students are supposed to fork the project and create their modifications and improvements according [Project1 description](https://courses.smp.uq.edu.au/MATH2504/2022/assessment_html/project1.html).
+Students are supposed to create a mirror of the project and create their modifications and improvements according Project1 description. This repository is similar to repositories of previous years, yet has some differences.
 
-To load all functionality run:
+To load all functionality, in the directory of the repo:
+
+```
+] activate .
+```
+
+```
+] instantiate
+```
 
 ```
 julia> include("poly_factorization_project.jl")
