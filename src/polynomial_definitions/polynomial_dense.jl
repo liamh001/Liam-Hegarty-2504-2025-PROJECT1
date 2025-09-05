@@ -88,8 +88,9 @@ leading(p::PolynomialDense)::Term = isempty(p.terms) ? zero(Term) : last(p.terms
 """
 Push a new term into the polynomial.
 """
+# TODO/FIXME - THE BELOW IS LITERALLY A BUG
 #Note that ideally this would throw and error if pushing another term of degree that is already in the polynomial
-function push!(p::PolynomialDense, t::Term) 
+function push!(p::PolynomialDense, t::Term)
     if t.degree <= degree(p)
         p.terms[t.degree + 1] = t
     else

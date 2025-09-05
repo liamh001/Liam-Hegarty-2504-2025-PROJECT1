@@ -209,6 +209,8 @@ evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 # Pushing and popping of terms #
 ################################
 
+# TODO - CHECK THE CURRENT IMPLEMENTATION OF THIS MAKES SENSE
+# TODO/FIXME - I HATE THIS, PUSHING A NEW TERM SHOULD ONLY LET YOU PUSH A NEW LEADING TERM
 """
 Push a new term into the polynomial.
 
@@ -295,6 +297,19 @@ function -(p1::P, p2::P)::P where {P <: Polynomial}
     return p1 + (-p2)
 end
 
+"""
+Subtraction of a polynomial and a term.
+"""
+function -(p::P, t::Term)::P where {P <: Polynomial}
+    return p - P(t)
+end
+
+"""
+Subtraction of a polynomial and an integer.
+"""
+function -(p::P, n::Int)::P where {P <: Polynomial}
+    return p - (n*one(P))
+end
 
 """
 Multiplication of polynomial and term.
@@ -317,13 +332,16 @@ Warning this may not make sense if n does not divide all the coefficients of p.
 """
 ÷(p::P, n::Int) where {P <: Polynomial} = (prime)->P(map((pt)->((pt ÷ n)(prime)), p.terms))
 
+# FIXME - Check that mod is working correctly
 """
 Take the mod of a polynomial with an integer.
 """
 function mod(f::P, p::Int)::P where {P <: Polynomial}
     f_out = P()
     for t in f
-        push!(f_out, mod(t, p))
+        new_t = mod(t, p)
+        !iszero(new_t) && push!(f_out, new_t)
+        # push!(f_out, mod(t, p))
     end
     return trim!(f_out)
 end

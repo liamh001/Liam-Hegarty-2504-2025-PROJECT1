@@ -95,11 +95,11 @@ Distinct degree split.
 
 Returns a list of irreducible polynomials of degree `d` so that the product of that list (mod prime) is the polynomial `f`.
 """
-function dd_split(f::Polynomial, d::Int, prime::Int)::Vector{Polynomial}
+function dd_split(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
     f = mod(f,prime)
     degree(f) == d && return [f]
     degree(f) == 0 && return []
-    w = rand(Polynomial, degree = d, monic = true)
+    w = rand(P, degree = d, monic = true)
     w = mod(w,prime)
     n_power = (prime^d-1) ÷ 2
     g = gcd(pow_mod(w,n_power,prime) - one(f), f, prime)
