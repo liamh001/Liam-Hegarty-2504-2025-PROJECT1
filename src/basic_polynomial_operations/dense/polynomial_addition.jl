@@ -1,7 +1,7 @@
 #############################################################################
 #############################################################################
 #
-# This file implements polynomial addition 
+# This file implements polynomial addition for dense polynomials.
 #                                                                               
 #############################################################################
 #############################################################################
@@ -9,7 +9,7 @@
 """
 Add a polynomial and a term.
 """
-function +(p::Polynomial, t::Term)
+function +(p::PolynomialDense, t::Term)
     p = deepcopy(p)
     if t.degree > degree(p)
         push!(p, t)
@@ -23,21 +23,24 @@ function +(p::Polynomial, t::Term)
 
     return trim!(p)
 end
-+(t::Term, p::Polynomial) = p + t
 
-"""
-Add two polynomials.
-"""
-function +(p1::Polynomial, p2::Polynomial)::Polynomial
-    p = deepcopy(p1)
-    for t in p2
-        p += t
-    end
-    return p
-end
+# FIXME
+# """
+# Add two polynomials. 
+# """
+# function +(p1::PolynomialDense, p2::PolynomialDense)::PolynomialDense
+#     min_degree = min(degree(p1), degree(p2))
+#     lower_order_terms = p1.terms[1:min_degree] .+ p2.terms[1:min_degree]
 
-"""
-Add a polynomial and an integer.
-"""
-+(p::Polynomial, n::Int) = p + Term(n,0)
-+(n::Int, p::Polynomial) = p + Term(n,0)
+#     if degree(p1) == degree(p2)
+#         return PolynomialDense(lower_order_terms)
+#     end
+
+#     if degree(p1) > degree(p2)
+#         higher_order_terms = p1.terms[min_degree+1:end]
+#     else degree(p1) < degree(p2)
+#         higher_order_terms = p2.terms[min_degree+1:end]
+#     end
+
+#     return PolynomialDense([higher_order_terms; lower_order_terms])
+# end

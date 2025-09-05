@@ -24,11 +24,11 @@ test_ext_euclid_ints()
 include("polynomials_test.jl")
 prod_test_poly()
 prod_derivative_test_poly()
-ext_euclid_test_poly()
-division_test_poly()
+ext_euclid_test_poly() # FIXME/TODO - Currently failing
+division_test_poly() # FIXME/TODO - Currently failing
 
 ####
 # Execute unit tests for polynomial factorization
 ####
-include("factorization_test.jl")
+include("factorization_test.jl") # FIXME/TODO - Currently failing
 factor_test_poly()

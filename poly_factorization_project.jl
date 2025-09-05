@@ -14,11 +14,21 @@ import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
 
 include("src/general_alg.jl")
 include("src/term.jl")
-include("src/polynomial.jl")
-    include("src/basic_polynomial_operations/polynomial_addition.jl")
-    include("src/basic_polynomial_operations/polynomial_multiplication.jl")
-    include("src/basic_polynomial_operations/polynomial_division.jl")
-    include("src/basic_polynomial_operations/polynomial_gcd.jl")
+
+# Polynomial
+include("src/polynomial_definitions/polynomial.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_addition.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_multiplication.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_division.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_gcd.jl")
+
+# Dense
+include("src/polynomial_definitions/polynomial_dense.jl")
+    include("src/basic_polynomial_operations/dense/polynomial_addition.jl")
+    include("src/basic_polynomial_operations/dense/polynomial_multiplication.jl")
+    include("src/basic_polynomial_operations/dense/polynomial_division.jl")
+    include("src/basic_polynomial_operations/dense/polynomial_gcd.jl")
+
 include("src/polynomial_factorization/factor.jl")
 
 nothing
