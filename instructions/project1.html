@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504, Programming of Simulation, Analysis, and Learning Systems (Semester 2, 2025)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <br>
+
+        <h1>Project #1 - Semester 2, 2025</h1>
+<h1>Univariate Polynomials with Integer Coefficients</h1>
+<p>&#40;last edit: September 4, 2025&#41;</p>
+<p><strong>Due:</strong> Friday, 26, September, 2025 at 4pm. Late submissions are not accepted.</p>
+<p><strong>Individual work:</strong> This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years &#40;in case students made them public&#41;. Do not copy code from those repos directly - but rather use such code bases for help as needed.</p>
+<p><strong>Note:</strong> The teaching staff will only answer questions &#40;via ED, consultation hour, or practicals&#41; regarding this assignment up to the evening of Thursday 25/9.</p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. There are 10 points for setting up the GitHub repo properly and following instructions for hand-in &#40;including voice recording&#41;. The remaining <strong>90</strong> points are for the project tasks. </p>
+<p><strong>Submission format:</strong> This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. </p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>MATH2504-staff-2025</code> be invited as a collaborator. It is also important to name the repo exactly as <code>&lt;&lt;FIRST NAME&gt;&gt;-&lt;&lt;LAST NAME&gt;&gt;-2504-2025-PROJECT1</code>. So for example if your name is &quot;Pierre-Simon Laplace&quot;, the repo name should be <code>Pierre-Simon-Laplace-2504-2025-PROJECT1</code>.</p>
+<p>The PDF file should be a nice formatted file that has:</p>
+<ul>
+<li><p>Your name, student number, and assignment title &#40;Project 1 - 2025&#41; on the top.</p>
+</li>
+<li><p>A &#40;clickable&#41; link to your GitHub repo.</p>
+</li>
+<li><p>An illustration of the code and output for <code>example_script.jl</code>: Show the lines of the script and display the corresponding output. </p>
+</li>
+<li><p>An illustration of the output of <code>test/runtests.jl</code>. </p>
+</li>
+<li><p>The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.</p>
+</li>
+</ul>
+<p>The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use <code>include&#40;&#41;</code> to run Julia code if appropriate. You also comment on questions in this PDF &#40;e.g. when asked to answer things not via code&#41;. If desired you could keep this jupyter notebook &#40;<code>.ipynb</code> file&#41; in the repo. However, this Jupyter notebook will not be checked &#40;only the PDF file&#41;, and it isn&#39;t required to be a &quot;runnable&quot; notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word &#40;instead of Jupyter&#41;, make sure the code is clean, formatted, and readable. </p>
+<p>Marking responses will be made by the teaching staff by annotating <strong>selected parts</strong> of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF &#40;or exporting to PDF&#41; there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.</p>
+<p><strong>Marking Criteria</strong>: </p>
+<ul>
+<li><p>10 points are allocated for setting up the GitHub hand-in according to the instructions and following the submission instructions.</p>
+</li>
+<li><p>90 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.</p>
+</li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. </p>
+</li>
+</ul>
+<hr />
+<h2>Setting up your GitHub repo for hand-in &#40;10pts&#41;:</h2>
+<ul>
+<li><p>Ideally use the same account you used for BigHW. </p>
+</li>
+<li><p>Ideally we would like you to <strong>fork</strong> the GitHub repo <a href="https://github.com/dietmaroelz/2504_2025_project1">https://github.com/dietmaroelz/2504_2025_project1</a>. The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead <strong>duplicate</strong> the repository as described <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository">here</a>. You will first create your new repository and then follow the 4 steps under &quot;Mirroring a repository&quot;.</p>
+</li>
+<li><p>Invite the course GitHub user, <code>MATH2504-staff-2025</code> as a collaborator. You may do so early on while working on the project, and you must do this no later than the project due date. You must verify that <code>MATH2504-staff-2025</code> is a collaborator on your project and let the course staff know if that is not the case. . It is your duty to check that we accepted the invite &#40;give us 2-5 working days to accept the invite&#41;.</p>
+</li>
+<li><p>Do <strong>not</strong> make any changes &#40;commits&#41; to the repo after the project due date. </p>
+</li>
+<li><p>Create a local clone of the repo. It is recommended that use use <code>git</code> command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism &#40;VS-Code, GitHub desktop, etc&#41;. Making intermediate commits is certainly recommended.</p>
+</li>
+</ul>
+<p>Your GitHub repo should be formatted like the original repo that you forked with additional files and modifications based on the tasks below.</p>
+<ul>
+<li><p>Note: make sure that there aren&#39;t any excessive files in your submission repo. An exception is perhaps a Jupyter <code>.ipynb</code> file if you choose to use it for creating the PDF. Use a <code>.gitignore</code> file to ensure <code>git</code> does not commit additional files and output files to your <code>repo</code>.</p>
+</li>
+</ul>
+<h2>Project tasks &#40;90pts&#41;</h2>
+<p>Build your project on top of the <a href="https://github.com/dietmaroelz/2504_2025_project1">https://github.com/dietmaroelz/2504_2025_project1</a> by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.</p>
+<p>Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.</p>
+<h3>Task 1 &#40;5 pts&#41; - Getting it to run, improving pretty printing, and creating your own example script.</h3>
+<h4>Study the Repo</h4>
+<p>Once you create your own repository make sure it works by running <code>test/runtests.jl</code> and <code>example_script.jl</code>. At this point simply study the functionality of the repository by looking at the function signatures &#40;not implementations&#41; to understand what the repo can do. </p>
+<h4>Create Example Scripts</h4>
+<p>Create your own example script called <code>example_script_2.jl</code> and include polynomials for illustrating the key functionality of the operations available via the software. Namely, your script should </p>
+<ul>
+<li><p>run and demonstrate how the code in the repository works, </p>
+</li>
+<li><p>contain some intermediate output &#40;e.g. using <code>println&#40;&#41;</code>&#41; that describes what is going on, and in particular</p>
+</li>
+<li><p>have example polynomials over residue classes &#40;primes&#41;.</p>
+</li>
+</ul>
+<p>Basically, <code>example_script_2.jl</code> is an improvement over the minimally supplied <code>example_script.jl</code>.</p>
+<h4>Pretty Printing</h4>
+<p>Improve the &quot;pretty printing&quot; of the polynomials by incorporating the following rules:</p>
+<ul>
+<li><p>Terms of zero degree &#40;constants&#41; should exclude <code>x^0</code>, e.g. <code>2</code> not <code>2x^0</code>.</p>
+</li>
+<li><p>Terms with unit degree should exclude the degree, e.g. <code>3x</code> not <code>3x^1</code>.</p>
+</li>
+<li><p>Excluding the constant term <code>1</code>, terms with unit coefficient should exclude the coefficient, e.g. <code>3x^2 &#43; x</code> not <code>3x^2 &#43; 1x</code>.</p>
+</li>
+<li><p>Use subtraction instead of adding negative terms, e.g. <code>3x^2 - 2x</code> not <code>3x^2 &#43; -2x</code>.</p>
+</li>
+<li><p>Display the terms in <em>descending</em> degree order. <span class="math">$a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$</span>.</p>
+</li>
+<li><p>Do not print terms with zero coefficients, e.g. <code>x^2 &#43; 1</code> not <code>x^2 &#43; 0 x^1 &#43; 1</code>.</p>
+</li>
+</ul>
+<h3>Task 2 &#40;16pts&#41; - Refactoring the data structure used</h3>
+<p>The current implementation for polynomials is a vector where the term of degree <span class="math">$k$</span> is stored at position <span class="math">$k+1$</span>.  This is optimal for dense polynomials &#40;those with mostly <em>nonzero</em> coefficients&#41; but our factoring algorithms rely heavily on manipulating <em>sparse polynomials</em> like <span class="math">$x^n -1$</span>.</p>
+<ul>
+<li><p>Create an abstract base type, <code>Polynomial</code> and refactor &#40;ie, modify&#41; <code>PolynomialDense</code> to  inherit from <code>Polynomial</code>. Refactor the existing codebase to accept <code>Polynomial</code> for all of the functions and methods that currently accept <code>PolynomialDense</code>.</p>
+</li>
+<li><p>Create a new type called <code>PolynomialSparse</code> that inherits from <code>Polynomial</code> that stores <em>only</em> nonzero terms in a <a href="TODO">max heap</a> ordered by term degree.  <code>PolynomialSparse</code> will have identical functionality to <code>Polynomial</code> in terms of the functions and methods the latter provides.</p>
+</li>
+<li><p>Create 5 hard coded tests and 10 random tests for verifying <code>PolynomialSparse</code> and associated functions are working. </p>
+</li>
+<li><p>Replicate Task 1 so that <code>example_script_2.jl</code> is for <code>PolynomialSparse</code>.</p>
+</li>
+<li><p>Describe three pros and/or cons between the dense and sparse representations.</p>
+</li>
+<li><p>&#91;TODO: Verifying this is solveable&#93; Find one example where <code>PolynomialSparse</code> overflows and yields the wrong result.</p>
+</li>
+<li><p>Compare the run-time performance of polynomial multiplication between <code>PolynomialSparse</code> and <code>PolynomialDense</code>.  Do this only for cases where <code>PolynomialSparse</code> and <code>PolynomialDense</code> does not overflow.  In general, your results should show that <code>PolynomialSparse</code> is faster, yet may overflow.</p>
+</li>
+</ul>
+<h3>Task 3 &#40;12pts&#41; - Refactoring the coefficient type from <code>Int</code> to <code>BigInt</code></h3>
+<p>From now on we focus on the sparse representation.</p>
+<p>Exact computation requires polynomials with &#40;truly&#41; integer coefficients and thereby we must use <code>BigInt</code> rather than &#40;the finitely many integers comprising&#41; <code>Int</code>.</p>
+<ul>
+<li><p>&#91;TODO: Do this with generics&#93; Refactor <code>PolynomialSparse</code> to have <code>BigInt</code> coefficients instead of <code>Int</code>. Do this by introducing a new type <code>PolynomialSparseBI</code> which is short hand for &quot;Polynomial Sparse Big Integer&quot;. </p>
+</li>
+<li><p>&#91;TODO: Do this generics&#93; Duplicate the functionality &#40;functions and methods&#41; of <code>PolynomialSparse</code> for <code>PolynomialSparseBI</code>. Note that <code>PolynomialSparseBI</code> should have a sparse implementation just like <code>PolynomialSparse</code>. </p>
+</li>
+<li><p>Create 5 hard coded tests and 10 random tests for verifying <code>PolynomialSparseBI</code> and associated functions.</p>
+</li>
+<li><p>Ensure your impelentation for <code>PolynomialSparseBI</code> passes your tests.</p>
+</li>
+<li><p>&#91;TODO GENERICS&#93; Show your new <code>PolynomialSparseBI</code> does not overlow on the example you found in Task 2.</p>
+</li>
+</ul>
+<p>&#91;TODO MOVE AND MAKE instructions&#93; Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type <code>PolynomialSparseBI</code>. You may &#40;if you wish&#41; use parametric types for <code>PolynomialSparse</code>, <code>PolynomialDense</code>, and <code>PolynomialSparseBI</code> but it is not required.</p>
+<h3>Task 4 &#40;17pts&#41; - Creating a polynomial mod p datatype and further refactoring</h3>
+<p>Notice the <code>PolynomialDense</code>, <code>PolynomialSparse</code>, and <code>PolynomialSparseBI</code> data-types have integer coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided.  It is for this reason that <code>divide</code>, <code>gcd</code>, and <code>factor</code> return a function that returns a polynomial only once a <span class="math">$p$</span> is provided.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.</p>
+<ul>
+<li><p>&#91;WITH ABSTRACTION&#93; Create a type <code>PolynomialModP</code> which has a polynomial &#40;of type <code>PolynomialSparse</code>&#41; and a prime number &#40;<code>Int</code>&#41; as field names.  <code>PolynomialModP</code> should support the same arithmetic operations as <code>PolynomialSparse</code> but with coefficient arithmetic over <span class="math">$\mathbb{Z}_p$</span> rather than <code>Int</code>. <code>PolynomialModP</code> should be easier to work with when carrying out division, gcd, and factorization. So for example <code>f1 ÷ f2</code> where <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code>, would directly yield a new <code>PolynomialModP</code> which is the result mod <span class="math">$p$</span>. Similarly for the other operations.  </p>
+</li>
+<li><p>Create tests for <code>PolynomialModP</code> and associated functions and ensure your implementation passes them.</p>
+</li>
+</ul>
+<p>Your new datatype should rely on the existing functionality of <code>PolynomialSparse</code> but restrict the coefficients to <span class="math">$0$</span>, <span class="math">$1$</span>, \ldots, <span class="math">$p-1$</span>.</p>
+<p>Once you complete this task, certain operations of <code>PolynomialSparseBI</code> like <code>p1 ÷ p2</code>, are now better done via <code>PolynomialModP</code>. That is, while you may use <code>f1 ÷ f2</code> for <code>f1</code> and <code>f2</code> of types <code>PolynomialSparseBI</code>, it is better to only <code>÷</code> when <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code> because you get back an instance of <code>PolynomialModP</code> rather than a function.</p>
+<ul>
+<li><p>Implement <code>^</code> for <code>PolynomialModP</code> and update the <code>pow_mod</code> function to use it.</p>
+</li>
+<li><p>Update the <code>show</code> method for <code>PolynomialModP</code> to include an indication it is &quot;mod p&quot;.</p>
+</li>
+</ul>
+<h3>Task 5 &#40;22pts&#41; - Improving multiplication using the Chinese Remainder Theorem</h3>
+<p>The current multiplication implementation is not efficient for <code>PolynomialSparseBI</code> because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
+<ul>
+<li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
+</li>
+<li><p>Implement multiplication using the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; for <code>PolynomialSparseBI</code> as presented in the lecture. Here the product of two <code>PolynomialSparseBI</code>s will be computed by doing sufficiently many multiplications of their <code>PolynomialModP</code> counterparts.</p>
+</li>
+<li><p>Create tests for <code>PolynomialSparseBI</code> CRT multiplication and ensure your implementation passes them.</p>
+</li>
+<li><p>Benchmark <code>PolynomialSparseBI</code> CRT multiplication and contrast your results against the old multiplication &#40;it is recommended to keep the old form of multiplication in another function or method&#41;.  Find examples that demonstrate the CRT based approach is faster.</p>
+</li>
+</ul>
+<h3>Task 6 &#40;17pts&#41; - Factorization mod p and improving power</h3>
+<p>At this point you should have efficient multiplication and power for <code>PolynomialSparseBI</code> as well as  <code>PolynomialModP</code> and its associated functions and methods.</p>
+<h4>Power</h4>
+<p>As discussed in class, if you have a polynomial <code>f</code> and raise it to the power <code>2^n</code> then instead of doing about <code>2^n</code> multiplications you can do about <code>n</code> using repeated squaring.</p>
+<ul>
+<li><p>Re-factor <code>pow_mod</code> and <code>^</code> into something more efficient by using repeated squaring.  Your implementation should work for both <code>PolynomialSparseBI</code> and <code>PolynomialModP</code>.</p>
+</li>
+<li><p>Create tests for <code>pow_mod</code> and <code>^</code> for both implementations and ensure your implementation passes them.</p>
+</li>
+</ul>
+<h4>Factoring</h4>
+<ul>
+<li><p>Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples. </p>
+</li>
+<li><p>Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.</p>
+</li>
+<li><p>Benchmark your factorization algorithm by factoring a database of problems &#40;e.g. generated by you via <code>rand</code>&#41;.  Do not use more than 120 seconds of local compute time.</p>
+</li>
+<li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial.</p>
+</li>
+</ul>
+<h3>Bonus Task &#40;6 bonus points&#41;</h3>
+<p>Use factorization of <code>PolynomialModP</code> and CRT to write a factorization algorithm for <code>PolynomialSparseBI</code>.</p>
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <p>
+            Published from <a href="project1.jmd">project1.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-09-04.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>
