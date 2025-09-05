@@ -298,20 +298,6 @@ function -(p1::P, p2::P)::P where {P <: Polynomial}
 end
 
 """
-Subtraction of a polynomial and a term.
-"""
-function -(p::P, t::Term)::P where {P <: Polynomial}
-    return p - P(t)
-end
-
-"""
-Subtraction of a polynomial and an integer.
-"""
-function -(p::P, n::Int)::P where {P <: Polynomial}
-    return p - (n*one(P))
-end
-
-"""
 Multiplication of polynomial and term.
 """
 function *(t::Term, p1::P)::P where {P <: Polynomial} 
