@@ -12,17 +12,21 @@ Factors a polynomial over the field Z_p.
 Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) such that their product of the list (mod p) is f. 
 Irreducibles are fixed points on the function `factor`.
 """
-function factor(f::Polynomial, prime::Int)::Vector{Tuple{Polynomial,Int}}
+function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
     #Cantor Zassenhaus factorization
 
     f_modp = mod(f, prime)
     degree(f_modp) ≤ 1 && return [(f_modp,1)]
 
+    ret_val = Tuple{P, Int}[]
+
+    # TODO: We should be able to remove factors of x before performing the factorisation
+
     # make f primitive
     ff = prim_part(f_modp)(prime)      
     # @show "after prim:", ff
 
-     # make f square-free
+    # make f square-free
     squares_poly = gcd(f, derivative(ff), prime) 
     ff = (ff ÷ squares_poly)(prime) 
     # @show "after square free:", ff
@@ -33,8 +37,6 @@ function factor(f::Polynomial, prime::Int)::Vector{Tuple{Polynomial,Int}}
     # @show "after monic:", ff
 
     dds = dd_factor(ff, prime)
-
-    ret_val = Tuple{Polynomial,Int}[]
 
     for (k,dd) in enumerate(dds)
         sp = dd_split(dd, k, prime)
@@ -53,7 +55,7 @@ end
 """
 Expand a factorization.
 """
-function expand_factorization(factorization::Vector{Tuple{Polynomial,Int}})::Polynomial 
+function expand_factorization(factorization::Vector{Tuple{P, Int}})::P where {P <: Polynomial}
     length(factorization) == 1 && return first(factorization[1])^last(factorization[1])
     return *([first(tt)^last(tt) for tt in factorization]...)
 end
@@ -61,7 +63,7 @@ end
 """
 Compute the number of times g divides f
 """
-function multiplicity(f::Polynomial, g::Polynomial, prime::Int)::Int
+function multiplicity(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
     degree(gcd(f, g, prime)) == 0 && return 0
     return 1 + multiplicity((f ÷ g)(prime), g, prime)
 end

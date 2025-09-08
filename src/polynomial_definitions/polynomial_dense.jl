@@ -133,7 +133,15 @@ Check if two polynomials are the same.
 Note - even though this is done for `Polynomial`, we can override it for `PolynomialDense`
 to leverage Julia's speed with vectors.
 """
-==(p1::Polynomial, p2::Polynomial)::Bool = p1.terms == p2.terms
+==(p1::PolynomialDense, p2::PolynomialDense)::Bool = p1.terms == p2.terms
+
+"""
+The term of smallest degree in this polynomial.
+"""
+function last(p::PolynomialDense) 
+    iszero(p) && return leading(p) # zero Term
+    p.terms[findfirst(t -> !iszero(t), p.terms)]
+end
 
 ##################################################################
 # Operations with two objects where at least one is a polynomial #

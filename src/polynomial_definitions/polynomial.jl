@@ -1,14 +1,11 @@
-#############################################################################
-#############################################################################
+##################################################################################
+##################################################################################
 #
-# This file defines the abstract polynomial type alongside a number of common 
+# This file defines the abstract polynomial type alongside a number of operations 
 # operations that concrete subtypes should implement.
-# Some functionality can be implemented at this abstract level.
-# However, you will need to implement certain functions yourself in each 
-# concrete subtype of `Polynomial`
 #                                                                               
-#############################################################################
-#############################################################################
+##################################################################################
+##################################################################################
 
 ###################
 # Polynomial type #
@@ -185,6 +182,13 @@ The number of (non-zero) terms of the polynomial.
 This must be overriden by concrete subtypes.
 """
 length(p::Polynomial) = not_implemented_error(p, "length")
+
+"""
+The term of smallest degree in this polynomial.
+
+This must be overriden by concrete subtypes.
+"""
+last(p::Polynomial) = not_implemented_error(p, "last")
 
 """
 The leading term of the polynomial.
