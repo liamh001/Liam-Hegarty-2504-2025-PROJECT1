@@ -12,8 +12,11 @@ import Base: %
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last
 import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
 
-include("src/general_alg.jl")
 include("src/term.jl")
+
+# Utilities
+include("src/utils/general_alg.jl")
+include("src/utils/sample_primes.jl")
 
 # Polynomial
 include("src/polynomial_definitions/polynomial.jl")
