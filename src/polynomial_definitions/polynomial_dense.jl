@@ -86,13 +86,13 @@ leading(p::PolynomialDense)::Term = isempty(p.terms) ? zero(Term) : last(p.terms
 ################################
 
 """
-Push a new term into the polynomial.
+Push a new leading term into the polynomial (note - a constant can be pushed onto the zero polynomial)..
 """
-# TODO/FIXME - THE BELOW IS LITERALLY A BUG
-#Note that ideally this would throw and error if pushing another term of degree that is already in the polynomial
 function push!(p::PolynomialDense, t::Term)
-    if t.degree <= degree(p)
-        p.terms[t.degree + 1] = t
+    if t.degree < degree(p) || (t.degree == degree(p) && !iszero(p))
+        error("Cannot push a term $(t) that is not a new leading term (the polynomial had degree $(degree(p)))")
+    elseif iszero(p) && iszero(t.degree) # New constant polynomial
+         p.terms[1] = t
     else
         append!(p.terms, zeros(Term, t.degree - degree(p)-1))
         push!(p.terms, t)

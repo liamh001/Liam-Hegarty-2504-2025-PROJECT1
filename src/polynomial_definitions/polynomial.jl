@@ -218,7 +218,7 @@ evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 ################################
 
 """
-Push a new leading term into the polynomial.
+Push a new leading term into the polynomial (note - a constant can be pushed onto the zero polynomial).
 This should modify the existing polynomial p in place (ie, no new polynomials should be created).
 
 Note: you may wish to throw an error if pushing a term of degree that is already in the 
