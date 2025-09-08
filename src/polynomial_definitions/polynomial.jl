@@ -17,16 +17,27 @@
 """
 An abstract `Polynomial` type, acting as the supertype for all implementations of a polynomial.
 
-TODO - ADD IN A FULL DESCRIPTION OF THE IMPLEMENTATION REQUIREMENTS FOR POLYNOMIAL
-TELL THEM THAT IF THEY CALL A FUNCTION THAT ISN'T IMPLEMENTED FOR A PARTICULAR CONCRETE SUBTYPE 
-THAT CANNOT BE IMPLEMENTED AT THE ABSTRACT LEVEL WE'LL THROW AN ERROR
 
-NOTE TODO (HOW DO I MAKE THIS REQUIREMENT MORE RIGOROUS) - 
-We are assuming that for any concrete subtype of `Polynomial` that a constructor
-exists to make it from a vector of terms and that the empty constructor gives
-us the zero Polynomial - MAYBE PUT THIS IN THE ABOVE DEFINITION?
+Introduction:
+The functions defined in this file, and in the folder src/basic_polynomial_operations/abstract
+provide an interface for any subtype of Polynomial. Some operations (e.g. *) can 
+be implemented at the abstract level assuming other functions (e.g. iterate) are implemented for
+the concrete subtypes of Polynomial. This utilises Julia's ability to do multiple dispatch, where
+the compiler can determine the correct function/method to call depending on the type of polynomial
+it is working with.
 
-MAYBE INCLUDE A LITTLE BRIEF ABOUT HOW WE ARE LEVERAGING MULTIPLE DISPATCH?
+Note: although a function may be implemented correctly at the abstract level, without leveraging 
+the details of the specific implementation the function may be very slow. Consider overriding these
+functions for your concrete subtypes.
+
+
+Constructors:
+We assume that at least the following two constructors exist for a given concrete subtype:
+    `Polynomial()` -> the empty constructor should produce the zero polynomial
+    `Polynomial(vt::Vector{Term})` -> given a vector of terms `vt`, constructs a polynomial with those terms
+
+We assume also that for any concrete subtype of Polynomial, no zero term is stored with degree higher
+than the leading term (ie, we do not store 1 + 2x + x^2 + 0x^3 + 0x^7)
 """
 abstract type Polynomial end
 
@@ -42,8 +53,8 @@ p:
 method: 
     The name of the unimplemented method
 """
-function not_implemented_error(p::Polynomial, method::String)
-    error("The method '$(method)' is not yet implemented for a polynomial of type $(typeof(p))")
+function not_implemented_error(p::Polynomial, methodName::String)
+    error("The method '$(methodName)' is not yet implemented for a polynomial of type $(typeof(p))")
 end
 
 """
@@ -89,7 +100,7 @@ Construct a polynomial of the form x.
 function x_poly(::Type{P})::P where {P <: Polynomial} 
     return P([Term(1,1)])
 end
-x_poly(p::Polynomial) = x_poly(typeof(p))
+x_poly(p::P) where {P <: Polynomial} = x_poly(P)
 
 """
 Creates the zero polynomial.
@@ -97,7 +108,7 @@ Creates the zero polynomial.
 function zero(::Type{P})::P where {P <: Polynomial} 
     return P()
 end
-zero(p::Polynomial) = zero(typeof(p))
+zero(p::P) where {P <: Polynomial} = zero(P)
 
 """
 Creates the unit polynomial.
@@ -105,7 +116,7 @@ Creates the unit polynomial.
 function one(::Type{P})::P where {P <: Polynomial} 
     return P(one(Term))
 end
-one(p::Polynomial) = one(typeof(p))
+one(p::P) where {P <: Polynomial} = one(P)
 
 """
 Generates a random polynomial.
@@ -158,7 +169,6 @@ end
 Allows to do iteration over the non-zero terms of the polynomial. This implements the iteration interface.
 
 This must be overriden by concrete subtypes.
-This is a fallback method which will error if it is ever called.
 """
 iterate(p::Polynomial, state=1) = not_implemented_error(p, "iterate")
 
@@ -170,7 +180,6 @@ iterate(p::Polynomial, state=1) = not_implemented_error(p, "iterate")
 The number of (non-zero) terms of the polynomial.
 
 This must be overriden by concrete subtypes.
-This is a fallback method which will error if it is ever called.
 """
 length(p::Polynomial) = not_implemented_error(p, "length")
 
@@ -178,7 +187,6 @@ length(p::Polynomial) = not_implemented_error(p, "length")
 The leading term of the polynomial.
 
 This must be overriden by concrete subtypes.
-This is a fallback method which will error if it is ever called.
 """
 leading(p::Polynomial) = not_implemented_error(p, "leading")
 
@@ -206,21 +214,25 @@ evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 # Pushing and popping of terms #
 ################################
 
-# TODO/FIXME - I HATE THIS, PUSHING A NEW TERM SHOULD ONLY LET YOU PUSH A NEW LEADING TERM
 """
-Push a new term into the polynomial.
+Push a new leading term into the polynomial.
+This should modify the existing polynomial p in place (ie, no new polynomials should be created).
 
-Note - this should modify the existing polynomial p in place (ie, no new polynomials should be created). 
-Note - you may wish to have this throw an error if pushing a term of degree that is already in the 
-polynomial, but the exact implementation details are up to you.
+Note: you may wish to throw an error if pushing a term of degree that is already in the 
+polynomial. However, the exact implementation details are up to you.
+
+This must be overriden by concrete subtypes.
 """
 push!(p::Polynomial, t::Term) = not_implemented_error(p, "push!")
 
 """
 Pop the leading term out of the polynomial. When polynomial is 0, keep popping out 0.
 
-Note - this should modify the existing polynomial p in place (ie, no 
-new polynomials should be created)"""
+Note - this should modify the existing polynomial p in place (ie, no new polynomials should be 
+created).
+
+This must be overriden by concrete subtypes.
+"""
 pop!(p::Polynomial)::Term = not_implemented_error(p, "pop")
 
 """
@@ -259,12 +271,12 @@ A square free polynomial.
 """
 square_free(p::Polynomial, prime::Int)::Polynomial = (p ÷ gcd(p,derivative(p),prime))(prime)
 
-#################################
-# Queries about two polynomials #
-#################################
+#############################
+# Queries about polynomials #
+#############################
 
 """
-Check if two polynomials are the same
+Check if two polynomials are the same.
 """
 function ==(p1::Polynomial, p2::Polynomial)::Bool 
     if length(p1) != length(p2)
@@ -274,20 +286,20 @@ function ==(p1::Polynomial, p2::Polynomial)::Bool
     return all(t1 == t2 for (t1, t2) in zip(p1, p2))
 end
 
-
-# FIXME/TODO - test if anything breaks if I fix this
 """
-Check if a polynomial is equal to 0.
+Check if a polynomial is equal to a constant `n`.
 """
-#Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
-==(p::Polynomial, n::T) where T <: Real = iszero(p) == iszero(n)
+function ==(p::Polynomial, n::T) where T <: Number
+    degree(p) != 0 && return false
+    return leading(p).coeff == n
+end
 
 ##################################################################
 # Operations with two objects where at least one is a polynomial #
 ##################################################################
 
 """
-Subtraction of two polynomials.
+Subtraction of two polynomials (of the same concrete subtype).
 """
 function -(p1::P, p2::P)::P where {P <: Polynomial} 
     return p1 + (-p2)
