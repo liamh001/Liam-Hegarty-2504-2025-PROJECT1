@@ -16,9 +16,6 @@ end
 
 """
 Add two polynomials.
-
-Note - whilst this function is correct this is NOT a very fast way of adding two polynomials. 
-You will likely need to override this function.
 """
 function +(p1::Polynomial, p2::Polynomial)::Polynomial
     p = deepcopy(p1)

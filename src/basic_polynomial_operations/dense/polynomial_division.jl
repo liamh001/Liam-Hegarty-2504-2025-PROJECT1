@@ -32,3 +32,10 @@ function divide(num::PolynomialDense, den::PolynomialDense)
     end
     return division_function
 end
+
+
+# We won't re-implement any of these functions for dense polynomials,
+# the abstract versions will produce the correct result.
+
+# ÷(num::Polynomial, den::Polynomial)  = (p::Int) -> first(divide(num,den)(p))
+# rem(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))

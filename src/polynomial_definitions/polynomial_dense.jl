@@ -26,13 +26,13 @@ struct PolynomialDense <: Polynomial
     #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
     #for the zero polynomial where the vector is of length 1.
     #Note: at positions where the coefficient is 0, the power of the term is also 0 (this is how the Term type is designed)
-    terms::Vector{Term}   
+    terms::Vector{Term{Int, Int}}   
     
     #Inner constructor of 0 polynomial
     PolynomialDense() = new([zero(Term)])
 
     #Inner constructor of polynomial based on arbitrary list of terms
-    function PolynomialDense(vt::Vector{Term})
+    function PolynomialDense(vt::Vector{Term{Int, Int}})
 
         #Filter the vector so that there is not more than a single zero term
         vt = filter((t)->!iszero(t), vt)

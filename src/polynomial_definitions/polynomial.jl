@@ -106,9 +106,6 @@ function one(::Type{P})::P where {P <: Polynomial}
     return P(one(Term))
 end
 one(p::Polynomial) = one(typeof(p))
-# function one(p::P)::P where {P <: Polynomial} 
-#     return one(P)
-# end
 
 """
 Generates a random polynomial.
@@ -209,7 +206,6 @@ evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
 # Pushing and popping of terms #
 ################################
 
-# TODO - CHECK THE CURRENT IMPLEMENTATION OF THIS MAKES SENSE
 # TODO/FIXME - I HATE THIS, PUSHING A NEW TERM SHOULD ONLY LET YOU PUSH A NEW LEADING TERM
 """
 Push a new term into the polynomial.
@@ -318,7 +314,6 @@ Warning this may not make sense if n does not divide all the coefficients of p.
 """
 ÷(p::P, n::Int) where {P <: Polynomial} = (prime)->P(map((pt)->((pt ÷ n)(prime)), p.terms))
 
-# FIXME - Check that mod is working correctly
 """
 Take the mod of a polynomial with an integer.
 """
@@ -327,7 +322,6 @@ function mod(f::P, p::Int)::P where {P <: Polynomial}
     for t in f
         new_t = mod(t, p)
         !iszero(new_t) && push!(f_out, new_t)
-        # push!(f_out, mod(t, p))
     end
     return trim!(f_out)
 end

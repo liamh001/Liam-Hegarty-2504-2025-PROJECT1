@@ -13,24 +13,37 @@
 """
 A term.
 """
-struct Term  #structs are immutable by default
-    coeff::Int
-    degree::Int
-    function Term(coeff::Int, degree::Int)
+struct Term{C <: Integer, D <: Integer} #structs are immutable by default
+    coeff::C
+    degree::D
+
+    function Term{C, D}(coeff::C, degree::D) where {C, D}
         degree < 0 && error("Degree must be non-negative")
-        coeff != 0 ? new(coeff,degree) : new(coeff,0)
+        coeff != 0 ? new(coeff, degree) : new(zero(C), zero(D))
     end
+end
+
+function Term(coeff::C, degree::D) where {C, D}
+    Term{C, D}(coeff, degree)
 end
 
 """
 Creates the zero term.
 """
-zero(::Type{Term})::Term = Term(0,0)
+function zero(::Type{Term{C, D}})::Term{C, D} where {C, D} 
+    Term(zero(C), zero(D))
+end
+zero(t::Term) = zero(typeof(t))
+zero(::Type{Term}) = zero(Term{Int, Int}) # Default constructor
 
 """
 Creates the unit term.
 """
-one(::Type{Term})::Term = Term(1,0)
+function one(::Type{Term{C, D}})::Term{C, D} where {C, D}
+    Term(one(C), zero(D))
+end
+one(t::Term) = one(typeof(t))
+one(::Type{Term}) = one(Term{Int, Int}) # Default constructor
 
 ###########
 # Display #
@@ -39,7 +52,7 @@ one(::Type{Term})::Term = Term(1,0)
 """
 Show a term.
 """
-show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
+show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)")
 
 ########################
 # Queries about a term #
@@ -53,12 +66,20 @@ iszero(t::Term)::Bool = iszero(t.coeff)
 """
 Compare two terms.
 """
-isless(t1::Term,t2::Term)::Bool =  t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
+function isless(t1::Term{C, D}, t2::Term{C, D})::Bool  where {C, D}
+    t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
+end
+
+function (==)(t1::Term{C, D}, t2::Term{C, D}) where {C, D}
+    t1.coeff == t2.coeff && t1.degree == t2.degree
+end
 
 """
 Evaluate a term at a point x.
 """
-evaluate(t::Term, x::T) where T <: Number = t.coeff * x^t.degree
+function evaluate(t::Term, x::S) where {S <: Number} 
+    t.coeff * x^t.degree
+end
 
 ##########################
 # Operations with a term #
@@ -67,7 +88,7 @@ evaluate(t::Term, x::T) where T <: Number = t.coeff * x^t.degree
 """
 Add two terms of the same degree.
 """
-function +(t1::Term,t2::Term)::Term
+function +(t1::Term{C, D},t2::Term{C, D})::Term{C, D} where {C, D}
     @assert t1.degree == t2.degree
     Term(t1.coeff + t2.coeff, t1.degree)
 end
@@ -75,38 +96,69 @@ end
 """
 Negate a term.
 """
--(t::Term,) = Term(-t.coeff,t.degree)  
+function -(t::Term{C, D},)::Term{C, D} where {C, D} 
+    Term(-t.coeff,t.degree)  
+end
 
 """
 Subtract two terms with the same degree.
 """
--(t1::Term, t2::Term)::Term = t1 + (-t2) 
+function -(t1::Term{C, D}, t2::Term{C, D})::Term{C, D} where {C, D}
+    t1 + (-t2) 
+end
 
 """
 Multiply two terms.
 """
-*(t1::Term, t2::Term)::Term = Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
+function *(t1::Term{C, D}, t2::Term{C, D})::Term{C, D} where {C, D}
+    Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
+end
 
+"""
+Multiply a term by a constant.
+"""
+function *(t::Term{C, D}, n::S)::Term{C, D} where {C, D, S <: Integer}
+    Term(t.coeff * n, t.degree)
+end
+function *(n::S, t::Term{C, D})::Term{C, D} where {C, D, S <: Integer}
+    t * n
+end
+
+"""
+Power of a term.
+"""
+function ^(t::Term{C, D}, n::S)::Term{C, D} where {C, D, S <: Integer}
+    Term(t.coeff^n, t.degree*D(n))
+end
 
 """
 Compute the symmetric mod of a term with an integer.
 """
-mod(t::Term, p::Int) = Term(mod(t.coeff,p), t.degree)
+function mod(t::Term{C, D}, p::Int)::Term{C, D} where {C <: Integer, D}
+    Term(mod(t.coeff,p), t.degree)
+end
 
 """
 Compute the derivative of a term.
 """
-derivative(t::Term) = Term(t.coeff*t.degree,max(t.degree-1,0))
+function derivative(t::Term{C, D})::Term{C, D} where {C, D}  
+    Term{C, D}(t.coeff*C(t.degree),max(t.degree-one(D),zero(D)))
+end
 
 """
 Divide two terms. Returns a function of an integer.
 """
-function ÷(t1::Term,t2::Term) #\div + [TAB]
+function ÷(t1::Term{C, D}, t2::Term{C, D}) where {C, D} #\div + [TAB]
     @assert t1.degree ≥ t2.degree
-    f(p::Int)::Term = Term(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
+    f(p::Int)::Term{C, D} = Term{C, D}(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
 end
 
 """
 Integer divide a term by an integer.
 """
-÷(t::Term, n::Int) = t ÷ Term(n,0)
+function ÷(t::Term{C, D}, n::C) where {C <: Integer, D} 
+    t ÷ Term(n,0)
+end
+
+""" Enable broadcasting an operation on a term """
+broadcastable(t::Term) = Ref(t)
