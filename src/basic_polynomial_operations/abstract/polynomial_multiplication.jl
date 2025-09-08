@@ -7,7 +7,7 @@
 #############################################################################
 
 """
-Multiply two polynomials.
+Multiply two polynomials (of the same concrete subtype).
 """
 function *(p1::P, p2::P)::P where {P <: Polynomial}
     p_out = P()

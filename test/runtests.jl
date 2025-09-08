@@ -17,6 +17,7 @@ include("../poly_factorization_project.jl")
 include("integers_test.jl")
 test_euclid_ints()
 test_ext_euclid_ints()
+println("---END INTEGER UNIT TESTS---\n")
 
 ####
 # Execute unit tests for polynomials
@@ -29,6 +30,7 @@ for poly in polynomial_types
     ext_euclid_test_poly(poly)
     division_test_poly(poly)
 end
+println("---END POLYNOMIAL UNIT TESTS---\n")
 
 ####
 # Execute unit tests for polynomial factorization
@@ -38,3 +40,4 @@ polynomial_types = [PolynomialDense] # The types of polynomials to unit test fac
 for poly in polynomial_types
     factor_test_poly(poly)
 end
+println("---END FACTORISATION UNIT TESTS---")

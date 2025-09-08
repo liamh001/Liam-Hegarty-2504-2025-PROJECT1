@@ -7,7 +7,7 @@
 #############################################################################
 
 """
-The extended euclid algorithm for polynomials modulo prime.
+The extended euclid algorithm for polynomials (of the same concrete subtype) modulo prime.
 """
 function extended_euclid_alg(a::P, b::P, prime::Int) where {P <: Polynomial}
     old_r, r = mod(a, prime), mod(b, prime)
@@ -27,6 +27,6 @@ function extended_euclid_alg(a::P, b::P, prime::Int) where {P <: Polynomial}
 end
 
 """
-The GCD of two polynomials modulo prime.
+The GCD of two polynomials (of the same concrete subtype) modulo prime.
 """
-gcd(a::Polynomial, b::Polynomial, prime::Int) = extended_euclid_alg(a,b,prime) |> first
+gcd(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg(a,b,prime) |> first

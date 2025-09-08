@@ -26,6 +26,9 @@ the concrete subtypes of Polynomial. This utilises Julia's ability to do multipl
 the compiler can determine the correct function/method to call depending on the type of polynomial
 it is working with.
 
+For any function that is not implemented at the abstract level, see the PolynomialDense struct
+for a particular implementation.
+
 Note: although a function may be implemented correctly at the abstract level, without leveraging 
 the details of the specific implementation the function may be very slow. Consider overriding these
 functions for your concrete subtypes.

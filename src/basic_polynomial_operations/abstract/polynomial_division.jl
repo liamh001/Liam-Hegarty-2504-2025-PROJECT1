@@ -6,23 +6,25 @@
 #############################################################################
 #############################################################################
 
-"""  Modular algorithm.
+"""  Modular algorithm (f, g have the same concrete subtype).
 f divide by g
 
-f = q*g + r
+f = q*g + r (mod p)
 
 p is a prime
+
+This must be overriden by concrete subtypes.
 """
-function divide(num::Polynomial, den::Polynomial)
+function divide(num::P, den::P) where {P <: Polynomial}
     not_implemented_error(num, "divide")
 end
 
 """
 The quotient from polynomial division. Returns a function of an integer.
 """
-÷(num::Polynomial, den::Polynomial)  = (p::Int) -> first(divide(num,den)(p))
+÷(num::P, den::P) where {P <: Polynomial}  = (p::Int) -> first(divide(num,den)(p))
 
 """
 The remainder from polynomial division. Returns a function of an integer.
 """
-rem(num::Polynomial, den::Polynomial)  = (p::Int) -> last(divide(num,den)(p))
+rem(num::P, den::P) where {P <: Polynomial} = (p::Int) -> last(divide(num,den)(p))

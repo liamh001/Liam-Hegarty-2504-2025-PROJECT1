@@ -8,6 +8,8 @@
 
 """
 Add a polynomial and a term.
+
+This must be overriden by concrete subtypes.
 """
 function +(p::Polynomial, t::Term)
     not_implemented_error(p, "Polynomial + Term")
@@ -15,9 +17,12 @@ end
 +(t::Term, p::Polynomial) = p + t
 
 """
-Add two polynomials.
+Add two polynomials of the same concrete subtype.
+
+Note: This operation may be slow for some concrete subtypes. You may wish to override this to factor
+in the details of your polynomial representation when implementing your concrete subtype.
 """
-function +(p1::Polynomial, p2::Polynomial)::Polynomial
+function +(p1::P, p2::P)::P where {P <: Polynomial}
     p = deepcopy(p1)
     for t in p2
         p += t
