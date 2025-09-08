@@ -9,7 +9,8 @@
 """
 Factors a polynomial over the field Z_p.
 
-Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) such that their product of the list (mod p) is f. Irreducibles are fixed points on the function factor.
+Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) such that their product of the list (mod p) is f. 
+Irreducibles are fixed points on the function `factor`.
 """
 function factor(f::Polynomial, prime::Int)::Vector{Tuple{Polynomial,Int}}
     #Cantor Zassenhaus factorization
@@ -82,7 +83,6 @@ function dd_factor(f::P, prime::Int)::Array{P} where {P <: Polynomial}
         g[k] = gcd(w - x, f, prime) 
         f = (f ÷ g[k])(prime)
     end
-
 
     #edge case for final factor
     f != one(P) && push!(g,f)
