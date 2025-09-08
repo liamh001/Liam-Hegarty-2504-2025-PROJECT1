@@ -22,13 +22,19 @@ test_ext_euclid_ints()
 # Execute unit tests for polynomials
 ####
 include("polynomials_test.jl")
-prod_test_poly()
-prod_derivative_test_poly()
-ext_euclid_test_poly()
-division_test_poly()
+polynomial_types = [PolynomialDense] # The types of polynomials to unit test
+for poly in polynomial_types
+    prod_test_poly(poly)
+    prod_derivative_test_poly(poly)
+    ext_euclid_test_poly(poly)
+    division_test_poly(poly)
+end
 
 ####
 # Execute unit tests for polynomial factorization
 ####
 include("factorization_test.jl")
-factor_test_poly()
+polynomial_types = [PolynomialDense] # The types of polynomials to unit test factorisation
+for poly in polynomial_types
+    factor_test_poly(poly)
+end
