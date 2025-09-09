@@ -92,7 +92,7 @@ function ext_euclid_test_poly(::Type{P};
     for _ in 1:N
         p1 = rand(P)
         p2 = rand(P)
-        g, s, t = extended_euclid_alg(p1, p2, prime)
+        g, s, t = extended_euclid_alg_mod_p(p1, p2, prime)
         @assert mod(s*p1 + t*p2 - g, prime) == 0
     end
     println("ext_euclid_test_poly for $(P) - PASSED")

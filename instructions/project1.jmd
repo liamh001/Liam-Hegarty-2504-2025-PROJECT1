@@ -151,11 +151,13 @@ The current implementation for `PolynomialDense` uses a vector to store the term
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using **repeated squaring**.
 
-1. Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialDense` and `PolynomialSparse` (i.e., it should be implemented for `Polynomial{C, D}`).
- 
-2. Create a file `tests/power_test.jl`. Inside of this file create tests for `pow_mod` and `^`. Ensure your implementations pass these tests.
+1. Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should be implemented at the abstract level (i.e.,`Polynomial{C, D}`) and should therefore  work for both `PolynomialDense` and `PolynomialSparse`.
 
-3. Have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions *Screenshot (or copy/paste) the output and add it to your PDF submission`*
+2. Augment (i.e., modify) your algorithms (`pow_mod` and `^`) such that the operations `0^n`, `1^n` and `x^n` occur in constant time.
+ 
+3. Create a file `tests/power_test.jl`. Inside of this file create tests for `pow_mod` and `^`. Ensure your implementations pass these tests.
+
+4. Have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions *Screenshot (or copy/paste) the output and add it to your PDF submission`*
  
 ### **Task 5 (13pts) - A new coefficient type**
 #### Creating `ZModP` TODO

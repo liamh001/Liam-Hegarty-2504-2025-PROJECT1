@@ -21,7 +21,7 @@ julia> include("poly_factorization_project.jl")
 You may then use functionality such as,
 
 ```
-julia> gcd(rand(PolynomialDense) + rand(PolynomialDense), rand(PolynomialDense), 101)
+julia> gcd_mod_p(rand(PolynomialDense) + rand(PolynomialDense), rand(PolynomialDense), 101)
 ```
 
 To execute all unit tests run:

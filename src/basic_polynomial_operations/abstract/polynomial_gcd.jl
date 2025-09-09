@@ -7,9 +7,34 @@
 #############################################################################
 
 """
-The extended euclid algorithm for polynomials (of the same concrete subtype) modulo prime.
+Computes the pseudo gcd of two polynomials (of the same concrete subtype).
+
+We cannot compute the gcd over Z[x] as Z is not a field. We can either compute the gcd in the related fraction
+field (i.e., Q[x]) or use the `pseudo_gcd`. The gcd may have fractional coefficients, to go from this to the
+pseudo_gcd we multiply by the lcm of the denominators of these fractions.
+
+The following algorithm also computes the pseudo_gcd without resorting to Q[x] (i.e., we stay in Z[x]).
 """
-function extended_euclid_alg(a::P, b::P, prime::Int) where {P <: Polynomial}
+function pseudo_gcd(f::P, g::P) where {P <: Polynomial}
+    while !(iszero(f) || iszero(g))
+        f, g = g, pseudo_rem(f, g)
+    end
+
+    iszero(g) && return prim_part(f)
+    return prim_part(g) # f = 0
+end
+
+"""
+The extended euclid algorithm for polynomials (of the same concrete subtype) modulo prime.
+
+Note, when working with polynomials over Z[x] we cannot compute the extended euclidean algorithm (EEA) directly.
+This is because we do not have division in Z[x]. Hence, we must drop to the field Zp[x] and compute the EEA
+with respect to some prime. 
+
+When you implement polynomials over Zp you can create your own version of this function that does not require 
+a prime as input.
+"""
+function extended_euclid_alg_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial}
     old_r, r = mod(a, prime), mod(b, prime)
     old_s, s = one(P), zero(P)
     old_t, t = zero(P), one(P)
@@ -26,67 +51,10 @@ function extended_euclid_alg(a::P, b::P, prime::Int) where {P <: Polynomial}
     return g, s, t  
 end
 
-
-"""
-The extended euclid algorithm for polynomials (of the same concrete subtype) modulo prime.
-"""
-function square_free(f::P) where {P <: Polynomial}
-    sq_fr_f = pseudo_quo(f, pseudo_gcd(f, derivative(f)))
-    content = gcd(map(t -> t.coeff, sq_fr_f))
-    return P( map(t -> Term(t.coeff ÷ content, t.degree), sq_fr_f) )
-end
-
-function prim_part(f::P) where {P <: Polynomial}
-    iszero(f) && return f
-    content = gcd(map(t -> t.coeff, f))
-    return P( map(t -> Term(t.coeff ÷ content, t.degree), f) )
-end
-
-function pseudo_gcd(f::P, g::P) where {P <: Polynomial}
-    while !(iszero(f) || iszero(g))
-        f, g = g, pseudo_rem(f, g)
-    end
-
-    iszero(g) && return prim_part(f)
-    return prim_part(g) # f = 0
-end
-
-function pseudo_quo(f::P, g::P) where {P <: Polynomial}
-    iszero(g) && error("Cannot divide by 0")
-    m, n = degree(f), degree(g)
-    lc_g_pow = one(P)
-    ret_val = zero(P)
-    lc_g = leading(g).coeff
-
-    while !(m < n || iszero(f))
-        x_pow = x_poly(P)^(m-n)
-        lc_f = leading(f).coeff
-
-        ret_val += lc_g_pow * lc_f * x_pow
-        lc_g_pow *= lc_g
-        f = (lc_g * f) - (lc_f * x_pow * g)
-
-        m = degree(f)
-    end
-
-    ret_val += lc_g_pow * prim_part(f)
-    return ret_val
-end
-
-function pseudo_rem(f::P, g::P) where {P <: Polynomial}
-    m, n = degree(f), degree(g)
-    while !(m < n || iszero(f))
-        x_pow = x_poly(P)^(m-n)
-        lc_f = leading(f).coeff
-        lc_g = leading(g).coeff
-        f = prim_part((lc_g * f) - (lc_f * x_pow * g))
-        m = degree(f)
-    end
-    
-    return f
-end
-
 """
 The GCD of two polynomials (of the same concrete subtype) modulo prime.
+
+Again, when you implement polynomials over Zp you can create your own version of this function that does not
+require a prime as input.
 """
-gcd(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg(a,b,prime) |> first
+gcd_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg_mod_p(a,b,prime) |> first

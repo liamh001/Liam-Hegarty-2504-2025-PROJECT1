@@ -269,14 +269,27 @@ function derivative(p::P)::P where {P <: Polynomial}
 end
 
 """
-The prim part (multiply a polynomial by the inverse of its content).
+Returns a primitive polynomial.
+E.g., 
+    f = 6x^3 + 6x^2 + 9x + 12
+    prim_part(f) = 2x^3 + 2x^2 + 3x + 4
 """
-prim_part(p::Polynomial) = p ÷ content(p)
+function prim_part(f::P) where {P <: Polynomial}
+    iszero(f) && return f
+    content = gcd(map(t -> t.coeff, f))
+    return P( map(t -> Term(t.coeff ÷ content, t.degree), f) )
+end
 
 """
-A square free polynomial.
+A square free (and primitive) polynomial.
+E.g.,
+    f = (x + a1)^e1 * (x + a2)^e2 * ... * (x + an)^en
+    square_free(f) = (x + a1) * (x + a2) * ... * (x + an)
 """
-square_free(p::Polynomial, prime::Int)::Polynomial = (p ÷ gcd(p,derivative(p),prime))(prime)
+function square_free(f::P) where {P <: Polynomial}
+    sq_fr_f = pseudo_quo(f, pseudo_gcd(f, derivative(f)))
+    return prim_part(sq_fr_f)
+end
 
 #############################
 # Queries about polynomials #

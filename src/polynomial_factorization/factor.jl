@@ -21,10 +21,9 @@ function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
     ret_val = Tuple{P, Int}[]
 
     # make f square-free
-    # squares_poly = gcd(f, derivative(f), prime) 
     sqr_fr_poly = square_free(f)
 
-    # Drop to Zp
+    # Drop to Zp[x]
     fp = mod(sqr_fr_poly, prime)
     # @show "see square free part" fp 
 
@@ -66,7 +65,7 @@ end
 Compute the number of times g divides f
 """
 function multiplicity(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
-    degree(gcd(f, g, prime)) == 0 && return 0
+    degree(gcd_mod_p(f, g, prime)) == 0 && return 0
     return 1 + multiplicity((f ÷ g)(prime), g, prime)
 end
 
@@ -84,7 +83,7 @@ function dd_factor(f::P, prime::Int)::Array{P} where {P <: Polynomial}
     #Looping over degrees
     for k in 1:degree(f)
         w = rem(pow_mod(w,prime,prime), f)(prime)
-        g[k] = gcd(w - x, f, prime) 
+        g[k] = gcd_mod_p(w - x, f, prime) 
         f = (f ÷ g[k])(prime)
     end
 
