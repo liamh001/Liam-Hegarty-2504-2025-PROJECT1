@@ -146,7 +146,7 @@ The current implementation for `PolynomialDense` uses a vector to store the term
 
 10. Include the output of `example_script_task_3.jl` in your PDF submission.
     
-### **Task 4 (17pts) - Optimising an algorithm**
+### **Task 4 (7pts) - Optimising an algorithm**
 #### Fixing power
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using **repeated squaring**.

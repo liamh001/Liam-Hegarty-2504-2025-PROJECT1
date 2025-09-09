@@ -20,8 +20,6 @@ function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
 
     ret_val = Tuple{P, Int}[]
 
-    # TODO: We should be able to remove factors of x before performing the factorisation
-
     # make f square-free
     # squares_poly = gcd(f, derivative(f), prime) 
     sqr_fr_poly = square_free(f)
