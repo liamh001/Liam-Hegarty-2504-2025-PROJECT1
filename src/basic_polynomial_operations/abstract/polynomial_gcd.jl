@@ -54,35 +54,23 @@ end
 function pseudo_quo(f::P, g::P) where {P <: Polynomial}
     iszero(g) && error("Cannot divide by 0")
     m, n = degree(f), degree(g)
-    (m < n || iszero(f)) && return prim_part(f)
-
-    lc_f = leading(f).coeff
+    lc_g_pow = one(P)
+    ret_val = zero(P)
     lc_g = leading(g).coeff
-    t = m - n
-    x_pow = x_poly(P)^t
 
-    f1 = (lc_g * f) - (lc_f * x_pow * g)
+    while !(m < n || iszero(f))
+        x_pow = x_poly(P)^(m-n)
+        lc_f = leading(f).coeff
 
-    return (lc_g * pseudo_quo(f1, g)) + (lc_f * x_pow)
+        ret_val += lc_g_pow * lc_f * x_pow
+        lc_g_pow *= lc_g
+        f = (lc_g * f) - (lc_f * x_pow * g)
 
+        m = degree(f)
+    end
 
-    # iszero(g) && error("Cannot divide by 0")
-    # m, n = degree(f), degree(g)
-    # (m < n || iszero(f)) && zero(f)
-
-    # q = zero(P)
-    # lc_g = leading(g).coeff
-    # while !(iszero(f) || m < n)
-    #     t = m - n
-    #     lc_f = leading(f).coeff
-    #     x_pow = x_poly(P)^t
-
-    #     q = (lc_g * q) + (lc_f * x_pow)
-    #     f = (lc_g * f) - (lc_f * x_pow * g)
-    #     m = degree(f)
-    # end
-
-    # return prim_part(q)
+    ret_val += lc_g_pow * prim_part(f)
+    return ret_val
 end
 
 function pseudo_rem(f::P, g::P) where {P <: Polynomial}
