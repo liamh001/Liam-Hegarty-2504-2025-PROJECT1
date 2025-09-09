@@ -12,6 +12,10 @@
 
 """
 A term.
+
+For Term{C, D},
+    C: The type of the coefficient of the term.
+    D: The type of the degree of the term.
 """
 struct Term{C <: Integer, D <: Integer} #structs are immutable by default
     coeff::C
@@ -23,6 +27,7 @@ struct Term{C <: Integer, D <: Integer} #structs are immutable by default
     end
 end
 
+""" Convenience outer constructor to infer coefficient/degree types. """
 function Term(coeff::C, degree::D) where {C, D}
     Term{C, D}(coeff, degree)
 end
@@ -64,7 +69,7 @@ Check if a term is 0.
 iszero(t::Term)::Bool = iszero(t.coeff)
 
 """
-Compare two terms.
+Compare two terms (with the same coefficient/degree types).
 """
 function isless(t1::Term{C, D}, t2::Term{C, D})::Bool  where {C, D}
     t1.degree == t2.degree ? (t1.coeff < t2.coeff) : (t1.degree < t2.degree)  
@@ -86,7 +91,7 @@ end
 ##########################
 
 """
-Add two terms of the same degree.
+Add two terms of the same degree (with the same coefficient/degree types).
 """
 function +(t1::Term{C, D},t2::Term{C, D})::Term{C, D} where {C, D}
     @assert t1.degree == t2.degree
@@ -101,14 +106,14 @@ function -(t::Term{C, D},)::Term{C, D} where {C, D}
 end
 
 """
-Subtract two terms with the same degree.
+Subtract two terms with the same degree (and the same coefficient/degree types).
 """
 function -(t1::Term{C, D}, t2::Term{C, D})::Term{C, D} where {C, D}
     t1 + (-t2) 
 end
 
 """
-Multiply two terms.
+Multiply two terms (with the same coefficient/degree types).
 """
 function *(t1::Term{C, D}, t2::Term{C, D})::Term{C, D} where {C, D}
     Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
@@ -146,7 +151,11 @@ function derivative(t::Term{C, D})::Term{C, D} where {C, D}
 end
 
 """
-Divide two terms. Returns a function of an integer.
+Divide two terms (with the same coefficient/degree types). 
+Returns a function of an integer.
+
+Note: You will need to override this for division where the coefficients are of type ZModP (Task 5)
+There we can do exact division, so we can simply do `t1.coeff ÷ t2.coeff`.
 """
 function ÷(t1::Term{C, D}, t2::Term{C, D}) where {C, D} #\div + [TAB]
     @assert t1.degree ≥ t2.degree
@@ -157,8 +166,12 @@ end
 Integer divide a term by an integer.
 """
 function ÷(t::Term{C, D}, n::C) where {C <: Integer, D} 
-    t ÷ Term(n,0)
+    t ÷ Term(C(n), zero(D))
 end
+
+#############################
+# Vectorisation with a term #
+#############################
 
 """ Enable broadcasting an operation on a term """
 broadcastable(t::Term) = Ref(t)
