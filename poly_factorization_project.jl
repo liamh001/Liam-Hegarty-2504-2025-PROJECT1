@@ -8,8 +8,8 @@
 
 using Distributions, StatsBase, Random, Primes
 
-import Base: %
-import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last
+import Base: %, gcd
+import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last, isempty
 import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
 
 include("src/term.jl")
@@ -17,6 +17,7 @@ include("src/term.jl")
 # Utilities
 include("src/utils/general_alg.jl")
 include("src/utils/sample_primes.jl")
+include("src/utils/heap.jl")
 
 # Polynomial
 include("src/polynomial_definitions/polynomial.jl")
