@@ -86,7 +86,7 @@ Improve the "pretty printing" of the polynomials by incorporating the following 
 10.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
 
 
-### **Task 2** (22 pts) - Utilising Julia's type system**
+### **Task 2 (22 pts) - Utilising Julia's type system**
 ### Parameterize the coefficient type to utilize `BigInt`
    
 #### Showing overflow for `PolynomialDense`

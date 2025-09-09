@@ -11,7 +11,7 @@
 Test factorization of polynomials.
 """
 function factor_test_poly(::Type{P};
-    N::Int = 3, seed::Int = 0, primes::Vector{Int} = [5,7,11]
+    N::Int = 10, seed::Int = 0, primes::Vector{Int} = [5,7,13]
     ) where {P <: Polynomial}
     Random.seed!(seed)
     for prime in primes

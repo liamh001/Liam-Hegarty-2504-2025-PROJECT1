@@ -21,7 +21,7 @@ function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
     ret_val = Tuple{P, Int}[]
 
     # make f square-free
-    sqr_fr_poly = square_free(f)
+    sqr_fr_poly = square_free_mod_p(f, prime)
 
     # Drop to Zp[x]
     fp = mod(sqr_fr_poly, prime)
@@ -105,7 +105,7 @@ function dd_split(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
     w = rand(P, degree = d, monic = true)
     w = mod(w,prime)
     n_power = (prime^d-1) ÷ 2
-    g = pseudo_gcd(pow_mod(w,n_power,prime) - one(f), f)
+    g = gcd_mod_p(pow_mod(w,n_power,prime) - one(f), f, prime)
     g = mod(g, prime)
     # @show g
     ḡ = (f ÷ g)(prime) # g\bar + [TAB]

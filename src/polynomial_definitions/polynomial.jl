@@ -281,6 +281,32 @@ function prim_part(f::P) where {P <: Polynomial}
 end
 
 """
+A square free polynomial modulo a prime.
+"""
+function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
+    fmod_p = mod(f, prime)
+
+    min_deg = last(fmod_p).degree
+    vt = filter(t -> !iszero(t), collect(f))
+    fmod_p = P( map(t -> Term(t.coeff, t.degree - min_deg), vt) )
+
+    # Now compute the gcd modulo a prime
+    der_fmod_p = mod(derivative(fmod_p), prime)
+    gcd_f_der_f = gcd_mod_p(fmod_p, der_fmod_p, prime)
+
+    iszero(gcd_f_der_f) && return fmod_p * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
+
+    sqr_free = (fmod_p ÷ gcd_f_der_f)(prime)
+
+    # Add the factor of `x` back in if there was one
+    if min_deg > zero(min_deg) 
+        sqr_free *= x_poly(P)
+    end
+
+    return sqr_free
+end
+
+"""
 A square free (and primitive) polynomial.
 E.g.,
     f = (x + a1)^e1 * (x + a2)^e2 * ... * (x + an)^en
@@ -372,12 +398,15 @@ function pow_mod(p::P, n::Int, prime::Int) where {P <: Polynomial}
     base = p
     # for _ in 1:n
     while n > 0
+        # TODO - PUT THIS BACK
         if isodd(n)
             out *= base
+            out = mod(out, prime)
         end
 
         n = n >> 1
         base *= base
+        base = mod(base, prime)
 
         # out *= p
         # out = mod(out, prime)

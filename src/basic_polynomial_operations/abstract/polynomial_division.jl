@@ -6,6 +6,7 @@
 #############################################################################
 #############################################################################
 
+# TODO - DOCSTRINGS HERE AND RENAME TO MOD_P
 """  Modular algorithm (f, g have the same concrete subtype).
 f divide by g
 

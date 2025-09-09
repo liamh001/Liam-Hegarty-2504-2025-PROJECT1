@@ -11,7 +11,8 @@ Computes the pseudo gcd of two polynomials (of the same concrete subtype).
 
 We cannot compute the gcd over Z[x] as Z is not a field. We can either compute the gcd in the related fraction
 field (i.e., Q[x]) or use the `pseudo_gcd`. The gcd may have fractional coefficients, to go from this to the
-pseudo_gcd we multiply by the lcm of the denominators of these fractions.
+pseudo_gcd we multiply by the lcm of the denominators of these fractions. This however, can still be slow
+as the numerator and denominator can respectively become very large.
 
 The following algorithm also computes the pseudo_gcd without resorting to Q[x] (i.e., we stay in Z[x]).
 """
