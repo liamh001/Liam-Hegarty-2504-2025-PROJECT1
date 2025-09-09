@@ -57,7 +57,7 @@ Build your project on top of the [https://github.com/dietmaroelz/2504\_2025\_pro
  
 Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.
  
-### Task 1 (15 pts) - Working in an existing codebase
+### **Task 1 (15 pts) - Working in an existing codebase**
 ### Getting it to run, improving pretty printing, and creating your own example script.
  
  
@@ -66,77 +66,101 @@ Once you create your own repository, first read the file `README.md`. Then make 
  
  
 #### Create Example Scripts
-Create your own example script called `example_script_task_1.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Namely, your script should run and demonstrate (using `println` or `@show`) how the code in the repository works by
-1.  constructing *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
-1.  compute `f + g`, `f * h`, `g * h`, and `gcd(f*h, g*h)`,
-1.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
-1.  compute `(f * h) \div h` modulo 3, 7 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
- 
-Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`. *Make sure to screenshot the output of `example_script_task_1.jl` at this stage to include in your submission.*
+Create your own example script called `example_script_task_1.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Your script should run and demonstrate (using `println` or `@show`) how the code in the repository works. Namely:
+
+1.  construct *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
+2.  compute `f + g`, `f * h`, `g * h`, and `gcd(f*h, g*h)`,
+3.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
+4.  compute `(f * h) \div h` modulo 3, 7 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
+    
+Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`. *Make sure to screenshot (or copy/paste) the output of `example_script_task_1.jl` at this stage to include in your submission.*
  
 #### Pretty Printing
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
-1.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
-2.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
-3.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
-4.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
-5.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
-6.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
+
+5.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
+6.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
+7.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
+8.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
+9.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
+10.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
 
 
-### Task 2 (22 pts) - Utilising Julia's type system
+### **Task 2** (22 pts) - Utilising Julia's type system**
 ### Parameterize the coefficient type to utilize `BigInt`
    
+#### Showing overflow for `PolynomialDense`
 Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`. 
   
-1. Create a new script called `example_script_task_2.jl`. Demonstrate using 5 hard-coded (ie, explicitly write out the polynomials - do not use `rand` to generate them) examples of `PolynomialDense` addition that will overflow (*make the coefficients excessively large, not the degree*).
+1. Create a new script called `example_script_task_2.jl`. Demonstrate using five hard-coded examples (i.e, explicitly write out the polynomials and do not use `rand` to generate them) of `PolynomialDense` addition that will overflow by making the coefficients (*not the degree*) excessively large.
 
-Notice that the struct `Term` is already parameterised and can accept coefficients and degrees that are `BigInt`s. However, the `Polynomial` and `PolynomialDense` types default to using `Int` for both. Your task is to refactor (modify) these types to be parametric as follows.
+#### Parameterising `Polynomial`
+Notice that the struct `Term` is already parameterised and can accept coefficients and degrees that are `BigInt`s. However, the `Polynomial` and `PolynomialDense` types default to using `Int` for both. Your task is to refactor (i.e., modify) these types to be parametric as follows:
  
-2.  Refactor `Polynomial` to accept two type parameters called `C` and `D` respectively. I.e, we should have `abstract type Polynomial{C, D} end`.
- 
-3. Refactor all functions in the file `src/polynomial_definitions/polynomial.jl` to account for these new parameters.  *Note: you may create a number of type `T` by writing, for example, `T(5)`. The methods `zero(T)` and `one(T)` can creating 0 and 1 of type `T`.*
+2.  Refactor `Polynomial` to accept two type parameters called `C` and `D` respectively. I.e., we should have `abstract type Polynomial{C, D} end`.
+
+3. Refactor all functions in the file `src/polynomial_definitions/polynomial.jl` to account for these new parameters.  *Note: you may create a number of type `T` by writing, for example, `T(5)`. The methods `zero(T)` and `one(T)` can create 0 and 1 of type `T`.*
 
 4. Refactor all functions in the folder `src/abstract` to account for these new parameters.
 
+#### Parameterising `PolynomialDense`
 5. At this stage the `PolynomialDense` implementation will no longer work. Refactor the type `PolynomialDense` to accept two type parameters `C`, `D` such that the struct definition starts with `struct PolynomialDense{C, D} <: Polynomial{C, D}`. `PolynomialDense` should then store it's terms in a vector of type `Vector{Term{C, D}}`.
 
 6. Refactor all methods in the file `src/polynomial_definitions/polynomial_dense.jl` to account for these new parameters.
- 
+
 7. Refactor all functions in the folder `src/dense` to account for these new parameters.
+
+At this stage we should be able to instantiate a polynomial of type `PolynomialDense{BigInt, Int}`. We need to verify it works correctly. *Note: do not try and instantiate a polynomial of type `PolynomialDense{BigInt, BigInt}` or `PolynomialDense{Int, BigInt}`. These may create absurdly large arrays.*
+
+#### Checking it works
+8.  Refactor your script `example_script_task_2.jl` to demonstrate that your five original hard-coded examples fail (i.e., produce obviously incorrect output) for `PolynomialDense{Int, Int}` but are correct when run using `PolynomialDense{BigInt, Int}` (ie, do not overflow).
+
+9.  Create 10 random tests for `PolynomialDense{BigInt, Int}` (at the end of your `example_script_task_2.jl`. Ensure your implementation for `PolynomialDense{BigInt, Int}` passes your tests. 
+
+10. Include the output of `example_script_task_2.jl` in your PDF submission.
   
-At this stage we should be able to instantiate a polynomial of type `PolynomialDense{BigInt, Int}`. We need to verify it works correctly. *Note - do not try and instantiate a polynomial of type `PolynomialDense{BigInt, BigInt}` or `PolynomialDense{Int, BigInt}`. These may create absurdly large arrays.*
+### **Task 3 (13 pts) - Refactoring the data structure used**
  
--  Refactor your script `example_script_task_2.jl` to demonstrate that your 5 original hard-coded examples fail (ie produce obviously incorrect output) for `PolynomialDense{Int, Int}` but are correct when run using `PolynomialDense{BigInt, Int}` (ie, do not overflow).
+The current implementation for `PolynomialDense` uses a vector to store the term of degree $k$ at position $k+1$. This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$. In this task we address this deficiency:
  
--  Create 10 random tests for `PolynomialDense{BigInt, Int}` (at the end of your `example_script_task_2.jl`. Ensure your impelentation for `PolynomialDense{BigInt, Int}` passes your tests. 
-  
-### Task 3 (?pts) - Refactoring the data structure used
- 
-The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.
- 
-1.  Navigate to the folder `src/basic_polynomial_operations` and duplicate the folder `dense` as the folder `sparse`.
- 
+#### Constructors:
 1.  Navigate to the folder `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
+
+2.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/heap.jl`) ordered by term degree to accomplish this.
+
+3.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing.
+
+#### Operations
+4.  Navigate to the folder `src/basic_polynomial_operations` and duplicate the folder `dense` as the folder `sparse`.
+
+5.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `add` can no longer be done with simple vector addition. 
+  
+*Note: sparse term multiplication and addition can be optimised significantly. You should override both these functions for your `PolynomialSparse` implementation.*
  
-1.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are exluded from storage.  Utlize a [max heap](https://juliacollections.github.io/DataStructures.jl/latest/heaps/) ordered by term degree to accomplish this.
+#### Checking it works
+7.  Replicate the `example_script_task_2.jl` for `PolynomialSparse` in a file called `example_script_task_3.jl`.
+
+8.  Describe three pros and/or cons (in a table in your PDF) between the dense and sparse representations.
+
+9.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) that there are examples where `PolynomialSparse` outperforms `PolynomialDense` for both time and memory usage.  *Do this only for cases where `PolynomialSparse` and `PolynomialDense` do not overflow.*
+
+10. Include the output of `example_script_task_3.jl` in your PDF submission.
+    
+### **Task 4 (17pts) - Optimising an algorithm**
+#### Fixing power
+
+As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using **repeated squaring**.
+
+1. Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialDense` and `PolynomialSparse` (i.e., it should be implemented for `Polynomial{C, D}`).
  
-1.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing.
+2. Create a file `tests/power_test.jl`. Inside of this file create tests for `pow_mod` and `^`. Ensure your implementations pass these tests.
+
+3. Have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions *Screenshot (or copy/paste) the output and add it to your PDF submission`*
  
-1.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `add` can no longer be done with simple vector addition.
- 
-1.  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse` and associated functions are working.
- 
-1.  Replicate Task 1 so that `example_script_2.jl` is for `PolynomialSparse`.
- 
-1.  Describe three pros and/or cons between the dense and sparse representations.
- 
-1.  Find one example where `PolynomialSparse` overflows and yields the wrong result.
- 
-1.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) `PolynomialSparse` out-performs `PolynomialDense` when operating on sparse polynomials.  *Do this only for cases where `PolynomialSparse` and `PolynomialDense` does not overflow.*
- 
-### Task 4 (17pts) - Creating a polynomial mod p datatype and further refactoring
- 
+### **Task 5 (13pts) - A new coefficient type**
+#### Creating `ZModP`
+
+# TODO
 Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial only once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
  
 -  [WITH ABSTRACTION] Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations. 
@@ -150,19 +174,6 @@ Once you complete this task, certain operations of `PolynomialSparseBI` like `p1
 -  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
  
 -  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
- 
-### Task 5 (?pts) - Improving Factorization mod p by optimising `PowMod`
- 
-At this point you should have efficient multiplication and power for `PolynomialSparseBI` as well as  `PolynomialModP` and its associated functions and methods.
- 
-#### Power
- 
-As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using repeated squaring.
- 
--  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialSparseBI` and `PolynomialModP`.
- 
--  Create tests for `pow_mod` and `^` for both implementations and ensure your implementation passes them.
- 
  
 ### Task 6 (22pts) - Improving multiplication using the Chinese Remainder Theorem
  
