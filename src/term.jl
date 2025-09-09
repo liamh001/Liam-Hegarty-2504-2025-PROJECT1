@@ -23,7 +23,8 @@ struct Term{C <: Integer, D <: Integer} #structs are immutable by default
 
     function Term{C, D}(coeff::C, degree::D) where {C, D}
         degree < 0 && error("Degree must be non-negative")
-        coeff != 0 ? new(coeff, degree) : new(zero(C), zero(D))
+        new(coeff, degree)
+        # coeff != 0 ? new(coeff, degree) : new(zero(C), zero(D))
     end
 end
 

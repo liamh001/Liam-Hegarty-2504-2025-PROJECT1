@@ -348,12 +348,26 @@ end
 """
 Power of a polynomial mod prime.
 """
-function pow_mod(p::Polynomial, n::Int, prime::Int)
+function pow_mod(p::P, n::Int, prime::Int) where {P <: Polynomial}
     n < 0 && error("No negative power")
+
+    iszero(p) && return P()
+    p == one(p) && return p
+    iszero(n) && return one(P)
+
     out = one(p)
-    for _ in 1:n
-        out *= p
-        out = mod(out, prime)
+    base = p
+    # for _ in 1:n
+    while n > 0
+        if isodd(n)
+            out *= base
+        end
+
+        n = n >> 1
+        base *= base
+
+        # out *= p
+        # out = mod(out, prime)
     end
     return out
 end

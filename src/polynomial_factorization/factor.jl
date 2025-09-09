@@ -22,21 +22,25 @@ function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
 
     # TODO: We should be able to remove factors of x before performing the factorisation
 
-    # make f primitive
-    ff = prim_part(f_modp)(prime)      
-    # @show "after prim:", ff
-
     # make f square-free
-    squares_poly = gcd(f, derivative(ff), prime) 
-    ff = (ff ÷ squares_poly)(prime) 
+    # squares_poly = gcd(f, derivative(f), prime) 
+    sqr_fr_poly = square_free(f)
+
+    # Drop to Zp
+    fp = mod(sqr_fr_poly, prime)
+    # @show "see square free part" fp 
+
+    # make f primitive
+    content = mod(gcd(map(t -> t.coeff, fp)), prime)
+    fp = mod(fp * int_inverse_mod(content, prime), prime)
     # @show "after square free:", ff
 
     # make f monic
-    old_coeff = leading(ff).coeff
-    ff = (ff ÷ old_coeff)(prime)        
+    old_coeff = leading(fp).coeff
+    fp = mod(fp * int_inverse_mod(old_coeff, prime), prime)
     # @show "after monic:", ff
 
-    dds = dd_factor(ff, prime)
+    dds = dd_factor(fp, prime)
 
     for (k,dd) in enumerate(dds)
         sp = dd_split(dd, k, prime)
@@ -104,7 +108,9 @@ function dd_split(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
     w = rand(P, degree = d, monic = true)
     w = mod(w,prime)
     n_power = (prime^d-1) ÷ 2
-    g = gcd(pow_mod(w,n_power,prime) - one(f), f, prime)
+    g = pseudo_gcd(pow_mod(w,n_power,prime) - one(f), f)
+    g = mod(g, prime)
+    # @show g
     ḡ = (f ÷ g)(prime) # g\bar + [TAB]
     return vcat(dd_split(g, d, prime), dd_split(ḡ, d, prime) )
 end

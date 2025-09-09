@@ -725,7 +725,7 @@ div.title {text-align: center;}
 <h2>Project tasks &#40;90pts&#41;</h2>
 <p>Build your project on top of the <a href="https://github.com/dietmaroelz/2504_2025_project1">https://github.com/dietmaroelz/2504_2025_project1</a> by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.</p>
 <p>Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.</p>
-<h3><strong>Task 1</strong> &#40;15 pts&#41; - Working in an existing codebase</h3>
+<h3><strong>Task 1 &#40;15 pts&#41; - Working in an existing codebase</strong></h3>
 <h3>Getting it to run, improving pretty printing, and creating your own example script.</h3>
 <h4>Study the Repo</h4>
 <p>Once you create your own repository, first read the file <code>README.md</code>. Then make sure the repository works by running <code>test/runtests.jl</code> and <code>example_script.jl</code>. At this point simply study the functionality of the repository by looking at the function signatures &#40;not implementations&#41; to understand what the repo can do.</p>
@@ -758,7 +758,7 @@ div.title {text-align: center;}
 <li><p>Do not print terms with zero coefficients, e.g. <code>x^2 &#43; 1</code> not <code>x^2 &#43; 0 x^1 &#43; 1</code>.</p>
 </li>
 </ol>
-<h3><strong>Task 2</strong> &#40;22 pts&#41; - Utilising Julia&#39;s type system</h3>
+<h3><strong>Task 2</strong> &#40;22 pts&#41; - Utilising Julia&#39;s type system**</h3>
 <h3>Parameterize the coefficient type to utilize <code>BigInt</code></h3>
 <h4>Showing overflow for <code>PolynomialDense</code></h4>
 <p>Exact computation requires polynomials with &#40;truly&#41; integer coefficients and thereby we must use <code>BigInt</code> rather than &#40;the finitely many integers comprising&#41; <code>Int</code>. </p>
@@ -795,13 +795,13 @@ div.title {text-align: center;}
 <li><p>Include the output of <code>example_script_task_2.jl</code> in your PDF submission.</p>
 </li>
 </ol>
-<h3><strong>Task 3</strong> &#40;13 pts&#41; - Refactoring the data structure used</h3>
+<h3><strong>Task 3 &#40;13 pts&#41; - Refactoring the data structure used</strong></h3>
 <p>The current implementation for <code>PolynomialDense</code> uses a vector to store the term of degree <span class="math">$k$</span> at position <span class="math">$k+1$</span>. This is optimal for dense polynomials &#40;those with mostly <em>nonzero</em> coefficients&#41; but our factoring algorithms rely heavily on manipulating <em>sparse polynomials</em> like <span class="math">$x^n -1$</span>. In this task we address this deficiency:</p>
 <h4>Constructors:</h4>
 <ol>
 <li><p>Navigate to the folder <code>src/polynomial_definitions</code> and duplicate the file <code>polynomial_dense.jl</code> as the file <code>polynomial_sparse.jl</code>.</p>
 </li>
-<li><p>Inside <code>polynomial_sparse.jl</code> rename all instances of <code>PolynomialDense</code> to <code>PolynomialSparse</code> and refactor &#40;ie. modify&#41; the inner constructor of <code>PolynomialSparse</code> so that non-zero terms are excluded from storage.  Utilize the <a href="https://en.wikipedia.org/wiki/Heap_&#40;data_structure&#41;">max heap</a> &#40;which you can find in <code>src/heap.jl</code>&#41; ordered by term degree to accomplish this.</p>
+<li><p>Inside <code>polynomial_sparse.jl</code> rename all instances of <code>PolynomialDense</code> to <code>PolynomialSparse</code> and refactor &#40;ie. modify&#41; the inner constructor of <code>PolynomialSparse</code> so that non-zero terms are excluded from storage.  Utilize the <a href="https://en.wikipedia.org/wiki/Heap_&#40;data_structure&#41;">max heap</a> &#40;which you can find in <code>src/utils/heap.jl</code>&#41; ordered by term degree to accomplish this.</p>
 </li>
 <li><p>Refactor the <em>constructors</em> and <em>functions</em> in <code>polynomial_sparse.jl</code> to account for the new underlying representation.  For example, <code>mod</code> can no longer utilise array indexing.</p>
 </li>
@@ -810,21 +810,37 @@ div.title {text-align: center;}
 <ol start="4">
 <li><p>Navigate to the folder <code>src/basic_polynomial_operations</code> and duplicate the folder <code>dense</code> as the folder <code>sparse</code>.</p>
 </li>
-<li><p>Refactor the <em>operations</em> in <code>src/basic_polynomial_operations/sparse</code> to account for the new underlying representation.  For example, <code>add</code> can no longer be done with simple vector addition.</p>
+<li><p>Refactor the <em>operations</em> in <code>src/basic_polynomial_operations/sparse</code> to account for the new underlying representation.  For example, <code>add</code> can no longer be done with simple vector addition. </p>
 </li>
 </ol>
+<p><em>Note: sparse term multiplication and addition can be optimised significantly. You should override both these functions for your <code>PolynomialSparse</code> implementation.</em></p>
 <h4>Checking it works</h4>
 <ol start="7">
 <li><p>Replicate the <code>example_script_task_2.jl</code> for <code>PolynomialSparse</code> in a file called <code>example_script_task_3.jl</code>.</p>
 </li>
-<li><p>Describe three pros and/or cons &#40;in a table&#41; between the dense and sparse representations.</p>
+<li><p>Describe three pros and/or cons &#40;in a table in your PDF&#41; between the dense and sparse representations.</p>
 </li>
-<li><p>Show &#40;using <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/"><code>BenchmarkTools</code></a>&#41; that there are examples where <code>PolynomialSparse</code> outperforms <code>PolynomialDense</code>.  <em>Do this only for cases where <code>PolynomialSparse</code> and <code>PolynomialDense</code> do not overflow.</em></p>
+<li><p>Show &#40;using <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/"><code>BenchmarkTools</code></a>&#41; that there are examples where <code>PolynomialSparse</code> outperforms <code>PolynomialDense</code> for both time and memory usage.  <em>Do this only for cases where <code>PolynomialSparse</code> and <code>PolynomialDense</code> do not overflow.</em></p>
 </li>
 <li><p>Include the output of <code>example_script_task_3.jl</code> in your PDF submission.</p>
 </li>
 </ol>
-<h3>Task 4 &#40;17pts&#41; - Creating a polynomial mod p datatype and further refactoring</h3>
+<h3><strong>Task 4 &#40;17pts&#41; - Optimising an algorithm</strong></h3>
+<h4>Fixing power</h4>
+<p>As discussed in class, if you have a polynomial <code>f</code> and raise it to the power <code>2^n</code> then instead of doing about <code>2^n</code> multiplications you can do about <code>n</code> using <strong>repeated squaring</strong>.</p>
+<ol>
+<li><p>Re-factor <code>pow_mod</code> and <code>^</code> into something more efficient by using repeated squaring.  Your implementation should work for both <code>PolynomialDense</code> and <code>PolynomialSparse</code> &#40;i.e., it should be implemented for <code>Polynomial&#123;C, D&#125;</code>&#41;.</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>Create a file <code>tests/power_test.jl</code>. Inside of this file create tests for <code>pow_mod</code> and <code>^</code>. Ensure your implementations pass these tests.</p>
+</li>
+<li><p>Have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
+</li>
+</ol>
+<h3><strong>Task 5 &#40;13pts&#41; - A new coefficient type</strong></h3>
+<h4>Creating <code>ZModP</code> TODO</h4>
+<h1>TODO</h1>
 <p>Notice the <code>PolynomialDense</code>, <code>PolynomialSparse</code>, and <code>PolynomialSparseBI</code> data-types have integer coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided.  It is for this reason that <code>divide</code>, <code>gcd</code>, and <code>factor</code> return a function that returns a polynomial only once a <span class="math">$p$</span> is provided.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.</p>
 <ul>
 <li><p>&#91;WITH ABSTRACTION&#93; Create a type <code>PolynomialModP</code> which has a polynomial &#40;of type <code>PolynomialSparse</code>&#41; and a prime number &#40;<code>Int</code>&#41; as field names.  <code>PolynomialModP</code> should support the same arithmetic operations as <code>PolynomialSparse</code> but with coefficient arithmetic over <span class="math">$\mathbb{Z}_p$</span> rather than <code>Int</code>. <code>PolynomialModP</code> should be easier to work with when carrying out division, gcd, and factorization. So for example <code>f1 ÷ f2</code> where <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code>, would directly yield a new <code>PolynomialModP</code> which is the result mod <span class="math">$p$</span>. Similarly for the other operations. </p>
@@ -844,19 +860,7 @@ div.title {text-align: center;}
 <li><p>Update the <code>show</code> method for <code>PolynomialModP</code> to include an indication it is &quot;mod p&quot;.</p>
 </li>
 </ul>
-<h3>Task 5 &#40;?pts&#41; - Improving Factorization mod p by optimising <code>PowMod</code></h3>
-<p>At this point you should have efficient multiplication and power for <code>PolynomialSparseBI</code> as well as  <code>PolynomialModP</code> and its associated functions and methods.</p>
-<h4>Power</h4>
-<p>As discussed in class, if you have a polynomial <code>f</code> and raise it to the power <code>2^n</code> then instead of doing about <code>2^n</code> multiplications you can do about <code>n</code> using repeated squaring.</p>
-<ul>
-<li><p>Re-factor <code>pow_mod</code> and <code>^</code> into something more efficient by using repeated squaring.  Your implementation should work for both <code>PolynomialSparseBI</code> and <code>PolynomialModP</code>.</p>
-</li>
-</ul>
-<ul>
-<li><p>Create tests for <code>pow_mod</code> and <code>^</code> for both implementations and ensure your implementation passes them.</p>
-</li>
-</ul>
-<h3>Task 6 &#40;22pts&#41; - Improving multiplication using the Chinese Remainder Theorem</h3>
+<h3>Task 6 &#40;22pts&#41; - Improving multiplication using the Chinese Remainder Theorem TODO</h3>
 <p>The current multiplication implementation is not efficient for <code>PolynomialSparseBI</code> because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
 <ul>
 <li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
@@ -874,7 +878,7 @@ div.title {text-align: center;}
 <li><p>Benchmark <code>PolynomialSparseBI</code> CRT multiplication and contrast your results against the old multiplication &#40;it is recommended to keep the old form of multiplication in another function or method&#41;.  Find examples that demonstrate the CRT based approach is faster.</p>
 </li>
 </ul>
-<h4>Factoring</h4>
+<h4>Factoring TODO</h4>
 <ul>
 <li><p>Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.</p>
 </li>
@@ -891,8 +895,12 @@ div.title {text-align: center;}
 <li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial.</p>
 </li>
 </ul>
-<h3>Bonus Task &#40;6 bonus points&#41;</h3>
+<h3><strong>Bonus Tasks</strong></h3>
+<p>***Note:*** no help will be given via the Ed discussion board or otherwise for bonus tasks. Bonus tasks may add to your marks, although you are still capped at 100&#37;. I.e., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
+<h4>Factorisation &#40;5 bonus points&#41; TODO</h4>
 <p>Use factorization of <code>PolynomialModP</code> and CRT to write a factorization algorithm for <code>PolynomialSparseBI</code>.</p>
+<h4>FFT Multiplication &#40;5 bonus points&#41; TODO</h4>
+<p>TODO - Write stuff here about FFT.</p>
 
 
         <HR/>

@@ -20,8 +20,8 @@ function +(p::PolynomialDense, t::Term)
             p.terms[t.degree + 1] = t
         end
     end
-
-    return trim!(p)
+    trim!(p)
+    return p
 end
 
 # We won't re-implement any of these functions for dense polynomials, the abstract versions will 

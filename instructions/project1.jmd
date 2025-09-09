@@ -126,7 +126,7 @@ The current implementation for `PolynomialDense` uses a vector to store the term
 #### Constructors:
 1.  Navigate to the folder `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
 
-2.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/heap.jl`) ordered by term degree to accomplish this.
+2.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
 
 3.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing.
 
@@ -158,7 +158,7 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 3. Have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions *Screenshot (or copy/paste) the output and add it to your PDF submission`*
  
 ### **Task 5 (13pts) - A new coefficient type**
-#### Creating `ZModP`
+#### Creating `ZModP` TODO
 
 # TODO
 Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial only once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
@@ -175,7 +175,7 @@ Once you complete this task, certain operations of `PolynomialSparseBI` like `p1
  
 -  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
  
-### Task 6 (22pts) - Improving multiplication using the Chinese Remainder Theorem
+### Task 6 (22pts) - Improving multiplication using the Chinese Remainder Theorem TODO
  
 The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
  
@@ -187,7 +187,7 @@ The current multiplication implementation is not efficient for `PolynomialSparse
  
 - Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
  
-#### Factoring
+#### Factoring TODO
  
 - Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.
  
@@ -197,6 +197,12 @@ The current multiplication implementation is not efficient for `PolynomialSparse
  
 -  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
  
-### Bonus Task (6 bonus points)
+### **Bonus Tasks**
+***Note:*** no help will be given via the Ed discussion board or otherwise for bonus tasks. Bonus tasks may add to your marks, although you are still capped at 100%. I.e., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 (*not 101/100*).
+
+#### Factorisation (5 bonus points) TODO
  
 Use factorization of `PolynomialModP` and CRT to write a factorization algorithm for `PolynomialSparseBI`.
+
+#### FFT Multiplication (5 bonus points) TODO
+TODO - Write stuff here about FFT.

@@ -25,7 +25,6 @@ struct PolynomialDense <: Polynomial
     #Terms are assumed to be in order with first term having degree 0, second degree 1, and so fourth
     #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
     #for the zero polynomial where the vector is of length 1.
-    #Note: at positions where the coefficient is 0, the power of the term is also 0 (this is how the Term type is designed)
     terms::Vector{Term{Int, Int}}   
     
     #Inner constructor of 0 polynomial
@@ -86,7 +85,7 @@ leading(p::PolynomialDense)::Term = isempty(p.terms) ? zero(Term) : last(p.terms
 ################################
 
 """
-Push a new leading term into the polynomial (note - a constant can be pushed onto the zero polynomial)..
+Push a new leading term into the polynomial (note - a constant can be pushed onto the zero polynomial).
 """
 function push!(p::PolynomialDense, t::Term)
     if t.degree < degree(p) || (t.degree == degree(p) && !iszero(p))
