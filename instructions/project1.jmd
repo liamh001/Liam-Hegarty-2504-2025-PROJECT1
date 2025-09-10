@@ -186,10 +186,40 @@ Notice all your implementations of polynomials so far integer data-types as thei
 
 #### Constructing $\mathbb{Z}_p$
 
-- Create a file `src/z_mod_p.jl`. Inside of this, create a struct with the following type signature:
+##### Constructors
+
+1. Create a file `src/z_mod_p.jl`. Inside of this, create a struct with the following type signature:
 ```
-struct ZModP{T, N}
+struct ZModP{T <: Integer, N} <: Integer
+    val::T
+
+    # val ∈ [0,...,N - 1]
+    # T is the type of val, N is the prime p in Zp
+end
 ```
+
+*Note that `N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime.*
+
+2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime via functions satisfying *all* of the following type signatures:
+
+    * ZModP{T, N}(a::Int) where {T <: Integer, N}
+    * ZModP(a::T, Val{N}) where {T <: Integer, N}
+    * zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    * one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    * zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    * one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} -> `T(1) mod p` TODO
+
+ construct `zero(T) mod p` by calling `zero(ZModP(T, p)` where `T` is either `Int` or `BigInt`. You must be able to construct `T(n) mod p` by calling `ZModP(T, n, p)`. In particular, your constructors must throw an error if you attempt to create an object of type `ZModP{T, N}` where `N` is *not* prime.
+
+ 3. Ensure any of the above constructors will fail if called in an attempt to create an object of type `ZModP{T, N}` where `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
+
+##### Field operations and miscellaneous functions
+
+3. Implement the following convenience and query operations:
+
+4. Implement the following basic arithmetic (field) operations:
+
+5. Implement the additional arithmetic operations
 
 - [WITH ABSTRACTION] Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations. 
  
