@@ -396,5 +396,22 @@ pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}}
 
 3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided (and why) if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$.
 
-### Secret Math Easter Egg - 
-The upshot of the bonus tasks, is that ... TALK ABOUT USING MULTIPLE ALGORITHMS TOGETHER TODO  Ben-Or/Tiwari algorithm or Zippel's algorithm  talk about as well for sparse polynomials.
+### Secret Math Easter Egg Extension Task
+*Note: this section is **NOT** worth any marks! It is only here for those students interested in synthesising the various parts of the assignment together and learning beyond the course material. No material in this section is assessed, feel free to ignore everything below here.*
+
+To perform fast polynomial multiplication on very large polynomials (both coefficient and degrees) while avoiding coefficient swell, you can use a modular approach combining FFT and the CRT. This method is particularly effective for dense polynomials (due to the implementation of FFT).
+
+#### The Modular Algorithm
+##### Reduce Modulo Primes
+Choose a set of small primes whose product is large enough to contain all the coefficients of the final product polynomial. Reduce the coefficients of your input polynomials modulo each of these primes.
+
+##### Multiply with FFT
+For each prime, perform the polynomial multiplication using the FFT. The FFT will be capable of doing this in almost O(n) for small primes.
+
+##### Combine with CRT
+Use CRT to combine the results from each modular multiplication. This reconstructs the final polynomial with its original large coefficients whilst avoiding coefficient swell.
+
+#### Sparse Polynomials?
+So far, this extension activity has only improved multiplication significantly for dense polynomials. Using it for sparse polynomials would involve converting to a dense representation to use FFT, and we can do much better than the standard FFT.
+ 
+For sparse polynomials, a more effective method is sparse interpolation, which uses random evaluations to reconstruct the product polynomial. Notable algorithms in this category include the Ben-Or/Tiwari algorithm and Zippel's algorithm.
