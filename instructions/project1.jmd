@@ -66,7 +66,7 @@ Follow the supplied type names below. These are given so that tasks have backwar
   
 Read all the tasks before starting - only some tasks are dependent on previous ones so they do *not* necessarily have to be done in order.
   
-### **Task 1 (15 pts) - Working in an existing codebase**
+### **Task 1 (15pts) - Working in an existing codebase**
 This task is for getting the repo to run, improving pretty printing, and creating your own example script.
  
 #### Study the Repo
@@ -98,7 +98,7 @@ Note: feel free to use [Unicode](https://en.wikipedia.org/wiki/Unicode) characte
 11. *Include the output of `example_script_task_1.jl` in your PDF submission via screenshot (or copy/paste).*
 
   
-### **Task 2 (20 pts) - Utilising Julia's type system**
+### **Task 2 (20pts) - Utilising Julia's type system**
  In this task we parameterise the coefficient type to utilize `BigInt`
    
 #### Showing overflow for `PolynomialDense` (*2 points*)
@@ -136,7 +136,7 @@ At this stage we should be able to instantiate a polynomial of type `PolynomialD
 
 9.  Refactor the test scripts in the directory `test` to accept your newly parameterised polynomials. Ensure your implementation for `PolynomialDense{Int, Int}` and `PolynomialDense{BigInt, Int}` passes your tests (you should refactor the `test/runtest.jl` file to allow different concrete polynomial types to be tested). *Include the output of the tests in your PDF submission.*
   
-### **Task 3 (15 pts) - Refactoring the data structure used**
+### **Task 3 (15pts) - Refactoring the data structure used**
 #### Sparse Polynomials 
   
 The current implementation for `PolynomialDense` uses a `Vector` to store the term of degree $k$ at position $k+1$. This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n - 1$. In this task we address this deficiency:
@@ -180,15 +180,30 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 
 4. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions. *Screenshot (or copy/paste) the output and add it to your PDF submission`*
   
-### **Task 5 (13pts) - $\mathbb{Z}_p$ and $\mathbb{Z}_p[x]$**
-  
-Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. It is for this reason that those functions are named `div_mod_p`, `gcd_mod_p`, and `factor_mod_p`.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated, as well as having simply `gcd`, `factor` etc. functions which work on the original type.
+### **Task 5 (13-Xpts) - Creating $\mathbb{Z}_p$**
 
-#### Constructing $\mathbb{Z}_p$
+Notice your polynomial implementation has assumed integer coefficients and (fatally) $\mattbb{Z}$ is *not* a [euclidean domain](https://en.wikipedia.org/wiki/Euclidean_domain). This means we do not yet have access to `gcd` on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a *[field](https://en.wikipedia.org/wiki/Field_(mathematics))* like $\mathbb{Z}_p$, for $p$ a prime, then the resulting $\mathbb{Z}_p[x]$ *is* a Euclidean domain. We therefore need to implement some way to work with $\mathbb{Z}_p[x]$.
+ 
+Notice your implementations of polynomials have so far assumed integer coefficients and thereby `divide`, `gcd`, `factor` and so on, *require* the coefficient arithmetic be done modulo $p$ because this makes the coefficient *[ring](https://en.wikipedia.org/wiki/Ring_(mathematics))* a *field*.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. 
+ 
+At the moment the code-base has implemented functions named `div_mod_p`, `gcd_mod_p`, and `factor_mod_p` that return a *function* which needs to be given a prime before returning an answer. 
+ 
+```
+# Example usage
+x = x_poly(PolynomialSparse{Int, Int})
+f = (x + 5)^3 * x^2 * (x + 1)^2
+g = (x - 1) * (x + 5) * (x + 1)^4
+@show gcd_mod_p(f, g, 7) # output:
+@show factor_mod_p(f, g, 7) # output: 
 
+TODO: MITTUN GIVE AN EXAMPLE OF ^ 
+```
+ 
+This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.  In this task we implement this improvement.
+ 
 ##### Constructors
 
-1. Create a file `src/z_mod_p.jl`. Inside of this, create a struct with the following type signature:
+1. Create `src/z_mod_p.jl` and inside of this file create a `struct` with the following type signature:
 ```
 struct ZModP{T <: Integer, N} <: Integer
     val::T
@@ -198,9 +213,11 @@ struct ZModP{T <: Integer, N} <: Integer
 end
 ```
 
-**Note:** *`N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime. A collection of primes has been provided to you in `src/utils/sample_primes.jl. Use subset of these to handle $\mathbb{Z}_p$.*
+*Note: that `N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime.*
 
-2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime via functions satisfying *all* of the following type signatures:
+*Note: A collection of primes has been provided to you in `src/utils/sample_primes.jl. Use subset of these to work with constants which are primes.*
+
+2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime. You must you write functions satisfying *all* of the following type signatures:
 
 ```
     function ZModP{T, N}(a::T) where {T <: Integer, N}
@@ -211,11 +228,11 @@ end
     function one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
 ```
 
- 3. Ensure any of the above constructors will fail if called in an attempt to create an object of type `ZModP{T, N}` where `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
+3. Ensure the constructors in Task 5.2 (above) fail when attempting to create an object of type `ZModP{T, N}` when `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
 
 ##### Field operations and miscellaneous functions
 
-3. Implement the following convenience and query operations:
+4. Implement the following convenience and query operations:
 
 ```
     function show(io::IO, a::ZModP{T, N}) where {T <: Integer, N}
@@ -224,7 +241,7 @@ end
     function ==(a::S, b::ZModP{T, N})::Bool where {T <: Integer, S <: Integer, N}
 ```
 
-4. Implement the following basic arithmetic (field) operations (when doing an operation between an integer and an object of type `ZModP`, convert the integer to an object of type `ZModP` and call the corresponding function):
+5. Implement the following basic arithmetic (field) operations:
 
 ```
     function +(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
@@ -243,48 +260,50 @@ end
     function ÷(a::S, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, S <: Integer, N}
 ```
 
-*Note:* All the above operations should act as they do in $\mathbb{Z}_p$. E.g., $3 * 2 = 6 = 1 (\text{mod} 5)$ should correspond to the code:
+*Hint: Recall division in a field is simply multiplication by the inverse. See `int_inverse_mod` in `src/utils/general_alg.jl`.*
+
+*Note: All the above operations should act as they do in $\mathbb{Z}_p$. E.g., $3 * 2 = 6 = 1 (\text{mod} 5)$ should correspond to the code:*
 ```
     a = ZModP(3, 5)
-    b = ZModP(3, 5)
-    @show a * b # should print 1
+    @show a * 2 # should print 1
 ```
 
-*Note:* Recall division in a field is simply *multiplication by the inverse*. In addition, see `int_inverse_mod` in `src/utils/general_alg.jl` to compute the inverse in $\mathhbb{Z}_p$.
-
-5. Implement the additional arithmetic operations
+6. Implement the additional arithmetic operations
 
 ```
     function ^(a::ZModP{T, N}, n::S) where {T <: Integer, S <: Integer, N}
     function abs(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} 
 ```
 
-6. Implement the following function to convert elements of `ZModP{T, N}` to `Int` or `BigInt`:
+7. Implement the following function to convert elements of `ZModP{T, N}` to `Int` or `BigInt`:
 
 ```
     function lift(a::ZModP{T, N})::S where {T <: Integer, N, S <: Integer}
 ```
 
-7. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
+8. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
+
+9. Utilising your constructors for `ZModP` and `lift` function, refactor the function `div_mod_p` for `Term` (i.e., in `src/term.jl`) to simply convert from the input type `Term{C, D}` to `Term{ZModP{C, N}, D}`, then call `div` and finally convert the result back to `Term{C, D}`.
 
 **Note:** you may make as many additional convenience/helper functions as you wish.
 
 #### Checking that it works 
 TODO
 
+### **Task 6 (X pts) - Creating $\mathbb{Z}_p[x]$**
 #### Constructing $\mathbb{Z}_p[x]$
 
 Now that we have `ZModP` as a subtype of `Integer`, we can use this as the coefficient type of our polynomials. E.g., `PolynomialSparse{ZModP{Int, 5}, Int}`. *Try experimenting in the REPL with this before attempting the rest of this section.*
  
-Using our baked-in version of $\mathbb{Z}_p$, we would ideally like to re-implement all our functions that were previously named with the suffix `_mod_p`.
+Additionally, since we have a baked-in version of $\mathbb{Z}_p$, it is better to re-implement all our functions that were previously named with the suffix `_mod_p`.
   
-In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl`. Your next task is to implement these:
- 
-1. Create a folder `src/basic_polynomial_operations/mod_p`. Duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
+We also have several functions that are not yet implemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl`. Your next task is to implement these:
 
-2. Each of the functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
+1. Create a folder `src/basic_polynomial_operations/mod_p` and duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
 
-3. The implementation of each function here is almost identical to the implementation of the corresponding function with the suffix `_mod_p`. Override each of the following functions for `C <: ZModP`:
+2. Each function in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` takes `::Type{C}` as its first argument. Modify the type signature to contain `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
+
+3. Reimplement each function in `polynomial_field_ops.jl` by refactoring the corresponding `_mod_p` version to use your new (better) $\mathbb{Z}_p[x]$ polynomials. *Note: these functions no longer require a prime to be given as input as this is now baked into the type.*
 ```
     function div_rem(::Type{C}, num::P, den::P)::Tuple{P, P} where {P <: Polynomial}
     function factor(::Type{C}, f::P)::Vector{Tuple{P,Int}} where {P <: Polynomial}
@@ -292,14 +311,11 @@ In addition, we have several functions that are unimplemented at the abstract le
     function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {P <: Polynomial}
 ```
 
-TODO - NOTES
-*Note: take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (note: the functions you write do **not** need to take in a prime, this is baked into the type): THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE*
-
-*Note: there are a lot of functions here - it is recommended you refactor a function and update all it's usages one at a time and check everything is working correctly before moving onto the next function.*
+*Note: it is recommended you refactor functions one at a time and test before moving on to the next one.*
 
 4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
 
-5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions you need to change are as follows:
+5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then convert back to the initial polynomial type. The functions are as follows:
 
 ```
     function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
@@ -310,60 +326,73 @@ TODO - NOTES
     function dd_factor_mod_p(f::P, prime::Int)::Array{P} where {P <: Polynomial}
     function dd_split_mod_p(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
 ```
+
+*Note: Any other functions with suffix `_mod_p` do not need to be refactored as they depend on the functions in Task 6.5.*
   
-TODO 
-1. MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK!
-2. GIVE THEM THE PRIMES
-4. ADD IN TERM DIVISION AS A REQUIREMENT TO OVERRIDE
+TODO (ASK PAUL) - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE?
  
 #### Checking that it works 
 TODO
  
-### Task 6 (20pts) - Improving multiplication using the Chinese Remainder Theorem TODO - ALSO SWAP BONUS TASK
+### Task 7 (20pts) - Factoring with Chinese Remainder Theorem 
+TODO - CAN WE MOVE ONE OR TWO POINTS TO THE PREVIOUS TWO TASKS? ASK ALISTAIR HIS THOUGHTS
+ 
+*Note:* This is a mastery level task that need only be attempted by those students targeting a seven.  Sufficient marks have been allocated by this point to earn a six.
+ 
+#### Factoring
+TODO - I don't know if much at all of the caveats are true. We also definitely need to demonstrate factoring some polynomials over BigInt as the final part. I don't know how feasible that is in the time constraints - but otherwise the task doesn't provide any new functionality (for int, just take a large enough prime and run factor on that - it will be ridiculously slow but correct).
+ 
+1. Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.
+ 
+2.  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of irreducible polynomials so your factorization is predictable (though some of the irreducible factors should be repeated).  
 
-SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN'T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION
+[TODO:  I'm not sure this is the case anymore.
+Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.]
  
-The current multiplication implementation is not efficient for any concrete subtype of `Polynomial{BigInt, Int}` or `Polynomial{BigInt, BigInt}` because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
+3.  Benchmark your factorization algorithm by factoring a database of problems (e.g. generated by you via `rand`).  Do not use more than 120 seconds of local compute time.
  
-- Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
- 
-- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
- 
-- Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
- 
-- Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
- 
-#### Factoring TODO
- 
-- Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.
- 
--  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.
- 
--  Benchmark your factorization algorithm by factoring a database of problems (e.g. generated by you via `rand`).  Do not use more than 120 seconds of local compute time.
- 
--  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
+4.  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial. (TODO what does this mean???)
  
 ### **Bonus Tasks (12 points)** 
 **Note:** *no help will be given via the Ed discussion board or otherwise for bonus tasks.* Bonus tasks may not increase your final mark beyond 100%. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 (*not 101/100*).
 
-#### 1. Factorisation (*4 **bonus** points*)
-Use factorization of polynomials over $Z_p$ (this was given to you) and CRT to write a factorization algorithm for polynomials over $Z$. See Unit 6 for details.
+#### 1. CRT Multiplication (*4 **bonus** points*)
+START MOVE
+The current multiplication implementation is not efficient for any concrete subtype of `Polynomial{BigInt, Int}` or `Polynomial{BigInt, BigInt}` because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
+ 
+1. Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
+ 
+2. Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
+ 
+3. Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
+ 
+4. Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
+END MOVE - TODO FIX THIS!
 
 #### 2. FFT/DFT Multiplication (*4 **bonus** points*)
-The naive multiplication algorithm that we have provided (and likely any optimised version you have written) is an $O(n^2)$. Modern computer systems use the [Discrete Fast Fourier Transform]() (DFFT) to multiply both polynomials and integers. This is one of the most important algorithms ever developed in both applied and pure mathematics.
-1. Refactor the existing multiplication of polynomials to use the DFFT. In particular, ensure your multiplication uses the 2 different implementations of DFFT to not repeat the bit permutation.  
-2. *In your PDF submission include an annotated copy of your code, and a description of the technical details of your implementation.*
+The naive multiplication algorithm that we have provided (and likely any optimised version you have written) is an $O(n^2)$ algorithm. Modern computer systems use the [Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) (FFT) to compute the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform). This is utilised to multiply both polynomials and (large) integers. This is one of the *most important algorithms ever developed* in both applied and pure mathematics.
+ 
+1. Refactor the existing multiplication of polynomials to use FFT. In particular, ensure your multiplication uses 2 different implementations of FFT to avoid the bit reversal permutation entirely.
+
+2. *In your PDF submission* include an annotated copy of your code, and a description of the technical details of your implementation.
+
+3. Create `example_script_bonus_task_2.jl`. Benchmark using `BenchmarkTools` the speed of your FFT polynomial multiplication algorithm against the naive ones provided.
   
-Note: no marks are awarded for 2 if your implementation does not work correctly.
+*Note: no marks are awarded for 2/3 if your implementation does not work correctly.*
+
+*Note: you do not need to learn/implement the truncated FFT (TFFT). FFT over $2^n$ terms is sufficient. For those curious, see [Paul's paper](TODO) for an explanation of (TFFT).*
 
 #### 3. Pseudo-Division in Rings that are *NOT* Euclidean Domains (*4 **bonus** points*)
-As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a [Euclidean domain](). Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
+As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a Euclidean domain. Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
 
 1. Write a function `pseudo_div_rem` which returns the *pseudo-quotient* and *pseudo-remainder* of `f` pseudo-divided by `g`. The type signature of the function should be: 
 ```
 pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}} 
 ```
 
-2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-div-rem property (this is similar to the definition of integer division) holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (*hint - create polynomials in product form*). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.
+2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-div-rem property (this is similar to the definition of integer division) holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (*hint - create polynomials in by taking products of irreducible polynomials*). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than *5 minutes* to run.
 
 3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided (and why) if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$.
+
+### Secret Math Easter Egg - 
+The upshot of the bonus tasks, is that ... TALK ABOUT USING MULTIPLE ALGORITHMS TOGETHER TODO  Ben-Or/Tiwari algorithm or Zippel's algorithm  talk about as well for sparse polynomials.

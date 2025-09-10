@@ -17,12 +17,12 @@ TODO (Task 2)
     I.e., we want the type signatures to contain:
         {C, D, P <: Polynomial{C, D}}
 
-TODO (Task 5)
+TODO (Task 6)
     In this task, override the unimplemented functions (after duplicating this 
     file as per the instructions) for C <: ZModP. When overriding, use the
     corresponding _mod_p function as a guide.
 
-TODO (Task 6)
+TODO (Task 7)
     Here, (in the duplicated file as per the instructions) override the factor
     function for C <: Integer and implement the Chinese Remainder Theorem (CRT).
 
@@ -38,7 +38,7 @@ of f and the multiplicity of g in f is n.
 The returned array may also contain a constant for reconstruction of the
 leading coefficient.
 
-NOTE: Override this in task 5 for Zp[x] and 6 for Z[x].
+NOTE: Override this in Task 6 for Zp[x] and in Task 7 for Z[x].
 """
 function factor(::Type{C}, f::P)::Vector{Tuple{P, Int}} where {C, P <: Polynomial}
     not_implemented_error(f, "factor")
@@ -48,7 +48,7 @@ end
 Returns the quotient and remainder of num divided by den (where num/den have the 
 same concrete type). 
 
-NOTE: Override this in task 5 for Zp[x].
+NOTE: Override this in Task 6 for Zp[x].
 """
 function div_rem(::Type{C}, num::P, den::P)::Tuple{P, P} where {C, P <: Polynomial}
     not_implemented_error(num, "div_rem")
@@ -61,7 +61,7 @@ Given a square free polynomial `f` returns a list, `g` such that `g[k]` is a pro
 of irreducible polynomials of degree `k` for `k` in 1,...,degree(f) ÷ 2, such that the 
 product of the list is equal to `f`.
 
-NOTE: Override this in task 5 for Zp[x].
+NOTE: Override this in Task 6 for Zp[x].
 """
 function dd_factor(::Type{C}, f::P)::Array{P} where {C, P <: Polynomial}
     not_implemented_error(f, "dd_factor")
@@ -73,7 +73,7 @@ Distinct degree split.
 Returns a list of irreducible polynomials of degree `d` so that the product of
 that list is the polynomial `f`.
 
-NOTE: Override this in task 5 for Zp[x].
+NOTE: Override this in Task 6 for Zp[x].
 """
 function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {C, P <: Polynomial}
     not_implemented_error(f, "dd_split")

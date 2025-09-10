@@ -732,7 +732,7 @@ div.title {text-align: center;}
 <p>Build your project on top of the <a href="https://github.com/dietmaroelz/2504_2025_project1">repo</a> by making modifications, additions, and improvements. Your first goal is to understand the base repository. After that, you will make improvements, additions, and cleanups.</p>
 <p>Follow the supplied type names below. These are given so that tasks have backwards compatibility. Note that in an actual project, you would sometimes replace older types with newer ones.</p>
 <p>Read all the tasks before starting - only some tasks are dependent on previous ones so they do <em>not</em> necessarily have to be done in order.</p>
-<h3><strong>Task 1 &#40;15 pts&#41; - Working in an existing codebase</strong></h3>
+<h3><strong>Task 1 &#40;15pts&#41; - Working in an existing codebase</strong></h3>
 <p>This task is for getting the repo to run, improving pretty printing, and creating your own example script.</p>
 <h4>Study the Repo</h4>
 <p>Once you create your own repository, first read the file <code>README.md</code>. Then make sure the repository works by running <code>test/runtests.jl</code> and <code>example_script.jl</code>. At this point simply study the functionality of the repository by looking at the function signatures &#40;not implementations&#41; to understand what the repo can do.</p>
@@ -772,7 +772,7 @@ div.title {text-align: center;}
 <li><p><em>Include the output of <code>example_script_task_1.jl</code> in your PDF submission via screenshot &#40;or copy/paste&#41;.</em></p>
 </li>
 </ol>
-<h3><strong>Task 2 &#40;20 pts&#41; - Utilising Julia&#39;s type system</strong></h3>
+<h3><strong>Task 2 &#40;20pts&#41; - Utilising Julia&#39;s type system</strong></h3>
 <p>In this task we parameterise the coefficient type to utilize <code>BigInt</code></p>
 <h4>Showing overflow for <code>PolynomialDense</code> &#40;<em>2 points</em>&#41;</h4>
 <p>Exact computation requires polynomials with &#40;truly&#41; integer coefficients and thereby we must use <code>BigInt</code> rather than &#40;the finitely many integers comprising&#41; <code>Int</code>. </p>
@@ -814,7 +814,7 @@ div.title {text-align: center;}
 <li><p>Refactor the test scripts in the directory <code>test</code> to accept your newly parameterised polynomials. Ensure your implementation for <code>PolynomialDense&#123;Int, Int&#125;</code> and <code>PolynomialDense&#123;BigInt, Int&#125;</code> passes your tests &#40;you should refactor the <code>test/runtest.jl</code> file to allow different concrete polynomial types to be tested&#41;. <em>Include the output of the tests in your PDF submission.</em></p>
 </li>
 </ol>
-<h3><strong>Task 3 &#40;15 pts&#41; - Refactoring the data structure used</strong></h3>
+<h3><strong>Task 3 &#40;15pts&#41; - Refactoring the data structure used</strong></h3>
 <h4>Sparse Polynomials</h4>
 <p>The current implementation for <code>PolynomialDense</code> uses a <code>Vector</code> to store the term of degree <span class="math">$k$</span> at position <span class="math">$k+1$</span>. This is optimal for dense polynomials &#40;those with mostly <em>nonzero</em> coefficients&#41; but our factoring algorithms rely heavily on manipulating <em>sparse polynomials</em> like <span class="math">$x^n - 1$</span>. In this task we address this deficiency:</p>
 <h4>Constructors &#40;<em>2 points</em>&#41;</h4>
@@ -860,12 +860,16 @@ div.title {text-align: center;}
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions. <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
 </li>
 </ol>
-<h3><strong>Task 5 &#40;13pts&#41; - <span class="math">$\mathbb{Z}_p$</span> and <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
-<p>Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. It is for this reason that those functions are named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code>.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated, as well as having simply <code>gcd</code>, <code>factor</code> etc. functions which work on the original type.</p>
-<h4>Constructing <span class="math">$\mathbb{Z}_p$</span></h4>
+<h3><strong>Task 5 &#40;13-Xpts&#41; - Creating <span class="math">$\mathbb{Z}_p$</span></strong></h3>
+<h1>TODO - ADD SOME LINKS FOR MATHEMATICAL TERMINOLOGY</h1>
+<p>Notice your polynomial implementation has assumed integer coefficients and &#40;fatally&#41; <span class="math">$\mattbb{Z}$</span> is <em>not</em> a <a href="https://en.wikipedia.org/wiki/Euclidean_domain">euclidean domain</a>. This means we do not yet have access to <code>gcd</code> on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a <em><a href="https://en.wikipedia.org/wiki/Field_&#40;mathematics&#41;">field</a></em> like <span class="math">$\mathbb{Z}_p$</span>, for <span class="math">$p$</span> a prime, then the resulting <span class="math">$\mathbb{Z}_p[x]$</span> <em>is</em> a Euclidean domain. We therefore need to implement some way to work with <span class="math">$\mathbb{Z}_p[x]$</span>.</p>
+<p>Notice your implementations of polynomials have so far assumed integer coefficients and thereby <code>divide</code>, <code>gcd</code>, <code>factor</code> and so on, <em>require</em> the coefficient arithmetic be done modulo <span class="math">$p$</span> because this makes the coefficient <em><a href="https://en.wikipedia.org/wiki/Ring_&#40;mathematics&#41;">ring</a></em> a <em>field</em>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. </p>
+<p>At the moment the code-base has implemented functions named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code> that return a <em>function</em> which needs to be given a prime before returning an answer. </p>
+<pre><code>TODO: MITTUN GIVE AN EXAMPLE OF ^ </code></pre>
+<p>This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.  In this task we implement this improvement.</p>
 <h5>Constructors</h5>
 <ol>
-<li><p>Create a file <code>src/z_mod_p.jl</code>. Inside of this, create a struct with the following type signature:</p>
+<li><p>Create <code>src/z_mod_p.jl</code> and inside of this file create a <code>struct</code> with the following type signature:</p>
 </li>
 </ol>
 <pre><code>struct ZModP&#123;T &lt;: Integer, N&#125; &lt;: Integer
@@ -874,9 +878,10 @@ div.title {text-align: center;}
     # val ∈ &#91;0,...,N - 1&#93;
     # T is the type of val, N is the prime p in Zp
 end</code></pre>
-<p><em>Note that <code>N</code> is a <a href="https://docs.julialang.org/en/v1/manual/types/#&#37;22Value-types&#37;22">value type</a> and thus it must be specified as a constant, it cannot be generated &#40;e.g. via rand&#41; at runtime.</em></p>
+<p><em>Note: that <code>N</code> is a <a href="https://docs.julialang.org/en/v1/manual/types/#&#37;22Value-types&#37;22">value type</a> and thus it must be specified as a constant, it cannot be generated &#40;e.g. via rand&#41; at runtime.</em></p>
+<p><em>Note: A collection of primes has been provided to you in &#96;src/utils/sample_primes.jl. Use subset of these to work with constants which are primes.</em></p>
 <ol start="2">
-<li><p>Create inner and outer constructors for this struct. You must be able to construct an object of type <code>ZModP&#123;T, N&#125;</code> where <code>T</code> is either <code>Int</code> or <code>BigInt</code> and <code>N</code> is some prime via functions satisfying <em>all</em> of the following type signatures:</p>
+<li><p>Create inner and outer constructors for this struct. You must be able to construct an object of type <code>ZModP&#123;T, N&#125;</code> where <code>T</code> is either <code>Int</code> or <code>BigInt</code> and <code>N</code> is some prime. You must you write functions satisfying <em>all</em> of the following type signatures:</p>
 </li>
 </ol>
 <pre><code>    function ZModP&#123;T, N&#125;&#40;a::T&#41; where &#123;T &lt;: Integer, N&#125;
@@ -884,14 +889,13 @@ end</code></pre>
     function zero&#40;::Type&#123;ZModP&#123;T, N&#125;&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
     function one&#40;::Type&#123;ZModP&#123;T, N&#125;&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
     function zero&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
-    function one&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; -&gt; &#96;T&#40;1&#41; mod p&#96; TODO &#40;ASK PAUL - MORE EXPLANATION HERE OR NOT&#41;</code></pre>
+    function one&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;</code></pre>
 <ol start="3">
-<li><p>Ensure any of the above constructors will fail if called in an attempt to create an object of type <code>ZModP&#123;T, N&#125;</code> where <code>N</code> is <em>not</em> a prime. <em>Use the Primes.jl package that is included in the repository.</em></p>
+<li><p>Ensure the constructors in Task 5.2 &#40;above&#41; fail when attempting to create an object of type <code>ZModP&#123;T, N&#125;</code> when <code>N</code> is <em>not</em> a prime. <em>Use the Primes.jl package that is included in the repository.</em></p>
 </li>
 </ol>
 <h5>Field operations and miscellaneous functions</h5>
-<p>TODO- &#40;Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS&#41;</p>
-<ol start="3">
+<ol start="4">
 <li><p>Implement the following convenience and query operations:</p>
 </li>
 </ol>
@@ -899,7 +903,7 @@ end</code></pre>
     function &#61;&#61;&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41;::Bool where &#123;T &lt;: Integer, N&#125;
     function &#61;&#61;&#40;a::ZModP&#123;T, N&#125;, b::S&#41;::Bool where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function &#61;&#61;&#40;a::S, b::ZModP&#123;T, N&#125;&#41;::Bool where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;</code></pre>
-<ol start="4">
+<ol start="5">
 <li><p>Implement the following basic arithmetic &#40;field&#41; operations:</p>
 </li>
 </ol>
@@ -913,82 +917,68 @@ end</code></pre>
     function *&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
     function *&#40;a::ZModP&#123;T, N&#125;, b::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function *&#40;a::S, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
-    function inv&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; TODO - GIVE HINT OF INT INVERSE MOD&#33;
+    function inv&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
     function ÷&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
     function ÷&#40;a::ZModP&#123;T, N&#125;, b::S&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function ÷&#40;a::S, b::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;</code></pre>
-<ol start="5">
+<p><em>Hint: Recall division in a field is simply multiplication by the inverse. See <code>int_inverse_mod</code> in <code>src/utils/general_alg.jl</code>.</em></p>
+<p><em>Note: All the above operations should act as they do in <span class="math">$\mathbb{Z}_p$</span>. E.g., <span class="math">$3 * 2 = 6 = 1 (\text{mod} 5)$</span> should correspond to the code:</em></p>
+<pre><code>    a &#61; ZModP&#40;3, 5&#41;
+    @show a * 2 # should print 1</code></pre>
+<ol start="6">
 <li><p>Implement the additional arithmetic operations</p>
 </li>
 </ol>
 <pre><code>    function ^&#40;a::ZModP&#123;T, N&#125;, n::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function abs&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; </code></pre>
-<ol start="6">
-<li><p>Implement functions to convert elements of <code>ZModP&#123;T, N&#125;</code> to <code>Int</code> or <code>BigInt</code>. TODO - EXPLAIN BETTER WITH TYPE SIGNATURE</p>
+<ol start="7">
+<li><p>Implement the following function to convert elements of <code>ZModP&#123;T, N&#125;</code> to <code>Int</code> or <code>BigInt</code>:</p>
 </li>
-<li><p>Override the functions in term TODO that are not implemented &#40;GIVE WHICH ONES&#41; and implement them for terms with coefficient type <code>ZModP</code>. These functions are the following:</p>
+</ol>
+<pre><code>    function lift&#40;a::ZModP&#123;T, N&#125;&#41;::S where &#123;T &lt;: Integer, N, S &lt;: Integer&#125;</code></pre>
+<ol start="8">
+<li><p>Override the function <code>div</code> for <code>Term</code> &#40;i.e., in <code>src/term.jl</code>&#41; to implement it for terms with coefficient type <code>ZModP</code>.</p>
 </li>
 </ol>
 <p><strong>Note:</strong> you may make as many additional convenience/helper functions as you wish.</p>
 <h4>Checking that it works</h4>
 <p>TODO</p>
+<h3><strong>Task 6 &#40;X pts&#41; - Creating <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
 <h4>Constructing <span class="math">$\mathbb{Z}_p[x]$</span></h4>
 <p>Now that we have <code>ZModP</code> as a subtype of <code>Integer</code>, we can use this as the coefficient type of our polynomials. E.g., <code>PolynomialSparse&#123;ZModP&#123;Int, 5&#125;, Int&#125;</code>. <em>Try experimenting in the REPL with this before attempting the rest of this section.</em></p>
-<p>Now that we have a baked-in version of <span class="math">$\mathbb{Z}_p$</span>, we would ideally like to re-implement all our functions that were previously named with the suffix <code>_mod_p</code>.</p>
-<p>In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code>. Your next task is to implement these:</p>
+<p>Additionally, since we have a baked-in version of <span class="math">$\mathbb{Z}_p$</span>, it is better to re-implement all our functions that were previously named with the suffix <code>_mod_p</code>.</p>
+<p>We also have several functions that are not yet implemented at the abstract level. These are stored in the file <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code>. Your next task is to implement these:</p>
 <ol>
-<li><p>Create a folder <code>src/basic_polynomial_operations/mod_p</code>. Next duplicate <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code> as <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code>.</p>
+<li><p>Create a folder <code>src/basic_polynomial_operations/mod_p</code> and duplicate <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code> as <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code>.</p>
+</li>
+<li><p>Each function in <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code> takes <code>::Type&#123;C&#125;</code> as its first argument. Modify the type signature to contain <code>&#123;T, N, C &lt;: ZMod&#123;T, N&#125;&#125;</code> &#40;i.e., so we can override it specifically for polynomials over <span class="math">$\mathbb{Z}_p$</span>&#41;.</p>
+</li>
+<li><p>Reimplement each function in <code>polynomial_field_ops.jl</code> by refactoring the corresponding <code>_mod_p</code> version to use your new &#40;better&#41; <span class="math">$\mathbb{Z}_p[x]$</span> polynomials. <em>Note: these functions no longer require a prime to be given as input as this is now baked into the type.</em></p>
 </li>
 </ol>
-<ol start="2">
-<li><p>Each of these functions in <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code> take in as the first argument <code>::Type&#123;C&#125;</code>. Modify the type signature such that it contains <code>&#123;T, N, C &lt;: ZMod&#123;T, N&#125;&#125;</code> &#40;i.e., so we can override it specifically for polynomials over <span class="math">$\mathbb{Z}_p$</span>&#41;.</p>
-</li>
-<li><p>The implementation of each function here is identical to the implementation of the corresponding function with the suffix <code>_mod_p</code>. For each of the following, take the corresponding <code>_mod_p</code> implementation and refactor it to work on polynomials over <span class="math">$\mathbb{Z}_p[x]$</span> &#40;<em>note: the functions you write do <strong>not</strong> need to take in a prime, this is baked into the type</em>&#41;: THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE</p>
-</li>
-</ol>
-<pre><code>TODO - ADD TYPE SIGNATURES
-    div&#40;&#41;
-    rem&#40;&#41;
-    extended_euclid_alg&#40;&#41;
-    gcd&#40;&#41;
-    div_rem&#40;&#41;
-    square_free&#40;&#41;
-    factor&#40;&#41;
-    multiplicity&#40;&#41;
-    dd_factor&#40;&#41;
-    dd_split&#40;&#41;</code></pre>
-<p><em>Note: there are a lot of functions here - it is recommended you refactor a function and update all it&#39;s usages one at a time and check everything is working correctly before moving onto the next function.</em></p>
+<pre><code>    function div_rem&#40;::Type&#123;C&#125;, num::P, den::P&#41;::Tuple&#123;P, P&#125; where &#123;P &lt;: Polynomial&#125;
+    function factor&#40;::Type&#123;C&#125;, f::P&#41;::Vector&#123;Tuple&#123;P,Int&#125;&#125; where &#123;P &lt;: Polynomial&#125;
+    function dd_factor&#40;::Type&#123;C&#125;, f::P&#41;::Array&#123;P&#125; where &#123;P &lt;: Polynomial&#125;
+    function dd_split&#40;::Type&#123;C&#125;, f::P, d::Int&#41;::Vector&#123;P&#125; where &#123;P &lt;: Polynomial&#125;</code></pre>
+<p><em>Note: it is recommended you refactor functions one at a time and test before moving on to the next one.</em></p>
 <ol start="4">
 <li><p>Write a function for converting between polynomials with terms of type <code>Term&#123;C, D&#125;</code> &#40;where <code>C</code> is <code>Int</code> or <code>BigInt</code>&#41; and polynomials with terms of type <code>Term&#123;ZModP&#123;C, N&#125;, D&#125;</code> for some given prime <code>N</code>.</p>
 </li>
-<li><p>Refactor the functions with suffix <code>_mod_p</code> to first convert to a polynomial over <span class="math">$\mathbb{Z}_p[x]$</span>, then call the corresponding <code>ZModP</code> function &#40;i.e., the function without suffix <code>_mod_p</code>&#41; and then converting back to the initial polynomial type. The functions are as follows:</p>
+<li><p>Refactor the functions with suffix <code>_mod_p</code> to first convert to a polynomial over <span class="math">$\mathbb{Z}_p[x]$</span>, then call the corresponding <code>ZModP</code> function &#40;i.e., the function without suffix <code>_mod_p</code>&#41; and then convert back to the initial polynomial type. The functions are as follows:</p>
 </li>
 </ol>
-<pre><code>TODO - ADD TYPE SIGNATURES
-    div_mod_p&#40;&#41;
-    rem_mod_p&#40;&#41;
-    extended_euclid_alg_mod_p&#40;&#41;
-    gcd_mod_p&#40;&#41;
-    div_rem_mod_p&#40;&#41;
-    square_free_mod_p&#40;&#41;
-    factor_mod_p&#40;&#41;
-    multiplicity_mod_p&#40;&#41;
-    dd_factor_mod_p&#40;&#41;
-    dd_split_mod_p&#40;&#41;</code></pre>
-<p>TODO </p>
-<ol>
-<li><p>MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK&#33; SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK&#33;</p>
-</li>
-<li><p>GIVE THEM THE PRIMES</p>
-</li>
-<li><p>ADD IN PRIM PART?</p>
-</li>
-<li><p>ADD IN TERM DIVISION AS A REQUIREMENT TO OVERRIDE</p>
-</li>
-</ol>
+<pre><code>    function div_rem_mod_p&#40;num::P, den::P, prime::Int&#41;::Tuple&#123;P, P&#125; where &#123;P &lt;: Polynomial&#125;
+    function extended_euclid_alg_mod_p&#40;a::P, b::P, prime::Int&#41; where &#123;P &lt;: Polynomial&#125;
+    function square_free_mod_p&#40;f::P, prime::Int&#41; where &#123;P &lt;: Polynomial&#125;
+    function factor_mod_p&#40;f::P, prime::Int&#41;::Vector&#123;Tuple&#123;P,Int&#125;&#125; where &#123;P &lt;: Polynomial&#125;
+    function multiplicity_mod_p&#40;f::P, g::P, prime::Int&#41;::Int where &#123;P &lt;: Polynomial&#125;
+    function dd_factor_mod_p&#40;f::P, prime::Int&#41;::Array&#123;P&#125; where &#123;P &lt;: Polynomial&#125;
+    function dd_split_mod_p&#40;f::P, d::Int, prime::Int&#41;::Vector&#123;P&#125; where &#123;P &lt;: Polynomial&#125;</code></pre>
+<p><em>Note: Any other functions with suffix <code>_mod_p</code> do not need to be refactored as they depend on the functions in Task 6.5.</em></p>
+<p>TODO &#40;ASK PAUL&#41; - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK&#33; SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE?</p>
 <h4>Checking that it works</h4>
 <p>TODO</p>
-<h3>Task 6 &#40;20pts&#41; - Improving multiplication using the Chinese Remainder Theorem TODO</h3>
+<h3>Task 7 &#40;20pts&#41; - Improving multiplication using the Chinese Remainder Theorem TODO - ALSO SWAP BONUS TASK</h3>
 <p>SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN&#39;T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION</p>
 <p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
 <ul>
@@ -1060,7 +1050,7 @@ end</code></pre>
           </center>
           <p>
             Published from <a href="project1.jmd">project1.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-09-10.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-09-11.
           </p>
         </div>
       </div>
