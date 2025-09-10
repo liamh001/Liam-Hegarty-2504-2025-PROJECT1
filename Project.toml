@@ -1,4 +1,5 @@
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Primes = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"

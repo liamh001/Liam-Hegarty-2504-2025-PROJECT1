@@ -6,7 +6,7 @@
 #############################################################################
 #############################################################################
 
-using Distributions, StatsBase, Random, Primes
+using Distributions, StatsBase, Random, Primes, StaticArrays
 
 import Base: %, gcd
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last, isempty
