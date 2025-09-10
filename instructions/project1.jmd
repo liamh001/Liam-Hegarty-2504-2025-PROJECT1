@@ -1,38 +1,44 @@
 # Project \#1 - Semester 2, 2025
 # Univariate Polynomials with Integer Coefficients
- 
-(last edit: September 9, 2025)
- 
-**Due:** Friday, 26, September, 2025 at 4pm. Late submissions are not accepted.
- 
-**Individual work:** This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years (in case students made them public). Do not copy code from those repos directly - but rather use such code bases for help as needed.
- 
-**Note:** The teaching staff will only answer questions (via ED, consultation hour, or practicals) regarding this assignment up to the evening of Thursday 25/9.
- 
-**Weights and marking criteria:** Total number of points: **100**. There are 10 points for setting up the GitHub repo properly and following instructions for hand-in (including voice recording). The remaining **90** points are for the project tasks.
- 
+  
+(last edit: September 10, 2025)
+   
+**Due:** *Friday, 26th September, 2025 at 4pm*. Late submissions are **not** accepted.
+  
+**Individual work:** This is an individual work assignment. Plagiarism will *not* be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years (in case students made them public). Do not copy code from those repos directly - but rather use such code bases for help as needed. *Only post your assignment code on Ed via a **private** post - the course staff will make your post anonymous and public if we believe it will benefit the entire cohort.*
+  
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the evening of Thursday 25/9.
+  
+**Weights and marking criteria:** Total number of points: *100*. There are *10* points for setting up the GitHub repo properly and following instructions for hand-in (including voice recording). The remaining *90* points are for the project tasks.
+  
 **Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard.
- 
+  
 Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT1`. So for example if your name is "Pierre-Simon Laplace", the repo name should be `Pierre-Simon-Laplace-2504-2025-PROJECT1`.
- 
-The PDF must have the following compents.
- 
-1.  Your name, student number, and assignment title (Project 1 - 2025) on the top.
+  
+The PDF must have the following components.
+  
+1.  Your name, student number, and assignment title (Project 1 - MATH2504 - 2025) on the top.
 2.  A (clickable) link to your GitHub repo.
 3.  A screenshot or copy/paste of output for each `example_script_task_i.jl`.
-4.  A screenshot or copy/paste the output of `test/runtests.jl`.
- 
+4.  A screenshot or copy/paste the output of `test/runtests.jl` for the relevant tasks.
+  
+**Note:** *organize your submission into clearly marked sections. Use headings in the format `Task i` or `Task i.j` for each part of the assignment.*
+  
 The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
- 
+  
 The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable.
- 
+  
 Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
- 
+  
+**Note:** *as you may have experienced in BigHW, long lines of code in Jupyter notebooks may be truncated by the width of the page when converted to a PDF. Please be aware of this and format your notebook (i.e., split code over multiple lines if needed) as appropriate.*
+  
 **Marking Criteria**:
  
-* 10 points are allocated for setting up the GitHub hand-in according to the instructions and following the submission instructions.
- 
-* 90 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.
+* *10 points* are allocated for setting up the GitHub hand-in according to the instructions and following the submission instructions.
+  
+* *90 points* are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.
+  
+* *X points* are available as part of *bonus tasks*. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.
  
 * In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent.
  
@@ -48,7 +54,7 @@ Marking responses will be made by the teaching staff by annotating **selected pa
  
 Your GitHub repo should be formatted like the original repo that you forked with additional files and modifications based on the tasks below.
  
-* Note: make sure that there aren't any excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use a `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+* Note: make sure that there aren't any excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
  
  
 ## Project tasks (90pts)
@@ -56,36 +62,38 @@ Your GitHub repo should be formatted like the original repo that you forked with
 Build your project on top of the [https://github.com/dietmaroelz/2504\_2025\_project1](https://github.com/dietmaroelz/2504_2025_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
  
 Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.
- 
+  
+It is recommended that you briefly read all the tasks before starting - only some tasks are dependent on previous ones so they do *not* necessarily have to be done in order (although this is recommended).
+  
 ### **Task 1 (15 pts) - Working in an existing codebase**
 ### Getting it to run, improving pretty printing, and creating your own example script.
- 
- 
+  
 #### Study the Repo
 Once you create your own repository, first read the file `README.md`. Then make sure the repository works by running `test/runtests.jl` and `example_script.jl`. At this point simply study the functionality of the repository by looking at the function signatures (not implementations) to understand what the repo can do.
- 
- 
+  
 #### Create Example Scripts
 Create your own example script called `example_script_task_1.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Your script should run and demonstrate (using `println` or `@show`) how the code in the repository works. Namely:
-
+  
 1.  construct *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
 2.  compute `f + g`, `f * h`, `g * h`, and `gcd(f*h, g*h)`,
 3.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
 4.  compute `(f * h) \div h` modulo 3, 7 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
     
-Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`. *Make sure to screenshot (or copy/paste) the output of `example_script_task_1.jl` at this stage to include in your submission.*
- 
+Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`.
+  
 #### Pretty Printing
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
-
+  
 5.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
 6.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
 7.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
 8.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
 9.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
 10.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
+  
+11. *Include the output of `example_script_task_1.jl` in your PDF submission via screenshot (or copy/paste).*
 
-
+  
 ### **Task 2 (22 pts) - Utilising Julia's type system**
 ### Parameterize the coefficient type to utilize `BigInt`
    
@@ -93,75 +101,74 @@ Improve the "pretty printing" of the polynomials by incorporating the following 
 Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`. 
   
 1. Create a new script called `example_script_task_2.jl`. Demonstrate using five hard-coded examples (i.e, explicitly write out the polynomials and do not use `rand` to generate them) of `PolynomialDense` addition that will overflow by making the coefficients (*not the degree*) excessively large.
-
+  
 #### Parameterising `Polynomial`
 Notice that the struct `Term` is already parameterised and can accept coefficients and degrees that are `BigInt`s. However, the `Polynomial` and `PolynomialDense` types default to using `Int` for both. Your task is to refactor (i.e., modify) these types to be parametric as follows:
- 
+  
 2.  Refactor `Polynomial` to accept two type parameters called `C` and `D` respectively. I.e., we should have `abstract type Polynomial{C, D} end`.
 
 3. Refactor all functions in the file `src/polynomial_definitions/polynomial.jl` to account for these new parameters.  *Note: you may create a number of type `T` by writing, for example, `T(5)`. The methods `zero(T)` and `one(T)` can create 0 and 1 of type `T`.*
 
-4. Refactor all functions in the folder `src/abstract` to account for these new parameters.
-
+4. Refactor all functions in the directory (a.k.a. folder) `src/abstract` to account for these new parameters.
+  
 #### Parameterising `PolynomialDense`
-5. At this stage the `PolynomialDense` implementation will no longer work. Refactor the type `PolynomialDense` to accept two type parameters `C`, `D` such that the struct definition starts with `struct PolynomialDense{C, D} <: Polynomial{C, D}`. `PolynomialDense` should then store it's terms in a vector of type `Vector{Term{C, D}}`.
+5. At this stage the `PolynomialDense` implementation will no longer work. Refactor the type `PolynomialDense` to accept two type parameters `{C, D}` such that the struct definition starts with `struct PolynomialDense{C, D} <: Polynomial{C, D}`. Then `PolynomialDense` should store it's terms in a vector of type `Vector{Term{C, D}}`.
 
 6. Refactor all methods in the file `src/polynomial_definitions/polynomial_dense.jl` to account for these new parameters.
 
-7. Refactor all functions in the folder `src/dense` to account for these new parameters.
-
+7. Refactor all functions in the directory `src/dense` to account for these new parameters.
+  
 At this stage we should be able to instantiate a polynomial of type `PolynomialDense{BigInt, Int}`. We need to verify it works correctly. *Note: do not try and instantiate a polynomial of type `PolynomialDense{BigInt, BigInt}` or `PolynomialDense{Int, BigInt}`. These may create absurdly large arrays.*
-
+  
 #### Checking it works
-8.  Refactor your script `example_script_task_2.jl` to demonstrate that your five original hard-coded examples fail (i.e., produce obviously incorrect output) for `PolynomialDense{Int, Int}` but are correct when run using `PolynomialDense{BigInt, Int}` (ie, do not overflow).
+8.  Refactor your script `example_script_task_2.jl` to demonstrate that your five original hard-coded examples fail (i.e., produce obviously incorrect output) for `PolynomialDense{Int, Int}` but are correct when run using `PolynomialDense{BigInt, Int}` (ie, do not overflow). *Include the output of `example_script_task_2.jl` in your PDF submission.*
 
-9.  Create 10 random tests for `PolynomialDense{BigInt, Int}` (at the end of your `example_script_task_2.jl`. Ensure your implementation for `PolynomialDense{BigInt, Int}` passes your tests. 
-
-10. Include the output of `example_script_task_2.jl` in your PDF submission.
+9.  Refactor the test scripts in the directory `test` to accept your newly parameterised polynomials. Ensure your implementation for `PolynomialDense{Int, Int}` and `PolynomialDense{BigInt, Int}` passes your tests (you can refactor the `test/runtest.jl` file to allow different concrete polynomial types to be tested). *Include the output of the tests in your PDF submission.*
   
 ### **Task 3 (13 pts) - Refactoring the data structure used**
- 
-The current implementation for `PolynomialDense` uses a vector to store the term of degree $k$ at position $k+1$. This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$. In this task we address this deficiency:
- 
-#### Constructors:
-1.  Navigate to the folder `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
-
-2.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
-
-3.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing.
-
-#### Operations
-4.  Navigate to the folder `src/basic_polynomial_operations` and duplicate the folder `dense` as the folder `sparse`.
-
-5.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `add` can no longer be done with simple vector addition. 
+#### Sparse Polynomials 
   
-*Note: sparse term multiplication and addition can be optimised significantly. You should override both these functions for your `PolynomialSparse` implementation.*
+The current implementation for `PolynomialDense` uses a `Vector` to store the term of degree $k$ at position $k+1$. This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n - 1$. In this task we address this deficiency:
+  
+#### Constructors:
+1.  Navigate to the directory `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
+
+2.  Inside `src/polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor the inner constructor of `PolynomialSparse` so that *non-zero terms* are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
+  
+3.  Refactor the *constructors* and *functions* in `src/polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing. *At this stage you may wish to consider whether you can override any of the functions in `src/polynomial.jl` to optimize them for both speed and memory for `PolynomialSparse`.*
+  
+#### Operations
+4.  Navigate to the directory `src/basic_polynomial_operations` and duplicate the directory `dense` as the directory `sparse`.
+
+5.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `+` can no longer be done with simple vector addition. 
+  
+*Note: sparse term multiplication and addition can be optimised significantly compared to the abstract implementations. You should override both these functions for your `PolynomialSparse` implementation. You cannot achieve full marks in this section without optimisation to **both** addition and term multiplication.*
  
 #### Checking it works
 7.  Replicate the `example_script_task_2.jl` for `PolynomialSparse` in a file called `example_script_task_3.jl`.
 
-8.  Describe three pros and/or cons (in a table in your PDF) between the dense and sparse representations.
+8.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) that there are examples where `PolynomialSparse` outperforms `PolynomialDense` for both time and memory usage. *Do this only for cases where `PolynomialSparse` and `PolynomialDense` do not overflow.*
 
-9.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) that there are examples where `PolynomialSparse` outperforms `PolynomialDense` for both time and memory usage.  *Do this only for cases where `PolynomialSparse` and `PolynomialDense` do not overflow.*
+9. Append the previous section to `example_script_task_3.jl` and *include the output of the script in your PDF submission.*
 
-10. Include the output of `example_script_task_3.jl` in your PDF submission.
+10.  Describe three pros and/or cons (*in a table within your PDF*) between the dense and sparse representations.
     
 ### **Task 4 (7pts) - Optimising an algorithm**
 #### Fixing power
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using **repeated squaring**.
-
+  
 1. Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should be implemented at the abstract level (i.e.,`Polynomial{C, D}`) and should therefore  work for both `PolynomialDense` and `PolynomialSparse`.
 
 2. Augment (i.e., modify) your algorithms (`pow_mod` and `^`) such that the operations `0^n`, `1^n` and `x^n` occur in constant time.
- 
+
 3. Create a file `tests/power_test.jl`. Inside of this file create tests for `pow_mod` and `^`. Ensure your implementations pass these tests.
 
-4. Have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions *Screenshot (or copy/paste) the output and add it to your PDF submission`*
- 
+4. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions. *Screenshot (or copy/paste) the output and add it to your PDF submission`*
+  
 ### **Task 5 (13pts) - A new coefficient type**
-#### Creating `ZModP` TODO
-
+#### Creating $\mathbb{Z}_p[x]$
+  
 # TODO
 Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial only once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
  
@@ -208,3 +215,6 @@ Use factorization of `PolynomialModP` and CRT to write a factorization algorithm
 
 #### FFT Multiplication (5 bonus points) TODO
 TODO - Write stuff here about FFT.
+
+#### Pseudo-Division in Rings that are *NOT* Euclidean Domains (2 bonus points) TODO
+TODO - Write stuff here about Pseudo division.
