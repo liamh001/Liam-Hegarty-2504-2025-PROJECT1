@@ -1,4 +1,15 @@
+#############################################################################
+#############################################################################
+#
+# This file contains defines unit tests for heap operations
+#                                                                               
+#############################################################################
+#############################################################################
 
+
+"""
+Tests heap interface.
+"""
 function test_heap(;N::Int = 10^4)
     # Test empty constructor
     h = Heap{Int}()
@@ -47,12 +58,29 @@ function test_heap(;N::Int = 10^4)
     @assert isempty(v)
     # println("test_heap - destructive safe vector constructor - PASSED")
 
-    # unsafe vector constructor
+    # Non-destructive heap mapping
     v = rand(1:N, N)
-    h = unsafe_vec_to_heap(v)
-    @assert peek(h) == v[1]
-    @assert length(h) == N
-    # println("test_heap - unsafe vector constructor - PASSED")
+    h1 = Heap(v)
+    h2 = map_heap(h1, t -> 2 * t)
+    @assert 2 * peek(h1) == peek(h2)
+    v1 = popall!(h1)
+    v2 = popall!(h2)
+    @assert [2*t for t in v1] == v2
+    @assert isempty(h1) && isempty(h2)
+    # println("test_heap - non-destructive map heap - PASSED")
+
+    # Destructive heap mapping
+    v = rand(1:N, N)
+    h = Heap(v)
+    h_cpy = deepcopy(h)
+    map_heap!(h, t -> 2 * t)
+    @assert length(h) == length(h_cpy) == N
+    @assert 2 * peek(h_cpy) == peek(h)
+    v1 = popall!(h)
+    v2 = popall!(h_cpy)
+    @assert [2*t for t in v2] == v1
+    @assert isempty(h1) && isempty(h2)
+    # println("test_heap - destructive map heap - PASSED")
 
     println("test_heap - PASSED")
 end

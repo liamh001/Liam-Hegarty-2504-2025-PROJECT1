@@ -82,7 +82,7 @@ function dd_factor(f::P, prime::Int)::Array{P} where {P <: Polynomial}
 
     #Looping over degrees
     for k in 1:degree(f)
-        w = rem(pow_mod(w,prime,prime), f)(prime)
+        w = rem_mod_p(pow_mod(w,prime,prime), f, prime)
         g[k] = gcd_mod_p(w - x, f, prime) 
         f = (f ÷ g[k])(prime)
     end

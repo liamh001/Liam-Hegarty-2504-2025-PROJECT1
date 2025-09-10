@@ -71,19 +71,29 @@ function Heap!(v::Vector{T}) where {T}
     return h
 end
 
-"""  
-Given a vector, turns it into a heap. This function is provided to you to enable fast order-preserving
-transformations on existing heaps. 
-
-Note: an example of an order preserving transformation is multiplication by a term. E.g.,
-[x^5, 3x^2, x] -> []
-
-WARNING:
-    This does NOT establish heap order. Thus, it is up to you to to ascertain this is established prior
-    to using the function. 
+# TODO - CHANGE THIS TO MAP_HEAP!
 """
-function unsafe_vec_to_heap(v::Vector{T}) where {T}
-    Heap{T}(v)
+Maps elements (non-destructively) of the heap via an order preserving function.
+The original heap is left unchanged.
+
+WARNING: 
+    This will break the heap if the `order_pres_func` is not order preserving.
+    An order preserving function `f` will maintain the order of any two inputs.
+    I.e., if `a > b` then `f(a) > f(b)`
+"""
+function map_heap(h::Heap{T}, order_pres_func::Function) where {T}
+    Heap{T}(order_pres_func.(h.data))
+end
+
+"""
+Maps elements (destructively) of the heap via an order preserving function.
+The original heap is modified in-place.
+
+WARNING: See warning above for map_heap
+"""
+function map_heap!(h::Heap{T}, order_pres_func::Function) where {T}
+    h.data .= order_pres_func.(h.data)
+    return h
 end
 
 ###########

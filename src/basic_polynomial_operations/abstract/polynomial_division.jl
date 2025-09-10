@@ -6,26 +6,26 @@
 #############################################################################
 #############################################################################
 
-# TODO - DOCSTRINGS HERE AND RENAME TO MOD_P
-"""  Modular algorithm (f, g have the same concrete subtype).
-f divide by g
+# # TODO - DOCSTRINGS HERE AND RENAME TO MOD_P
+# """  Modular algorithm (f, g have the same concrete subtype).
+# f divide by g
 
-f = q*g + r (mod p)
+# f = q*g + r (mod p)
 
-p is a prime
+# p is a prime
 
-This must be overridden by concrete subtypes.
-"""
-function divide(num::P, den::P) where {P <: Polynomial}
-    not_implemented_error(num, "divide")
-end
-
-"""
-The quotient from polynomial division. Returns a function of an integer.
-"""
-÷(num::P, den::P) where {P <: Polynomial}  = (p::Int) -> first(divide(num,den)(p))
+# This must be overridden by concrete subtypes.
+# """
+# function divide_mod_p(num::P, den::P) where {P <: Polynomial}
+#     not_implemented_error(num, "divide")
+# end
 
 """
-The remainder from polynomial division. Returns a function of an integer.
+The quotient from polynomial division modulo a prime. 
 """
-rem(num::P, den::P) where {P <: Polynomial} = (p::Int) -> last(divide(num,den)(p))
+÷(num::P, den::P) where {P <: Polynomial}  = (prime::Int) -> first(divide_mod_p(num, den, prime))
+
+"""
+The remainder from polynomial division modulo a prime.
+"""
+rem_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = last(divide_mod_p(num, den, prime))

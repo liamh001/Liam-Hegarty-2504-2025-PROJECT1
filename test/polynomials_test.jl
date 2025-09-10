@@ -65,7 +65,7 @@ function division_test_poly(::Type{P};
         p_prod = p1*p2
         q, r = PolynomialDense(), PolynomialDense()
         try
-            q, r = divide(p_prod, p2)(prime)
+            q, r = divide_mod_p(p_prod, p2, prime)
             if (q, r) == (nothing,nothing)
                 println("Unlucky prime: $p1 is reduced to $(p1 % prime) modulo $prime")
                 continue
