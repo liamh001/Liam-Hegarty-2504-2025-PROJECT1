@@ -17,7 +17,7 @@ Returns quotient and remainder (q, r)
 
 Precondition: 
     1) degree(num) == degree(mod(num, prime))
-    2) g != 0
+    2) mod(den, prime) != 0
 """
 function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
     f, g = mod(num,prime), mod(den,prime)
