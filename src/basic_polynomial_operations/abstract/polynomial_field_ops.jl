@@ -28,7 +28,6 @@ TODO (Task 6)
 
 =#
 
-# TODO - ADD DOCSTRINGS
 
 """
 Returns the factors of `f` in an array of tuples. 
@@ -39,7 +38,7 @@ of f and the multiplicity of g in f is n.
 The returned array may also contain a constant for reconstruction of the
 leading coefficient.
 
-NOTE: Override this in task 5 and 6.
+NOTE: Override this in task 5 for Zp[x] and 6 for Z[x].
 """
 function factor(::Type{C}, f::P)::Vector{Tuple{P, Int}} where {C, P <: Polynomial}
     not_implemented_error(f, "factor")
@@ -49,7 +48,7 @@ end
 Returns the quotient and remainder of num divided by den (where num/den have the 
 same concrete type). 
 
-NOTE: Override this in task 5.
+NOTE: Override this in task 5 for Zp[x].
 """
 function div_rem(::Type{C}, num::P, den::P)::Tuple{P, P} where {C, P <: Polynomial}
     not_implemented_error(num, "div_rem")
@@ -61,6 +60,8 @@ Distinct degree factorization.
 Given a square free polynomial `f` returns a list, `g` such that `g[k]` is a product 
 of irreducible polynomials of degree `k` for `k` in 1,...,degree(f) ÷ 2, such that the 
 product of the list is equal to `f`.
+
+NOTE: Override this in task 5 for Zp[x].
 """
 function dd_factor(::Type{C}, f::P)::Array{P} where {C, P <: Polynomial}
     not_implemented_error(f, "dd_factor")
@@ -71,11 +72,12 @@ Distinct degree split.
 
 Returns a list of irreducible polynomials of degree `d` so that the product of
 that list is the polynomial `f`.
+
+NOTE: Override this in task 5 for Zp[x].
 """
 function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {C, P <: Polynomial}
     not_implemented_error(f, "dd_split")
 end
-
 
 """ 
 Returns the quotient of num divided by den (where num/den have the 
@@ -103,11 +105,10 @@ gcd(::Type{C}, f::P, g::P) where {C, P <: Polynomial} = extended_euclid_alg(f, g
 
 """
 Perfect field, yun's algorithm, square free
+References...
 """
 function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
-    # TODO - See if I can implement this over any field using Yun's algorithm
-    # TODO - Yun's algorithm holds over any field apparently
-    # FIXME - TUTOR TO PROVIDE IMPLEMENTATION - MITTUN
+    # FIXME - Tutor to provide implementation and add docstring - MITTUN
     not_implemented_error(f, "square_free")
     # fmod_p = mod(f, prime)
 

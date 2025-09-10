@@ -19,7 +19,7 @@ function factor_mod_p_test_poly(::Type{P};
         for _ in 1:N
             print(".")
             p = rand(P; max_coeff = 3, mean_degree = 1.5, prob_term = 0.2)
-            # p = rand(P) FIXME/TODO - Known bug exists in factor, course staff working on fixing this
+            # p = rand(P) FIXME - Known bug exists in factor, course staff working on fixing this - Mittun
             # @show p
             factorization = factor_mod_p(p, prime)
             pr = mod(expand_factorization(factorization),prime)

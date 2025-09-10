@@ -164,7 +164,7 @@ Exact division when the coefficient type `C` is a field (e.g. Zp).
 You will need to override this in Task 5 for ZModP specifically.
 Do NOT modify this particular version of the function.
 """
-function div(t1::Term{C, D}, t2::Term{C, D}) where {C, D}
+function div(t1::Term{C, D}, t2::Term{C, D}) where {C, D} # Base.:÷
     not_yet_implemented_error(t1, "div")
 end
 
@@ -175,10 +175,10 @@ Returns a function of an integer.
 Note: You will need to override this for division where the coefficients are of type ZModP (Task 5)
 There we can do exact division, so we can simply do `t1.coeff ÷ t2.coeff`.
 """
-function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::C) where {C, D} #\div + [TAB] TODO - MOVE THIS
+function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::C) where {C, D}
     @assert t1.degree ≥ t2.degree
     new_coeff = mod((t1.coeff * int_inverse_mod(t2.coeff, prime)), prime)
-    return Term{C, D}(new_coeff, t1.degree - t2.degree) # TODO - REMOVE TYPES HERE
+    return Term(new_coeff, t1.degree - t2.degree)
 end
 
 """

@@ -71,7 +71,6 @@ function Heap!(v::Vector{T}) where {T}
     return h
 end
 
-# TODO - CHANGE THIS TO MAP_HEAP!
 """
 Maps elements (non-destructively) of the heap via an order preserving function.
 The original heap is left unchanged.
