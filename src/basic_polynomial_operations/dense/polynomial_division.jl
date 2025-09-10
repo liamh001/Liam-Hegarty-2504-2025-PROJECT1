@@ -13,15 +13,17 @@ f divide by g
 f = q*g + r
 
 p is a prime
+
+Returns quotient and remainder (q, r)
 """
-function divide_mod_p(num::PolynomialDense, den::PolynomialDense, prime::Int)
+function div_rem_mod_p(num::PolynomialDense, den::PolynomialDense, prime::Int)
     f, g = mod(num,prime), mod(den,prime)
     degree(f) < degree(num) && return nothing 
     iszero(g) && throw(DivideError())
     q = PolynomialDense()
     prev_degree = degree(f)
     while degree(f) ≥ degree(g) 
-        h = PolynomialDense( (leading(f) ÷ leading(g))(prime) )  #syzergy 
+        h = PolynomialDense( div_mod_p(leading(f), leading(g), prime) )  #syzergy 
         f = mod((f - h*g), prime)
         q = mod((q + h), prime)  
         prev_degree == degree(f) && break
@@ -35,5 +37,5 @@ end
 # We won't re-implement any of these functions for dense polynomials, the abstract versions will 
 # produce the correct result.
 
-# ÷(num::Polynomial, den::Polynomial)
+# div_mod_p(num::Polynomial, den::Polynomial, prime::Int)
 # rem_mod_p(num::Polynomial, den::Polynomial, prime::Int)

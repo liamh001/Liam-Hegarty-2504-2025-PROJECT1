@@ -277,7 +277,7 @@ E.g.,
 function prim_part(f::P) where {P <: Polynomial}
     iszero(f) && return f
     content = gcd(map(t -> t.coeff, f))
-    return P( map(t -> Term(t.coeff ÷ content, t.degree), f) )
+    return P( map(t -> Term(t.coeff ÷ content, t.degree), f) ) # Exact integer division
 end
 
 """
@@ -296,7 +296,7 @@ function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
 
     iszero(gcd_f_der_f) && return fmod_p * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
 
-    sqr_free = (fmod_p ÷ gcd_f_der_f)(prime)
+    sqr_free = div_mod_p(fmod_p, gcd_f_der_f, prime)
 
     # Add the factor of `x` back in if there was one
     if min_deg > zero(min_deg) 
@@ -355,11 +355,13 @@ Multiplication of polynomial and an integer.
 *(n::Int, p::Polynomial)::Polynomial = p*n
 
 """
-Integer division of a polynomial by an integer.
+Integer division of a polynomial by an integer modulo a prime.
 
 Warning this may not make sense if n does not divide all the coefficients of p.
 """
-÷(p::P, n::Int) where {P <: Polynomial} = (prime)->P(map((pt)->((pt ÷ n)(prime)), p.terms))
+function div_mod_p(p::P, n::Int, prime::Int) where {P <: Polynomial}
+    P( map((pt)->(div_mod_p(pt, n, prime)), p.terms) )
+end
 
 """
 Take the mod of a polynomial with an integer.

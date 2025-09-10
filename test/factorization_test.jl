@@ -19,12 +19,13 @@ function factor_test_poly(::Type{P};
         for _ in 1:N
             print(".")
             p = rand(P; max_coeff = 3, mean_degree = 1.5, prob_term = 0.2)
+            # p = rand(P)
             factorization = factor(p, prime)
             pr = mod(expand_factorization(factorization),prime)
             @assert mod(p-pr,prime) == 0 
         end
     end
 
-    println("\nfactor_test_poly for $(P) - PASSED")
+    println("\n\nfactor_test_poly for $(P) - PASSED")
 end
 

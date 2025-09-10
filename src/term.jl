@@ -158,16 +158,17 @@ Returns a function of an integer.
 Note: You will need to override this for division where the coefficients are of type ZModP (Task 5)
 There we can do exact division, so we can simply do `t1.coeff ÷ t2.coeff`.
 """
-function ÷(t1::Term{C, D}, t2::Term{C, D}) where {C, D} #\div + [TAB]
+function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::C) where {C, D} #\div + [TAB] TODO - MOVE THIS
     @assert t1.degree ≥ t2.degree
-    f(p::Int)::Term{C, D} = Term{C, D}(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
+    new_coeff = mod((t1.coeff * int_inverse_mod(t2.coeff, prime)), prime)
+    return Term{C, D}(new_coeff, t1.degree - t2.degree) # TODO - REMOVE TYPES HERE
 end
 
 """
 Integer divide a term by an integer.
 """
-function ÷(t::Term{C, D}, n::C) where {C <: Integer, D} 
-    t ÷ Term(C(n), zero(D))
+function div_mod_p(t::Term{C, D}, n::C, prime::C) where {C <: Integer, D} 
+    return div_mod_p(t, Term(C(n), zero(D)), prime)
 end
 
 #############################

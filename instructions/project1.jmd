@@ -182,7 +182,7 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
   
 ### **Task 5 (13pts) - $\mathbb{Z}_p$ and $\mathbb{Z}_p[x]$**
   
-Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. It is for this reason that those functions are named `divide_mod_p`, `gcd_mod_p`, and `factor_mod_p`.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated, as well as having simply `gcd`, `factor` etc. functions which work on the original type.
+Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. It is for this reason that those functions are named `div_mod_p`, `gcd_mod_p`, and `factor_mod_p`.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated, as well as having simply `gcd`, `factor` etc. functions which work on the original type.
 
 #### Constructing $\mathbb{Z}_p$
 
@@ -284,7 +284,11 @@ TODO - FIGURE THESE ONES OUT
 TODO - FIGURE THESE ONES OUT
 ```
   
-TODO - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK!
+TODO 
+1. MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK!
+2. GIVE THEM THE PRIMES
+3. ADD IN PRIM PART?
+4. ADD IN TERM DIVISION AS A REQUIREMENT TO OVERRIDE
 
 #### Checking that it works 
 TODO

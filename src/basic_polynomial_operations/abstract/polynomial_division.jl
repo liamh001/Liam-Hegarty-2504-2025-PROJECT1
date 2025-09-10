@@ -16,16 +16,16 @@
 
 # This must be overridden by concrete subtypes.
 # """
-# function divide_mod_p(num::P, den::P) where {P <: Polynomial}
+# function div_mod_p(num::P, den::P) where {P <: Polynomial}
 #     not_implemented_error(num, "divide")
 # end
 
 """
 The quotient from polynomial division modulo a prime. 
 """
-÷(num::P, den::P) where {P <: Polynomial}  = (prime::Int) -> first(divide_mod_p(num, den, prime))
+div_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = first(div_rem_mod_p(num, den, prime))
 
 """
 The remainder from polynomial division modulo a prime.
 """
-rem_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = last(divide_mod_p(num, den, prime))
+rem_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = last(div_rem_mod_p(num, den, prime))

@@ -22,7 +22,7 @@ function extended_euclid_alg_mod_p(a::P, b::P, prime::Int) where {P <: Polynomia
     old_t, t = zero(P), one(P)
 
     while !iszero(mod(r,prime))
-        q = first(divide_mod_p(old_r, r, prime))
+        q = div_mod_p(old_r, r, prime)
         old_r, r = r, mod(old_r - q*r, prime)
         old_s, s = s, mod(old_s - q*s, prime)
         old_t, t = t, mod(old_t - q*t, prime)
