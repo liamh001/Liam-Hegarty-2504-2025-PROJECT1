@@ -10,7 +10,7 @@ using Distributions, StatsBase, Random, Primes
 
 import Base: %, gcd
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last, isempty
-import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
+import Base: +, -, *, mod, %, ÷, ==, ^, rand, div, rem, zero, one
 
 include("src/term.jl")
 
@@ -25,6 +25,8 @@ include("src/polynomial_definitions/polynomial.jl")
     include("src/basic_polynomial_operations/abstract/polynomial_multiplication.jl")
     include("src/basic_polynomial_operations/abstract/polynomial_division.jl")
     include("src/basic_polynomial_operations/abstract/polynomial_gcd.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_pseudo_operations.jl")
+    include("src/basic_polynomial_operations/abstract/polynomial_field_ops.jl")
 
 # Dense
 include("src/polynomial_definitions/polynomial_dense.jl")

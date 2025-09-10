@@ -9,7 +9,7 @@
 #############################################################################
 
 # """
-# A square free (and primitive) polynomial over Z[x].
+# A square free (and primitive) polynomial over Z[x] via pseudo quotient and remainder..
 # This function utilises pseudo-division over the ring Z[x] and may be
 # subject to coefficient swell leading to extremely bad performance.
 
@@ -22,7 +22,7 @@
 
 # Do NOT use this for `Zp[x]`.
 # """
-# function square_free(f::P) where {P <: Polynomial}
+# function pseudo_square_free(f::P) where {P <: Polynomial}
 #     sq_fr_f = pseudo_quo(f, pseudo_gcd(f, derivative(f)))
 #     return prim_part(sq_fr_f)
 # end

@@ -6,9 +6,9 @@
 #############################################################################
 #############################################################################
 
-##############################
-# Term type and construction #
-##############################
+##################################
+# Term type and utility function #
+##################################
 
 """
 A term.
@@ -24,9 +24,16 @@ struct Term{C <: Integer, D <: Integer} #structs are immutable by default
     function Term{C, D}(coeff::C, degree::D) where {C, D}
         degree < 0 && error("Degree must be non-negative")
         new(coeff, degree)
-        # coeff != 0 ? new(coeff, degree) : new(zero(C), zero(D))
     end
 end
+
+function not_yet_implemented_error(t::Term, methodName::String)
+    error("The method '$(methodName)' is not yet implemented for a term of type $(typeof(t))")
+end
+
+######################
+# Outer Constructors #
+######################
 
 """ Convenience outer constructor to infer coefficient/degree types. """
 function Term(coeff::C, degree::D) where {C, D}
@@ -141,7 +148,7 @@ end
 Compute the symmetric mod of a term with an integer.
 """
 function mod(t::Term{C, D}, p::Int)::Term{C, D} where {C <: Integer, D}
-    Term(mod(t.coeff,p), t.degree)
+    Term(mod(t.coeff, p), t.degree)
 end
 
 """
@@ -149,6 +156,16 @@ Compute the derivative of a term.
 """
 function derivative(t::Term{C, D})::Term{C, D} where {C, D}  
     Term{C, D}(t.coeff*C(t.degree),max(t.degree-one(D),zero(D)))
+end
+
+"""
+Exact division when the coefficient type `C` is a field (e.g. Zp).
+
+You will need to override this in Task 5 for ZModP specifically.
+Do NOT modify this particular version of the function.
+"""
+function div(t1::Term{C, D}, t2::Term{C, D}) where {C, D}
+    not_yet_implemented_error(t1, "div")
 end
 
 """
@@ -172,7 +189,7 @@ function div_mod_p(t::Term{C, D}, n::C, prime::C) where {C <: Integer, D}
 end
 
 #############################
-# Vectorisation with a term #
+# Vectorization with a term #
 #############################
 
 """ Enable broadcasting an operation on a term """

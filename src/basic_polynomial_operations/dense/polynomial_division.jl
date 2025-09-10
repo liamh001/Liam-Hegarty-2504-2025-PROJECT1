@@ -16,7 +16,7 @@ p is a prime
 
 Returns quotient and remainder (q, r)
 """
-function div_rem_mod_p(num::PolynomialDense, den::PolynomialDense, prime::Int)
+function div_rem_mod_p(num::PolynomialDense, den::PolynomialDense, prime::Int)::Tuple{PolynomialDense, PolynomialDense}
     f, g = mod(num,prime), mod(den,prime)
     degree(f) < degree(num) && return nothing 
     iszero(g) && throw(DivideError())

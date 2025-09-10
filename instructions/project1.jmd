@@ -198,7 +198,7 @@ struct ZModP{T <: Integer, N} <: Integer
 end
 ```
 
-*Note that `N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime.*
+**Note:** *`N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime. A collection of primes has been provided to you in `src/utils/sample_primes.jl. Use subset of these to handle $\mathbb{Z}_p$.*
 
 2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime via functions satisfying *all* of the following type signatures:
 
@@ -208,14 +208,13 @@ end
     function zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
     function one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
     function zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
-    function one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} -> `T(1) mod p` TODO (ASK PAUL - MORE EXPLANATION HERE OR NOT)
+    function one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
 ```
 
  3. Ensure any of the above constructors will fail if called in an attempt to create an object of type `ZModP{T, N}` where `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
 
 ##### Field operations and miscellaneous functions
 
-TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
 3. Implement the following convenience and query operations:
 
 ```
@@ -225,7 +224,7 @@ TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
     function ==(a::S, b::ZModP{T, N})::Bool where {T <: Integer, S <: Integer, N}
 ```
 
-4. Implement the following basic arithmetic (field) operations:
+4. Implement the following basic arithmetic (field) operations (when doing an operation between an integer and an object of type `ZModP`, convert the integer to an object of type `ZModP` and call the corresponding function):
 
 ```
     function +(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
@@ -238,11 +237,20 @@ TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
     function *(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
     function *(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
     function *(a::S, b::ZModP{T, N}) where {T <: Integer, S <: Integer, N}
-    function inv(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} TODO - GIVE HINT OF INT INVERSE MOD!
+    function inv(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
     function ÷(a::ZModP{T, N}, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
     function ÷(a::ZModP{T, N}, b::S)::ZModP{T, N} where {T <: Integer, S <: Integer, N}
     function ÷(a::S, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, S <: Integer, N}
 ```
+
+*Note:* All the above operations should act as they do in $\mathbb{Z}_p$. E.g., $3 * 2 = 6 = 1 (\text{mod} 5)$ should correspond to the code:
+```
+    a = ZModP(3, 5)
+    b = ZModP(3, 5)
+    @show a * b # should print 1
+```
+
+*Note:* Recall division in a field is simply *multiplication by the inverse*. In addition, see `int_inverse_mod` in `src/utils/general_alg.jl` to compute the inverse in $\mathhbb{Z}_p$.
 
 5. Implement the additional arithmetic operations
 
@@ -251,9 +259,13 @@ TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
     function abs(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} 
 ```
 
-6. Implement functions to convert elements of `ZModP{T, N}` to `Int` or `BigInt`. TODO - EXPLAIN BETTER WITH TYPE SIGNATURE
+6. Implement the following function to convert elements of `ZModP{T, N}` to `Int` or `BigInt`:
 
-7. Override the functions in term TODO that are not implemented (GIVE WHICH ONES) and implement them for terms with coefficient type `ZModP`. These functions are the following:
+```
+    function lift(a::ZModP{T, N})::S where {T <: Integer, N, S <: Integer}
+```
+
+7. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
 
 **Note:** you may make as many additional convenience/helper functions as you wish.
 
@@ -263,32 +275,31 @@ TODO
 #### Constructing $\mathbb{Z}_p[x]$
 
 Now that we have `ZModP` as a subtype of `Integer`, we can use this as the coefficient type of our polynomials. E.g., `PolynomialSparse{ZModP{Int, 5}, Int}`. *Try experimenting in the REPL with this before attempting the rest of this section.*
-
-Now that we have a baked-in version of $\mathbb{Z}_p$, we would ideally like to re-implement all our functions that were previously named with the suffix `_mod_p`.
+ 
+Using our baked-in version of $\mathbb{Z}_p$, we would ideally like to re-implement all our functions that were previously named with the suffix `_mod_p`.
   
 In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl`. Your next task is to implement these:
+ 
+1. Create a folder `src/basic_polynomial_operations/mod_p`. Duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
 
-1. Create a folder `src/basic_polynomial_operations/mod_p`. Next duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
-  
-2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take in as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
+2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
 
-3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. For each of the following, take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (*note: the functions you write do **not** need to take in a prime, this is baked into the type*): THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE
-
+3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. Override each of the following functions:
 ```
 TODO - ADD TYPE SIGNATURES
-    div()
-    rem()
-    extended_euclid_alg()
-    gcd()
-    div_rem()
+    function div_rem(num::P, den::P)::Tuple{P, P} where {P <: Polynomial}
     square_free()
     factor()
     multiplicity()
     dd_factor()
     dd_split()
 ```
-*Note: there are a lot of functions here - it is recommended you refactor a function and update all it's usages one at a time and check everything is working correctly before moving onto the next function.*
 
+TODO - NOTES
+*Note: take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (note: the functions you write do **not** need to take in a prime, this is baked into the type): THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE*
+
+*Note: there are a lot of functions here - it is recommended you refactor a function and update all it's usages one at a time and check everything is working correctly before moving onto the next function.*
+ 
 4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
 
 5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions are as follows:
@@ -310,13 +321,12 @@ TODO - ADD TYPE SIGNATURES
 TODO 
 1. MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK!
 2. GIVE THEM THE PRIMES
-3. ADD IN PRIM PART?
 4. ADD IN TERM DIVISION AS A REQUIREMENT TO OVERRIDE
-
+ 
 #### Checking that it works 
 TODO
  
-### Task 6 (20pts) - Improving multiplication using the Chinese Remainder Theorem TODO
+### Task 6 (20pts) - Improving multiplication using the Chinese Remainder Theorem TODO - ALSO SWAP BONUS TASK
 
 SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN'T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION
  

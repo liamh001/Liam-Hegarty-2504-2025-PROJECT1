@@ -12,9 +12,6 @@ The extended euclid algorithm for polynomials (of the same concrete subtype) mod
 Note, when working with polynomials over Z[x] we cannot compute the extended euclidean algorithm (EEA) directly.
 This is because we do not have division in Z[x]. Hence, we must drop to the field Zp[x] and compute the EEA
 with respect to some prime. 
-
-When you implement polynomials over Zp you can create your own version of this function that does not require 
-a prime as input.
 """
 function extended_euclid_alg_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial}
     old_r, r = mod(a, prime), mod(b, prime)
@@ -35,8 +32,5 @@ end
 
 """
 The GCD of two polynomials (of the same concrete subtype) modulo prime.
-
-Again, when you implement polynomials over Zp you can create your own version of this function that does not
-require a prime as input.
 """
 gcd_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg_mod_p(a,b,prime) |> first
