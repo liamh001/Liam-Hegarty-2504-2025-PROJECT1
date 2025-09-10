@@ -282,40 +282,33 @@ In addition, we have several functions that are unimplemented at the abstract le
  
 1. Create a folder `src/basic_polynomial_operations/mod_p`. Duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
 
-2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
+2. Each of the functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
 
-3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. Override each of the following functions:
+3. The implementation of each function here is almost identical to the implementation of the corresponding function with the suffix `_mod_p`. Override each of the following functions for `C <: ZModP`:
 ```
-TODO - ADD TYPE SIGNATURES
-    function div_rem(num::P, den::P)::Tuple{P, P} where {P <: Polynomial}
-    square_free()
-    factor()
-    multiplicity()
-    dd_factor()
-    dd_split()
+    function div_rem(::Type{C}, num::P, den::P)::Tuple{P, P} where {P <: Polynomial}
+    function factor(::Type{C}, f::P)::Vector{Tuple{P,Int}} where {P <: Polynomial}
+    function dd_factor(::Type{C}, f::P)::Array{P} where {P <: Polynomial}
+    function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {P <: Polynomial}
 ```
 
 TODO - NOTES
 *Note: take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (note: the functions you write do **not** need to take in a prime, this is baked into the type): THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE*
 
 *Note: there are a lot of functions here - it is recommended you refactor a function and update all it's usages one at a time and check everything is working correctly before moving onto the next function.*
- 
+
 4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
 
-5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions are as follows:
+5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions you need to change are as follows:
 
 ```
-TODO - ADD TYPE SIGNATURES
-    div_mod_p()
-    rem_mod_p()
-    extended_euclid_alg_mod_p()
-    gcd_mod_p()
-    div_rem_mod_p()
-    square_free_mod_p()
-    factor_mod_p()
-    multiplicity_mod_p()
-    dd_factor_mod_p()
-    dd_split_mod_p()
+    function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
+    function extended_euclid_alg_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial}
+    function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
+    function factor_mod_p(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
+    function multiplicity_mod_p(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
+    function dd_factor_mod_p(f::P, prime::Int)::Array{P} where {P <: Polynomial}
+    function dd_split_mod_p(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
 ```
   
 TODO 

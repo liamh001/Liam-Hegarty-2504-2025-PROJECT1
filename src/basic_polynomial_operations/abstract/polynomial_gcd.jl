@@ -33,4 +33,4 @@ end
 """
 The GCD of two polynomials (of the same concrete subtype) modulo prime.
 """
-gcd_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg_mod_p(a,b,prime) |> first
+gcd_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial} = extended_euclid_alg_mod_p(a, b, prime) |> first

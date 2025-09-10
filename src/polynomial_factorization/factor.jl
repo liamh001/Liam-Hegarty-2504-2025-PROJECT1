@@ -6,7 +6,6 @@
 #############################################################################
 #############################################################################
 
-# TODO - RENAME THESE MOD P
 """
 Factors a polynomial over the field Z_p.
 
@@ -14,7 +13,7 @@ Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) su
 Irreducibles are fixed points on the function `factor`.
 """
 function factor_mod_p(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
-    #Cantor Zassenhaus factorization
+    # Cantor Zassenhaus factorization
 
     f_modp = mod(f, prime)
     degree(f_modp) ≤ 1 && return [(f_modp,1)]
@@ -63,7 +62,7 @@ function expand_factorization(factorization::Vector{Tuple{P, Int}})::P where {P 
 end
 
 """
-Compute the number of times g divides f
+Compute the number of times g divides f modulo a prime.
 """
 function multiplicity_mod_p(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
     degree(gcd_mod_p(f, g, prime)) == 0 && return 0
