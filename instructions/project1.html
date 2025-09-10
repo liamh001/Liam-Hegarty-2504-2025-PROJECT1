@@ -669,7 +669,7 @@ div.title {text-align: center;}
 
         <h1>Project #1 - Semester 2, 2025</h1>
 <h1>Univariate Polynomials with Integer Coefficients</h1>
-<p>&#40;last edit: September 10, 2025&#41;</p>
+<p>&#40;last edit: September 11, 2025&#41;</p>
 <p><strong>Due Date &amp; Late Submission Policy:</strong> See <a href="https://course-profiles.uq.edu.au/course-profiles/MATH2504-62116-7560#assessment">ECP</a></p>
 <p><strong>Individual work:</strong> This is an individual work assignment. Plagiarism will <em>not</em> be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years &#40;in case students made them public&#41;. Do not copy code from those repos directly - but rather use such code bases for help as needed.</p>
 <p><strong>Note:</strong> The teaching staff will only answer questions &#40;via Ed, consultation hour, or practicals&#41; regarding this assignment up 24 hours before the due date.</p>
@@ -988,14 +988,33 @@ end</code></pre>
     function dd_factor_mod_p&#40;f::P, prime::Int&#41;::Array&#123;P&#125; where &#123;P &lt;: Polynomial&#125;
     function dd_split_mod_p&#40;f::P, d::Int, prime::Int&#41;::Vector&#123;P&#125; where &#123;P &lt;: Polynomial&#125;</code></pre>
 <p><em>Note: Any other functions with suffix <code>_mod_p</code> do not need to be refactored as they depend on the functions in Task 6.5.</em></p>
-<p>TODO &#40;ASK PAUL&#41; - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK&#33; SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE?</p>
 <h4>Checking that it works</h4>
 <p>TODO</p>
 <h3>Task 7 &#40;20pts&#41; - Factoring with Chinese Remainder Theorem</h3>
 <p>TODO - CAN WE MOVE ONE OR TWO POINTS TO THE PREVIOUS TWO TASKS? ASK ALISTAIR HIS THOUGHTS</p>
 <p><em>Note:</em> This is a mastery level task that need only be attempted by those students targeting a seven.  Sufficient marks have been allocated by this point to earn a six.</p>
-<h4>Factoring</h4>
+<ol>
+<li><p>Create <code>example_script_task_7.jl</code>. All <em>examples</em> you provide in the remainder of task 7 must be included in this script, and the output of the script at the end of task 7 &#40;or however much you are able to accomplish&#41; should be <em>included in your PDF submission</em>.</p>
+</li>
+<li><p>Create <code>src/crt.jl</code>. All functions you implement in task 7 should be written in this file unless explicitly stated otherwise.</p>
+</li>
+</ol>
+<h4>Integer CRT</h4>
+<ol start="2">
+<li><p>Implement a function with the following type signature which applies the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; over a list of remainders <span class="math">$r1,\ldots,rk$</span> and &#40;coprime&#41; moduli <span class="math">$m1,\ldots,mk$</span>:</p>
+</li>
+</ol>
+<pre><code>function int_crt&#40;rems::Vector&#123;T&#125;, moduli::Vector&#123;T&#125;&#41;::S where &#123;T &lt;: Union&#123;Int, BigInt&#125;, S &lt;: Union&#123;Int, BigInt&#125;&#125;
+# The output has a different type as you may wish to output a &#96;BigInt&#96; even if &#96;Int&#96;&#39;s are inputted to avoid overflow.</code></pre>
+<h6>TODO: checking it works &amp; make sure to do it for big ints</h6>
+<h6>TODO: write a short summary/description of the CRT theorem for integers</h6>
+<h4>Factorisation with CRT</h4>
 <p>TODO - I don&#39;t know if much at all of the caveats are true. We also definitely need to demonstrate factoring some polynomials over BigInt as the final part. I don&#39;t know how feasible that is in the time constraints - but otherwise the task doesn&#39;t provide any new functionality &#40;for int, just take a large enough prime and run factor on that - it will be ridiculously slow but correct&#41;.</p>
+<h6>TODO: implement CRT for polynomial factorisation using lecture pseudocode</h6>
+<h6>TODO: test that it works</h6>
+<h6>TODO: write a short summary/description of the CRT theorem for polynomials</h6>
+<h6>TODO: write a short summary/description of Hensel&#39;s Lemma/Hensel Lifting</h6>
+<p>&#91;BEGIN TODO</p>
 <ol>
 <li><p>Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.</p>
 </li>
@@ -1004,7 +1023,7 @@ end</code></pre>
 <li><p>Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of irreducible polynomials so your factorization is predictable &#40;though some of the irreducible factors should be repeated&#41;.  </p>
 </li>
 </ol>
-<p>&#91;TODO:  I&#39;m not sure this is the case anymore. Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.&#93;</p>
+<p>ADD IN A NOTE TO CHECK THE PRECONDITION ON THE Zp DIV<em>REM</em>MOD_P SIDE</p>
 <ol start="3">
 <li><p>Benchmark your factorization algorithm by factoring a database of problems &#40;e.g. generated by you via <code>rand</code>&#41;.  Do not use more than 120 seconds of local compute time.</p>
 </li>
@@ -1013,27 +1032,28 @@ end</code></pre>
 <li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial. &#40;TODO what does this mean???&#41;</p>
 </li>
 </ol>
+<p>END TODO&#93;</p>
 <h3><strong>Bonus Tasks &#40;12 points&#41;</strong></h3>
 <p><strong>Note:</strong> <em>no help will be given via the Ed discussion board or otherwise for bonus tasks.</em> Bonus tasks may not increase your final mark beyond 100&#37;. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
+<p>Each bonus task can be completed independent of the others, the order presented here is arbitrary.</p>
 <h4>1. CRT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
-<p>START MOVE The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
+<p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>Polynomial&#123;BigInt, T&#125;</code> via cheaper products of <code>Polynomial&#123;BigInt, T&#125;</code>. <em>Note: <code>BigInt</code> arithmetic is highly optimised in Julia &#40;built on <a href="TODO">GMP</a>&#41;. It is unlikely you will be able to show CRT is faster until bonus task 2 is implemented and you use large <code>BigInt</code>&#39;s &#40;i.e., spanning numerous words&#41; and contrived examples of polynomials for your benchmarks.</em></p>
 <ol>
-<li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
+<li><p>Create <code>example_script_bonus_task_1.jl</code>. All test cases and benchmarking in the remainder of this section must be included in this script. <em>Include the output of this script in your PDF submission.</em></p>
 </li>
 </ol>
+<ol>
+<li><p>Implement a function to multiply two polynomials using CRT &#40;<em>you should reuse parts of your code from Task 7</em>&#41;. The product of 2 polynomials must be computed by doing sufficiently many multiplications of each polynomial reduced to <span class="math">$\mathbb{Z}_p[x]$</span>. <em>Note: you can reuse the primes as global constants from <code>src/utils/sample_primes.jl</code>.</em> </p>
+</li>
+</ol>
+<pre><code>function crt_multiplication&#40;f::P, g::P&#41; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125;</code></pre>
+<p><em>Note: before creating non-trivial tests in the next section, you should test your implementation on trivial examples to verify it is not obviously incorrect.</em></p>
 <ol start="2">
-<li><p>Implement multiplication using the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; for <code>PolynomialSparseBI</code> as presented in the lecture. Here the product of two <code>PolynomialSparseBI</code>s will be computed by doing sufficiently many multiplications of their <code>PolynomialModP</code> counterparts.</p>
+<li><p>Write at least 10 hardcoded tests demonstrating the correctness of your implementation on non-trivial multiplications &#40;i.e., with <code>BigInt</code> coefficients and degree greater than 100&#41; from bonus task 1.1. <em>Hint: use polynomials where you know what the coefficients should be after multiplying, e.g., using binomial theorem.</em></p>
+</li>
+<li><p>Benchmark &#40;using BenchmarkTools&#41; the speed of your CRT multiplication for the examples in bonus task 1.2 against multiplying the <code>BigInt</code>&#39;s directly. Try using both <code>PolynomialSparse</code> and <code>PolynomialDense</code>.</p>
 </li>
 </ol>
-<ol start="3">
-<li><p>Create tests for <code>PolynomialSparseBI</code> CRT multiplication and ensure your implementation passes them.</p>
-</li>
-</ol>
-<ol start="4">
-<li><p>Benchmark <code>PolynomialSparseBI</code> CRT multiplication and contrast your results against the old multiplication &#40;it is recommended to keep the old form of multiplication in another function or method&#41;.  Find examples that demonstrate the CRT based approach is faster.</p>
-</li>
-</ol>
-<p>END MOVE - TODO FIX THIS&#33;</p>
 <h4>2. FFT/DFT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
 <p>The naive multiplication algorithm that we have provided &#40;and likely any optimised version you have written&#41; is an <span class="math">$O(n^2)$</span> algorithm. Modern computer systems use the <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> &#40;FFT&#41; to compute the <a href="https://en.wikipedia.org/wiki/Discrete_Fourier_transform">Discrete Fourier Transform</a>. This is utilised to multiply both polynomials and &#40;large&#41; integers. This is one of the <em>most important algorithms ever developed</em> in both applied and pure mathematics.</p>
 <ol>
@@ -1061,7 +1081,7 @@ end</code></pre>
 </ol>
 <h3><em>Final Extension Activity &#40;<strong>Not Assessed</strong>&#41;</em></h3>
 <p><em>Note: this section is <strong>NOT</strong> worth any marks&#33; It is only here for those students interested in synthesising the various parts of the assignment together and learning beyond the course material. No material in this section is assessed, feel free to ignore everything below here.</em></p>
-<p>To perform fast polynomial multiplication on very large polynomials &#40;both coefficient and degrees&#41; while avoiding coefficient swell, you can use a modular approach combining FFT and the CRT. This method is particularly effective for dense polynomials &#40;due to the implementation of FFT&#41;.</p>
+<p>To perform fast polynomial multiplication on very large polynomials &#40;both coefficient and degrees&#41; while avoiding coefficient swell, you can use a modular approach combining FFT and the CRT. This method is particularly effective for dense polynomials &#40;due to our implementation of FFT&#41;.</p>
 <h4>The Modular Algorithm</h4>
 <h5>Reduce Modulo Primes</h5>
 <p>Choose a set of small primes whose product is large enough to contain all the coefficients of the final product polynomial. Reduce the coefficients of your input polynomials modulo each of these primes.</p>
@@ -1070,8 +1090,10 @@ end</code></pre>
 <h5>Combine with CRT</h5>
 <p>Use CRT to combine the results from each modular multiplication. This reconstructs the final polynomial with its original large coefficients whilst avoiding coefficient swell.</p>
 <h4>Sparse Polynomials?</h4>
+<p>***Additional Reading***</p>
 <p>So far, this extension activity has only improved multiplication significantly for dense polynomials. Using it for sparse polynomials would involve converting to a dense representation to use FFT, and we can do much better than the standard FFT.</p>
 <p>For sparse polynomials, a more effective method is sparse interpolation, which uses random evaluations to reconstruct the product polynomial. Notable algorithms in this category include the Ben-Or/Tiwari algorithm and Zippel&#39;s algorithm.</p>
+<p><em>Feel free to do your own research regarding these TODO - can we say interested students can come to Paul to learn more about computer algebra?</em></p>
 
 
         <HR/>
