@@ -400,7 +400,7 @@ pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}}
  
  
  
-### Final Extension Activity
+### *Final Extension Activity (**Not Assessed**)*
 *Note: this section is **NOT** worth any marks! It is only here for those students interested in synthesising the various parts of the assignment together and learning beyond the course material. No material in this section is assessed, feel free to ignore everything below here.*
 
 To perform fast polynomial multiplication on very large polynomials (both coefficient and degrees) while avoiding coefficient swell, you can use a modular approach combining FFT and the CRT. This method is particularly effective for dense polynomials (due to the implementation of FFT).
