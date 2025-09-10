@@ -6,13 +6,14 @@
 #############################################################################
 #############################################################################
 
+# TODO - RENAME THESE MOD P
 """
 Factors a polynomial over the field Z_p.
 
 Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) such that their product of the list (mod p) is f. 
 Irreducibles are fixed points on the function `factor`.
 """
-function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
+function factor_mod_p(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
     #Cantor Zassenhaus factorization
 
     f_modp = mod(f, prime)
@@ -37,13 +38,13 @@ function factor(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
     fp = mod(fp * int_inverse_mod(old_coeff, prime), prime)
     # @show "after monic:", ff
 
-    dds = dd_factor(fp, prime)
+    dds = dd_factor_mod_p(fp, prime)
 
     for (k,dd) in enumerate(dds)
-        sp = dd_split(dd, k, prime)
+        sp = dd_split_mod_p(dd, k, prime)
         sp = map((p)->div_mod_p(p, leading(p).coeff, prime), sp) #makes the polynomials inside the list sp, monic
         for mp in sp
-            push!(ret_val, (mp, multiplicity(f_modp,mp,prime)) )
+            push!(ret_val, (mp, multiplicity_mod_p(f_modp,mp,prime)) )
         end
     end
 
@@ -64,9 +65,9 @@ end
 """
 Compute the number of times g divides f
 """
-function multiplicity(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
+function multiplicity_mod_p(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
     degree(gcd_mod_p(f, g, prime)) == 0 && return 0
-    return 1 + multiplicity(div_mod_p(f, g, prime), g, prime)
+    return 1 + multiplicity_mod_p(div_mod_p(f, g, prime), g, prime)
 end
 
 
@@ -77,7 +78,7 @@ Given a square free polynomial `f` returns a list, `g` such that `g[k]` is a pro
 polynomials of degree `k` for `k` in 1,...,degree(f) ÷ 2, such that the product of the list (mod `prime`) 
 is equal to `f` (mod `prime`).
 """
-function dd_factor(f::P, prime::Int)::Array{P} where {P <: Polynomial}
+function dd_factor_mod_p(f::P, prime::Int)::Array{P} where {P <: Polynomial}
     x = x_poly(P)
     w = deepcopy(x)
     g = Array{P}(undef,degree(f)) #Array of polynomials indexed by degree
@@ -100,7 +101,7 @@ Distinct degree split.
 
 Returns a list of irreducible polynomials of degree `d` so that the product of that list (mod prime) is the polynomial `f`.
 """
-function dd_split(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
+function dd_split_mod_p(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
     f = mod(f,prime)
     degree(f) == d && return [f]
     degree(f) == 0 && return []
@@ -111,5 +112,5 @@ function dd_split(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
     g = mod(g, prime)
     # @show g
     ḡ = div_mod_p(f, g, prime) # g\bar + [TAB]
-    return vcat(dd_split(g, d, prime), dd_split(ḡ, d, prime) )
+    return vcat(dd_split_mod_p(g, d, prime), dd_split_mod_p(ḡ, d, prime) )
 end

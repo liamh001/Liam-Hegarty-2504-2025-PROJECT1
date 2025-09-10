@@ -861,7 +861,7 @@ div.title {text-align: center;}
 </li>
 </ol>
 <h3><strong>Task 5 &#40;13pts&#41; - <span class="math">$\mathbb{Z}_p$</span> and <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
-<p>Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. It is for this reason that those functions are named <code>divide_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code>.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated, as well as having simply <code>gcd</code>, <code>factor</code> etc. functions which work on the original type.</p>
+<p>Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. It is for this reason that those functions are named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code>.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated, as well as having simply <code>gcd</code>, <code>factor</code> etc. functions which work on the original type.</p>
 <h4>Constructing <span class="math">$\mathbb{Z}_p$</span></h4>
 <h5>Constructors</h5>
 <ol>
@@ -923,27 +923,74 @@ end</code></pre>
 </ol>
 <pre><code>    function ^&#40;a::ZModP&#123;T, N&#125;, n::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function abs&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; </code></pre>
+<ol start="6">
+<li><p>Implement functions to convert elements of <code>ZModP&#123;T, N&#125;</code> to <code>Int</code> or <code>BigInt</code>. TODO - EXPLAIN BETTER WITH TYPE SIGNATURE</p>
+</li>
+<li><p>Override the functions in term TODO that are not implemented &#40;GIVE WHICH ONES&#41; and implement them for terms with coefficient type <code>ZModP</code>. These functions are the following:</p>
+</li>
+</ol>
 <p><strong>Note:</strong> you may make as many additional convenience/helper functions as you wish.</p>
-<ul>
-<li><p>&#91;WITH ABSTRACTION&#93; Create a type <code>PolynomialModP</code> which has a polynomial &#40;of type <code>PolynomialSparse</code>&#41; and a prime number &#40;<code>Int</code>&#41; as field names.  <code>PolynomialModP</code> should support the same arithmetic operations as <code>PolynomialSparse</code> but with coefficient arithmetic over <span class="math">$\mathbb{Z}_p$</span> rather than <code>Int</code>. <code>PolynomialModP</code> should be easier to work with when carrying out division, gcd, and factorization. So for example <code>f1 ÷ f2</code> where <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code>, would directly yield a new <code>PolynomialModP</code> which is the result mod <span class="math">$p$</span>. Similarly for the other operations. </p>
+<h4>Checking that it works</h4>
+<p>TODO</p>
+<h4>Constructing <span class="math">$\mathbb{Z}_p[x]$</span></h4>
+<p>Now that we have <code>ZModP</code> as a subtype of <code>Integer</code>, we can use this as the coefficient type of our polynomials. E.g., <code>PolynomialSparse&#123;ZModP&#123;Int, 5&#125;, Int&#125;</code>. <em>Try experimenting in the REPL with this before attempting the rest of this section.</em></p>
+<p>Now that we have a baked-in version of <span class="math">$\mathbb{Z}_p$</span>, we would ideally like to re-implement all our functions that were previously named with the suffix <code>_mod_p</code>.</p>
+<p>In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code>. Your next task is to implement these:</p>
+<ol>
+<li><p>Create a folder <code>src/basic_polynomial_operations/mod_p</code>. Next duplicate <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code> as <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code>.</p>
 </li>
-</ul>
-<ul>
-<li><p>Create tests for <code>PolynomialModP</code> and associated functions and ensure your implementation passes them.</p>
+</ol>
+<ol start="2">
+<li><p>Each of these functions in <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code> take in as the first argument <code>::Type&#123;C&#125;</code>. Modify the type signature such that it contains <code>&#123;T, N, C &lt;: ZMod&#123;T, N&#125;&#125;</code> &#40;i.e., so we can override it specifically for polynomials over <span class="math">$\mathbb{Z}_p$</span>&#41;.</p>
 </li>
-</ul>
-<p>Your new datatype should rely on the existing functionality of <code>PolynomialSparse</code> but restrict the coefficients to <span class="math">$0$</span>, <span class="math">$1$</span>, \ldots, <span class="math">$p-1$</span>.</p>
-<p>Once you complete this task, certain operations of <code>PolynomialSparseBI</code> like <code>p1 ÷ p2</code>, are now better done via <code>PolynomialModP</code>. That is, while you may use <code>f1 ÷ f2</code> for <code>f1</code> and <code>f2</code> of types <code>PolynomialSparseBI</code>, it is better to only <code>÷</code> when <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code> because you get back an instance of <code>PolynomialModP</code> rather than a function.</p>
-<ul>
-<li><p>Implement <code>^</code> for <code>PolynomialModP</code> and update the <code>pow_mod</code> function to use it.</p>
+<li><p>The implementation of each function here is identical to the implementation of the corresponding function with the suffix <code>_mod_p</code>. For each of the following, take the corresponding <code>_mod_p</code> implementation and refactor it to work on polynomials over <span class="math">$\mathbb{Z}_p[x]$</span> &#40;<em>note: the functions you write do <strong>not</strong> need to take in a prime, this is baked into the type</em>&#41;: THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE</p>
 </li>
-</ul>
-<ul>
-<li><p>Update the <code>show</code> method for <code>PolynomialModP</code> to include an indication it is &quot;mod p&quot;.</p>
+</ol>
+<pre><code>TODO - ADD TYPE SIGNATURES
+    div&#40;&#41;
+    rem&#40;&#41;
+    extended_euclid_alg&#40;&#41;
+    gcd&#40;&#41;
+    div_rem&#40;&#41;
+    square_free&#40;&#41;
+    factor&#40;&#41;
+    multiplicity&#40;&#41;
+    dd_factor&#40;&#41;
+    dd_split&#40;&#41;</code></pre>
+<p><em>Note: there are a lot of functions here - it is recommended you refactor a function and update all it&#39;s usages one at a time and check everything is working correctly before moving onto the next function.</em></p>
+<ol start="4">
+<li><p>Write a function for converting between polynomials with terms of type <code>Term&#123;C, D&#125;</code> &#40;where <code>C</code> is <code>Int</code> or <code>BigInt</code>&#41; and polynomials with terms of type <code>Term&#123;ZModP&#123;C, N&#125;, D&#125;</code> for some given prime <code>N</code>.</p>
 </li>
-</ul>
+<li><p>Refactor the functions with suffix <code>_mod_p</code> to first convert to a polynomial over <span class="math">$\mathbb{Z}_p[x]$</span>, then call the corresponding <code>ZModP</code> function &#40;i.e., the function without suffix <code>_mod_p</code>&#41; and then converting back to the initial polynomial type. The functions are as follows:</p>
+</li>
+</ol>
+<pre><code>TODO - ADD TYPE SIGNATURES
+    div_mod_p&#40;&#41;
+    rem_mod_p&#40;&#41;
+    extended_euclid_alg_mod_p&#40;&#41;
+    gcd_mod_p&#40;&#41;
+    div_rem_mod_p&#40;&#41;
+    square_free_mod_p&#40;&#41;
+    factor_mod_p&#40;&#41;
+    multiplicity_mod_p&#40;&#41;
+    dd_factor_mod_p&#40;&#41;
+    dd_split_mod_p&#40;&#41;</code></pre>
+<p>TODO </p>
+<ol>
+<li><p>MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK&#33; SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK&#33;</p>
+</li>
+<li><p>GIVE THEM THE PRIMES</p>
+</li>
+<li><p>ADD IN PRIM PART?</p>
+</li>
+<li><p>ADD IN TERM DIVISION AS A REQUIREMENT TO OVERRIDE</p>
+</li>
+</ol>
+<h4>Checking that it works</h4>
+<p>TODO</p>
 <h3>Task 6 &#40;20pts&#41; - Improving multiplication using the Chinese Remainder Theorem TODO</h3>
-<p>The current multiplication implementation is not efficient for <code>PolynomialSparseBI</code> because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
+<p>SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN&#39;T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION</p>
+<p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
 <ul>
 <li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
 </li>
@@ -993,14 +1040,14 @@ end</code></pre>
 <h4>3. Pseudo-Division in Rings that are <em>NOT</em> Euclidean Domains &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
 <p>As you may have discovered, implementing division over <span class="math">$Z[x]$</span> is not possible. In particular, we cannot determine a quotient and remainder as <span class="math">$Z[x]$</span> is not a <a href="">Euclidean domain</a>. Instead, we have the notion of <em>pseudo-division</em>. <em>Write all examples for this task in a script called <code>example_script_bonus_task_3.jl</code> and include the output in your PDF submission.</em></p>
 <ol>
-<li><p>Write a function which returns the <em>pseudo-quotient</em> and <em>pseudo-remainder</em> of <code>f</code> pseudo-divided by <code>g</code>. The type signature of the function should be: </p>
+<li><p>Write a function <code>pseudo_div_rem</code> which returns the <em>pseudo-quotient</em> and <em>pseudo-remainder</em> of <code>f</code> pseudo-divided by <code>g</code>. The type signature of the function should be: </p>
 </li>
 </ol>
-<pre><code>pseudo_divide&#40;f::P, g::P&#41;::Tuple&#123;P, P&#125; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125; </code></pre>
+<pre><code>pseudo_div_rem&#40;f::P, g::P&#41;::Tuple&#123;P, P&#125; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125; </code></pre>
 <ol start="2">
-<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-division property holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;hint - create polynomials in product form&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.</p>
+<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-div-rem property &#40;this is similar to the definition of integer division&#41; holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;<em>hint - create polynomials in product form</em>&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.</p>
 </li>
-<li><p><em>In your PDF submission</em> provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be averted if we computed this over <span class="math">$\mathbb{Q}[x]$</span> rather than <span class="math">$\mathbb{Z}[x]$</span> using exact division over <span class="math">$\mathbb{Q}$</span> and why.</p>
+<li><p><em>In your PDF submission</em> provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided &#40;and why&#41; if we computed this over <span class="math">$\mathbb{Q}[x]$</span> rather than <span class="math">$\mathbb{Z}[x]$</span> using exact division over <span class="math">$\mathbb{Q}$</span>.</p>
 </li>
 </ol>
 

@@ -52,7 +52,7 @@ polynomial_types = [PolynomialDense] # The types of polynomials to unit test fac
 println("---BEGIN FACTORIZATION UNIT TESTS---\n")
 for poly in polynomial_types
     println("Type of `Polynomial``: $(poly)")
-    factor_test_poly(poly)
+    factor_mod_p_test_poly(poly)
     println("")
 end
 println("---END FACTORISATION UNIT TESTS---")

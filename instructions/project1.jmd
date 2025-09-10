@@ -253,6 +253,8 @@ TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
 
 6. Implement functions to convert elements of `ZModP{T, N}` to `Int` or `BigInt`. TODO - EXPLAIN BETTER WITH TYPE SIGNATURE
 
+7. Override the functions in term TODO that are not implemented (GIVE WHICH ONES) and implement them for terms with coefficient type `ZModP`. These functions are the following:
+
 **Note:** you may make as many additional convenience/helper functions as you wish.
 
 #### Checking that it works 
@@ -264,24 +266,45 @@ Now that we have `ZModP` as a subtype of `Integer`, we can use this as the coeff
 
 Now that we have a baked-in version of $\mathbb{Z}_p$, we would ideally like to re-implement all our functions that were previously named with the suffix `_mod_p`.
   
-In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` TODO. Your next task is to implement these:
+In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl`. Your next task is to implement these:
 
 1. Create a folder `src/basic_polynomial_operations/mod_p`. Next duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
   
-2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take in as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}`.
+2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take in as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
 
-3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. For each of the following, take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (*note: the functions you write do not need to take in a prime, this is baked into the type*):
+3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. For each of the following, take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (*note: the functions you write do **not** need to take in a prime, this is baked into the type*): THIS NEEDS TO BE EXPLAINED MORE CLEARLY - I MEAN DO IT IN THE FILE MENTIONED ABOVE
 
 ```
-TODO - FIGURE THESE ONES OUT
+TODO - ADD TYPE SIGNATURES
+    div()
+    rem()
+    extended_euclid_alg()
+    gcd()
+    div_rem()
+    square_free()
+    factor()
+    multiplicity()
+    dd_factor()
+    dd_split()
 ```
+*Note: there are a lot of functions here - it is recommended you refactor a function and update all it's usages one at a time and check everything is working correctly before moving onto the next function.*
 
 4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
 
 5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions are as follows:
 
 ```
-TODO - FIGURE THESE ONES OUT
+TODO - ADD TYPE SIGNATURES
+    div_mod_p()
+    rem_mod_p()
+    extended_euclid_alg_mod_p()
+    gcd_mod_p()
+    div_rem_mod_p()
+    square_free_mod_p()
+    factor_mod_p()
+    multiplicity_mod_p()
+    dd_factor_mod_p()
+    dd_split_mod_p()
 ```
   
 TODO 
@@ -333,11 +356,11 @@ Note: no marks are awarded for 2 if your implementation does not work correctly.
 #### 3. Pseudo-Division in Rings that are *NOT* Euclidean Domains (*4 **bonus** points*)
 As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a [Euclidean domain](). Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
 
-1. Write a function which returns the *pseudo-quotient* and *pseudo-remainder* of `f` pseudo-divided by `g`. The type signature of the function should be: 
+1. Write a function `pseudo_div_rem` which returns the *pseudo-quotient* and *pseudo-remainder* of `f` pseudo-divided by `g`. The type signature of the function should be: 
 ```
-pseudo_divide(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}} 
+pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}} 
 ```
 
-2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-division property holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (hint - create polynomials in product form). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.
+2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-div-rem property (this is similar to the definition of integer division) holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (*hint - create polynomials in product form*). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.
 
-3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be averted if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$ and why.
+3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided (and why) if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$.
