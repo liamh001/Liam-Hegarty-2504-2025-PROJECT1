@@ -20,6 +20,14 @@ test_euclid_ints()
 test_ext_euclid_ints()
 println("---END INTEGER UNIT TESTS---\n")
 
+####
+# Execute unit tests for data structures
+###
+include("heap_test.jl")
+println("---BEGIN HEAP UNIT TESTS---")
+test_heap()
+println("---END HEAP UNIT TESTS---\n")
+
 # ####
 # # Execute unit tests for polynomials
 # ####
