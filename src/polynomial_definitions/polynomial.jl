@@ -306,17 +306,6 @@ function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
     return sqr_free
 end
 
-"""
-A square free (and primitive) polynomial.
-E.g.,
-    f = (x + a1)^e1 * (x + a2)^e2 * ... * (x + an)^en
-    square_free(f) = (x + a1) * (x + a2) * ... * (x + an)
-"""
-function square_free(f::P) where {P <: Polynomial}
-    sq_fr_f = pseudo_quo(f, pseudo_gcd(f, derivative(f)))
-    return prim_part(sq_fr_f)
-end
-
 #############################
 # Queries about polynomials #
 #############################
