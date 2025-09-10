@@ -395,8 +395,12 @@ pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}}
 2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-div-rem property (this is similar to the definition of integer division) holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (*hint - create polynomials in by taking products of irreducible polynomials*). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than *5 minutes* to run.
 
 3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided (and why) if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$.
-
-### Secret Math Easter Egg Extension Task
+ 
+ 
+ 
+ 
+ 
+### Final Extension Activity
 *Note: this section is **NOT** worth any marks! It is only here for those students interested in synthesising the various parts of the assignment together and learning beyond the course material. No material in this section is assessed, feel free to ignore everything below here.*
 
 To perform fast polynomial multiplication on very large polynomials (both coefficient and degrees) while avoiding coefficient swell, you can use a modular approach combining FFT and the CRT. This method is particularly effective for dense polynomials (due to the implementation of FFT).
