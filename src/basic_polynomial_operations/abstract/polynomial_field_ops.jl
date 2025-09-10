@@ -104,32 +104,46 @@ The greatest common divisor of two polynomials (of the same concrete subtype).
 gcd(::Type{C}, f::P, g::P) where {C, P <: Polynomial} = extended_euclid_alg(f, g) |> first
 
 """
-Perfect field, yun's algorithm, square free
-References...
+Yun's algorithm to compute a square free polynomial can be performed over any so-called
+`perfect field`. All the usual fields you would have worked with are perfect. In particular,
+any field with characteristic zero, or finite fields (i.e., Zp) are perfect fields. Thus,
+we apply Yun's algorithm.
+
+Precondition: C represents a perfect field.
+
+Note: to account for the case of fields with characteristic p (e.g., Zp), we first divide
+by the minimum degree to remove extraneous factors of x. These can cause issues due to the 
+following lemma:
+
+Lemma:
+Given F a characteristic zero or finite field and f a polynomial in F[x],
+    1) If char(F) = 0 then: f' = 0 implies f is constant
+    2) If char(F) > 0 then: f' = 0 implies f has a factor of x^char(F)
+
+https://en.wikipedia.org/wiki/Square-free_polynomial
+https://en.wikipedia.org/wiki/Perfect_field
 """
 function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
-    # FIXME - Tutor to provide implementation and add docstring - Mittun
-    not_implemented_error(f, "square_free")
-    # fmod_p = mod(f, prime)
+    # Remove minimum degree (in case char(C) != 0)
+    min_deg = last(f).degree
+    vt = filter(t -> !iszero(t), collect(f))
+    f = P( map(t -> Term(t.coeff, t.degree - min_deg), vt) )
 
-    # min_deg = last(fmod_p).degree
-    # vt = filter(t -> !iszero(t), collect(f))
-    # fmod_p = P( map(t -> Term(t.coeff, t.degree - min_deg), vt) )
+    # Compute the gcd of f, f'
+    der_f = derivative(f)
+    sqr_part = gcd(f, der_f)
 
-    # # Now compute the gcd modulo a prime
-    # der_fmod_p = mod(derivative(fmod_p), prime)
-    # gcd_f_der_f = gcd_mod_p(fmod_p, der_fmod_p, prime)
+    iszero(sqr_part) && return f * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
 
-    # iszero(gcd_f_der_f) && return fmod_p * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
+    # Remove factors with multiplicity > 1
+    sqr_free = div(f, sqr_part)
 
-    # sqr_free = div_mod_p(fmod_p, gcd_f_der_f, prime)
+    # Add one factor of `x` back in if necessary
+    if min_deg > zero(min_deg) 
+        sqr_free *= x_poly(P)
+    end
 
-    # # Add the factor of `x` back in if there was one
-    # if min_deg > zero(min_deg) 
-    #     sqr_free *= x_poly(P)
-    # end
-
-    # return sqr_free
+    return sqr_free
 end
 
 """
