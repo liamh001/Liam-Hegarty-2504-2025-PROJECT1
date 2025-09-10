@@ -860,10 +860,70 @@ div.title {text-align: center;}
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions. <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
 </li>
 </ol>
-<h3><strong>Task 5 &#40;13pts&#41; - A new coefficient type</strong></h3>
-<h4>Creating <span class="math">$\mathbb{Z}_p$</span> and <span class="math">$\mathbb{Z}_p[x]$</span></h4>
-<h1>TODO</h1>
-<p>Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. It is for this reason that those functions are named <code>divide_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code>.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.</p>
+<h3><strong>Task 5 &#40;13pts&#41; - <span class="math">$\mathbb{Z}_p$</span> and <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
+<p>Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as <code>divide</code>, <code>gcd</code>, and <code>factor</code> require the coefficient arithmetic to be done modulo <span class="math">$p$</span>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. It is for this reason that those functions are named <code>divide_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code>.  It would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated, as well as having simply <code>gcd</code>, <code>factor</code> etc. functions which work on the original type.</p>
+<h4>Constructing <span class="math">$\mathbb{Z}_p$</span></h4>
+<h5>Constructors</h5>
+<ol>
+<li><p>Create a file <code>src/z_mod_p.jl</code>. Inside of this, create a struct with the following type signature:</p>
+</li>
+</ol>
+<pre><code>struct ZModP&#123;T &lt;: Integer, N&#125; &lt;: Integer
+    val::T
+
+    # val ∈ &#91;0,...,N - 1&#93;
+    # T is the type of val, N is the prime p in Zp
+end</code></pre>
+<p><em>Note that <code>N</code> is a <a href="https://docs.julialang.org/en/v1/manual/types/#&#37;22Value-types&#37;22">value type</a> and thus it must be specified as a constant, it cannot be generated &#40;e.g. via rand&#41; at runtime.</em></p>
+<ol start="2">
+<li><p>Create inner and outer constructors for this struct. You must be able to construct an object of type <code>ZModP&#123;T, N&#125;</code> where <code>T</code> is either <code>Int</code> or <code>BigInt</code> and <code>N</code> is some prime via functions satisfying <em>all</em> of the following type signatures:</p>
+</li>
+</ol>
+<pre><code>    function ZModP&#123;T, N&#125;&#40;a::T&#41; where &#123;T &lt;: Integer, N&#125;
+    function ZModP&#40;a::T, Val&#123;N&#125;&#41;::ZMod where &#123;T &lt;: Integer, N&#125;
+    function zero&#40;::Type&#123;ZModP&#123;T, N&#125;&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
+    function one&#40;::Type&#123;ZModP&#123;T, N&#125;&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
+    function zero&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
+    function one&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; -&gt; &#96;T&#40;1&#41; mod p&#96; TODO &#40;ASK PAUL - MORE EXPLANATION HERE OR NOT&#41;</code></pre>
+<ol start="3">
+<li><p>Ensure any of the above constructors will fail if called in an attempt to create an object of type <code>ZModP&#123;T, N&#125;</code> where <code>N</code> is <em>not</em> a prime. <em>Use the Primes.jl package that is included in the repository.</em></p>
+</li>
+</ol>
+<h5>Field operations and miscellaneous functions</h5>
+<p>TODO- &#40;Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS&#41;</p>
+<ol start="3">
+<li><p>Implement the following convenience and query operations:</p>
+</li>
+</ol>
+<pre><code>    function show&#40;io::IO, a::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function &#61;&#61;&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41;::Bool where &#123;T &lt;: Integer, N&#125;
+    function &#61;&#61;&#40;a::ZModP&#123;T, N&#125;, b::S&#41;::Bool where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function &#61;&#61;&#40;a::S, b::ZModP&#123;T, N&#125;&#41;::Bool where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;</code></pre>
+<ol start="4">
+<li><p>Implement the following basic arithmetic &#40;field&#41; operations:</p>
+</li>
+</ol>
+<pre><code>    function &#43;&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function &#43;&#40;a::ZModP&#123;T, N&#125;, b::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function &#43;&#40;a::Int, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function -&#40;a::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function -&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function -&#40;a::ZModP&#123;T, N&#125;, b::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function -&#40;a::S, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function *&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, N&#125;
+    function *&#40;a::ZModP&#123;T, N&#125;, b::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function *&#40;a::S, b::ZModP&#123;T, N&#125;&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function inv&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; TODO - GIVE HINT OF INT INVERSE MOD&#33;
+    function ÷&#40;a::ZModP&#123;T, N&#125;, b::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125;
+    function ÷&#40;a::ZModP&#123;T, N&#125;, b::S&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function ÷&#40;a::S, b::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;</code></pre>
+<ol start="5">
+<li><p>Implement the additional arithmetic operations</p>
+</li>
+</ol>
+<pre><code>    function ^&#40;a::ZModP&#123;T, N&#125;, n::S&#41; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
+    function abs&#40;a::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, N&#125; </code></pre>
+<p><strong>Note:</strong> you may make as many additional convenience/helper functions as you wish.</p>
 <ul>
 <li><p>&#91;WITH ABSTRACTION&#93; Create a type <code>PolynomialModP</code> which has a polynomial &#40;of type <code>PolynomialSparse</code>&#41; and a prime number &#40;<code>Int</code>&#41; as field names.  <code>PolynomialModP</code> should support the same arithmetic operations as <code>PolynomialSparse</code> but with coefficient arithmetic over <span class="math">$\mathbb{Z}_p$</span> rather than <code>Int</code>. <code>PolynomialModP</code> should be easier to work with when carrying out division, gcd, and factorization. So for example <code>f1 ÷ f2</code> where <code>f1</code> and <code>f2</code> are of type <code>PolynomialModP</code>, would directly yield a new <code>PolynomialModP</code> which is the result mod <span class="math">$p$</span>. Similarly for the other operations. </p>
 </li>

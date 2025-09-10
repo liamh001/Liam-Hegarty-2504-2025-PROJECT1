@@ -202,40 +202,98 @@ end
 
 2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime via functions satisfying *all* of the following type signatures:
 
-    * ZModP{T, N}(a::Int) where {T <: Integer, N}
-    * ZModP(a::T, Val{N}) where {T <: Integer, N}
-    * zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
-    * one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
-    * zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
-    * one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} -> `T(1) mod p` TODO
-
- construct `zero(T) mod p` by calling `zero(ZModP(T, p)` where `T` is either `Int` or `BigInt`. You must be able to construct `T(n) mod p` by calling `ZModP(T, n, p)`. In particular, your constructors must throw an error if you attempt to create an object of type `ZModP{T, N}` where `N` is *not* prime.
+```
+    function ZModP{T, N}(a::T) where {T <: Integer, N}
+    function ZModP(a::T, Val{N})::ZMod where {T <: Integer, N}
+    function zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    function one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    function zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    function one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} -> `T(1) mod p` TODO (ASK PAUL - MORE EXPLANATION HERE OR NOT)
+```
 
  3. Ensure any of the above constructors will fail if called in an attempt to create an object of type `ZModP{T, N}` where `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
 
 ##### Field operations and miscellaneous functions
 
+TODO- (Int and Normal for most - GIVE EXPLANATION OF HOW THIS WORKS)
 3. Implement the following convenience and query operations:
+
+```
+    function show(io::IO, a::ZModP{T, N}) where {T <: Integer, N}
+    function ==(a::ZModP{T, N}, b::ZModP{T, N})::Bool where {T <: Integer, N}
+    function ==(a::ZModP{T, N}, b::S)::Bool where {T <: Integer, S <: Integer, N}
+    function ==(a::S, b::ZModP{T, N})::Bool where {T <: Integer, S <: Integer, N}
+```
 
 4. Implement the following basic arithmetic (field) operations:
 
+```
+    function +(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function +(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function +(a::Int, b::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function -(a::S, b::ZModP{T, N}) where {T <: Integer, S <: Integer, N}
+    function *(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function *(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function *(a::S, b::ZModP{T, N}) where {T <: Integer, S <: Integer, N}
+    function inv(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} TODO - GIVE HINT OF INT INVERSE MOD!
+    function ÷(a::ZModP{T, N}, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    function ÷(a::ZModP{T, N}, b::S)::ZModP{T, N} where {T <: Integer, S <: Integer, N}
+    function ÷(a::S, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, S <: Integer, N}
+```
+
 5. Implement the additional arithmetic operations
 
-- [WITH ABSTRACTION] Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations. 
- 
-- Create tests for `PolynomialModP` and associated functions and ensure your implementation passes them.
- 
-Your new datatype should rely on the existing functionality of `PolynomialSparse` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
- 
-Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `f1 ÷ f2` for `f1` and `f2` of types `PolynomialSparseBI`, it is better to only `÷` when `f1` and `f2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
- 
--  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
- 
--  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
+```
+    function ^(a::ZModP{T, N}, n::S) where {T <: Integer, S <: Integer, N}
+    function abs(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} 
+```
+
+6. Implement functions to convert elements of `ZModP{T, N}` to `Int` or `BigInt`. TODO - EXPLAIN BETTER WITH TYPE SIGNATURE
+
+**Note:** you may make as many additional convenience/helper functions as you wish.
+
+#### Checking that it works 
+TODO
+
+#### Constructing $\mathbb{Z}_p[x]$
+
+Now that we have `ZModP` as a subtype of `Integer`, we can use this as the coefficient type of our polynomials. E.g., `PolynomialSparse{ZModP{Int, 5}, Int}`. *Try experimenting in the REPL with this before attempting the rest of this section.*
+
+Now that we have a baked-in version of $\mathbb{Z}_p$, we would ideally like to re-implement all our functions that were previously named with the suffix `_mod_p`.
+  
+In addition, we have several functions that are unimplemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` TODO. Your next task is to implement these:
+
+1. Create a folder `src/basic_polynomial_operations/mod_p`. Next duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
+  
+2. Each of these functions in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` take in as the first argument `::Type{C}`. Modify the type signature such that it contains `{T, N, C <: ZMod{T, N}}`.
+
+3. The implementation of each function here is identical to the implementation of the corresponding function with the suffix `_mod_p`. For each of the following, take the corresponding `_mod_p` implementation and refactor it to work on polynomials over $\mathbb{Z}_p[x]$ (*note: the functions you write do not need to take in a prime, this is baked into the type*):
+
+```
+TODO - FIGURE THESE ONES OUT
+```
+
+4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
+
+5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then converting back to the initial polynomial type. The functions are as follows:
+
+```
+TODO - FIGURE THESE ONES OUT
+```
+  
+TODO - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK! SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE? IDK!
+
+#### Checking that it works 
+TODO
  
 ### Task 6 (20pts) - Improving multiplication using the Chinese Remainder Theorem TODO
+
+SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN'T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION
  
-The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
+The current multiplication implementation is not efficient for any concrete subtype of `Polynomial{BigInt, Int}` or `Polynomial{BigInt, BigInt}` because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
  
 - Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
  
