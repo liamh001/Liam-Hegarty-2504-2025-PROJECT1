@@ -287,7 +287,7 @@ function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
     fmod_p = mod(f, prime)
 
     min_deg = last(fmod_p).degree
-    vt = filter(t -> !iszero(t), collect(f))
+    vt = filter(t -> !iszero(t), collect(fmod_p))
     fmod_p = P( map(t -> Term(t.coeff, t.degree - min_deg), vt) )
 
     # Now compute the gcd modulo a prime

@@ -14,15 +14,20 @@ f = q*g + r
 p is a prime
 
 Returns quotient and remainder (q, r)
+
+Precondition: 
+    1) degree(num) == degree(mod(num, prime))
+    2) g != 0
 """
 function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
     f, g = mod(num,prime), mod(den,prime)
-    degree(f) < degree(num) && return nothing # FIXME - Mittun
+    @assert degree(num) == degree(mod(num, prime))
     iszero(g) && throw(DivideError())
-    q = PolynomialDense()
+    iszero(f) && return zero(P), zero(P)
+    q = P()
     prev_degree = degree(f)
     while degree(f) ≥ degree(g) 
-        h = PolynomialDense( div_mod_p(leading(f), leading(g), prime) )  #syzergy 
+        h = P( div_mod_p(leading(f), leading(g), prime) )  #syzergy 
         f = mod((f - h*g), prime)
         q = mod((q + h), prime)  
         prev_degree == degree(f) && break

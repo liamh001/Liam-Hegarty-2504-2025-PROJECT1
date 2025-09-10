@@ -24,7 +24,7 @@ function prod_test_poly(::Type{P};
     for _ in 1:N
         p_base = P(Term(1,0))
         for _ in 1:N_prods
-            p = rand(PolynomialDense)
+            p = rand(P)
             prod = p_base*p
             @assert leading(prod) == leading(p_base)*leading(p)
             p_base = prod
@@ -62,7 +62,7 @@ function division_test_poly(::Type{P};
         p1 = rand(P)
         p2 = rand(P)
         p_prod = p1*p2
-        q, r = PolynomialDense(), PolynomialDense()
+        q, r = P(), P()
         try
             q, r = div_rem_mod_p(p_prod, p2, prime)
             if (q, r) == (nothing,nothing)
