@@ -108,7 +108,7 @@ Perfect field, yun's algorithm, square free
 References...
 """
 function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
-    # FIXME - Tutor to provide implementation and add docstring - MITTUN
+    # FIXME - Tutor to provide implementation and add docstring - Mittun
     not_implemented_error(f, "square_free")
     # fmod_p = mod(f, prime)
 

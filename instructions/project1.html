@@ -861,12 +861,16 @@ div.title {text-align: center;}
 </li>
 </ol>
 <h3><strong>Task 5 &#40;13-Xpts&#41; - Creating <span class="math">$\mathbb{Z}_p$</span></strong></h3>
-<h1>TODO - ADD SOME LINKS FOR MATHEMATICAL TERMINOLOGY</h1>
 <p>Notice your polynomial implementation has assumed integer coefficients and &#40;fatally&#41; <span class="math">$\mattbb{Z}$</span> is <em>not</em> a <a href="https://en.wikipedia.org/wiki/Euclidean_domain">euclidean domain</a>. This means we do not yet have access to <code>gcd</code> on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a <em><a href="https://en.wikipedia.org/wiki/Field_&#40;mathematics&#41;">field</a></em> like <span class="math">$\mathbb{Z}_p$</span>, for <span class="math">$p$</span> a prime, then the resulting <span class="math">$\mathbb{Z}_p[x]$</span> <em>is</em> a Euclidean domain. We therefore need to implement some way to work with <span class="math">$\mathbb{Z}_p[x]$</span>.</p>
 <p>Notice your implementations of polynomials have so far assumed integer coefficients and thereby <code>divide</code>, <code>gcd</code>, <code>factor</code> and so on, <em>require</em> the coefficient arithmetic be done modulo <span class="math">$p$</span> because this makes the coefficient <em><a href="https://en.wikipedia.org/wiki/Ring_&#40;mathematics&#41;">ring</a></em> a <em>field</em>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. </p>
 <p>At the moment the code-base has implemented functions named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code> that return a <em>function</em> which needs to be given a prime before returning an answer. </p>
-<pre><code>TODO: MITTUN GIVE AN EXAMPLE OF ^ </code></pre>
-<p>This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.  In this task we implement this improvement.</p>
+<pre><code># Example usage
+x &#61; x_poly&#40;PolynomialSparse&#123;Int, Int&#125;&#41;
+f &#61; &#40;x &#43; 5&#41;^3 * x^2 * &#40;x &#43; 1&#41;^2
+g &#61; &#40;x - 1&#41; * &#40;x &#43; 5&#41; * &#40;x &#43; 1&#41;^4
+@show gcd_mod_p&#40;f, g, 7&#41; 
+# output: 5⋅x^0 &#43; 4⋅x^1 &#43; 1⋅x^3 &#61; &#40;x &#43; 5&#41; * &#40;x &#43; 1&#41;^2</code></pre>
+<p>This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.  In this task we implement this improvement. <em>Note: you should aim to implement all functions in this section as efficiently as you can.</em></p>
 <h5>Constructors</h5>
 <ol>
 <li><p>Create <code>src/z_mod_p.jl</code> and inside of this file create a <code>struct</code> with the following type signature:</p>
@@ -939,10 +943,19 @@ end</code></pre>
 <ol start="8">
 <li><p>Override the function <code>div</code> for <code>Term</code> &#40;i.e., in <code>src/term.jl</code>&#41; to implement it for terms with coefficient type <code>ZModP</code>.</p>
 </li>
+<li><p>Utilising your constructors for <code>ZModP</code> and <code>lift</code> function, refactor the function <code>div_mod_p</code> for <code>Term</code> &#40;i.e., in <code>src/term.jl</code>&#41; to simply convert from the input type <code>Term&#123;C, D&#125;</code> to <code>Term&#123;ZModP&#123;C, N&#125;, D&#125;</code>, then call <code>div</code> and finally convert the result back to <code>Term&#123;C, D&#125;</code>.</p>
+</li>
 </ol>
 <p><strong>Note:</strong> you may make as many additional convenience/helper functions as you wish.</p>
 <h4>Checking that it works</h4>
-<p>TODO</p>
+<ol start="10">
+<li><p>Create <code>example_script_task_5.jl</code> and in this file, demonstrate a series of examples of basic modular arithmetic operations working correctly.</p>
+</li>
+<li><p>Create <code>tests/z_mod_p.jl</code> containing tests which run <em>all</em> operations on <code>ZModP</code>.  Your tests must run on at least 10^3 randomly generated integers in the range -10^4 to 10^4 inclusive. Utilise the in-built <code>mod</code> function on integers to verify correctness of your operations. Ensure your implementations pass these tests.</p>
+</li>
+<li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your operations on <code>ZModP</code>. <em>Screenshot &#40;or copy/paste&#41; the output of this and your <code>example_script_task_5.jl</code> and add it to your PDF submission.</em></p>
+</li>
+</ol>
 <h3><strong>Task 6 &#40;X pts&#41; - Creating <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
 <h4>Constructing <span class="math">$\mathbb{Z}_p[x]$</span></h4>
 <p>Now that we have <code>ZModP</code> as a subtype of <code>Integer</code>, we can use this as the coefficient type of our polynomials. E.g., <code>PolynomialSparse&#123;ZModP&#123;Int, 5&#125;, Int&#125;</code>. <em>Try experimenting in the REPL with this before attempting the rest of this section.</em></p>
@@ -978,68 +991,76 @@ end</code></pre>
 <p>TODO &#40;ASK PAUL&#41; - MENTION PRETTY PRINTING AND HOW THAT SHOULD WORK&#33; SHOULD JUST BE TO PARAMETERISE SHOW FUNCTION AND OVERRIDE IN ONE CASE MAYBE?</p>
 <h4>Checking that it works</h4>
 <p>TODO</p>
-<h3>Task 7 &#40;20pts&#41; - Improving multiplication using the Chinese Remainder Theorem TODO - ALSO SWAP BONUS TASK</h3>
-<p>SHOULD THIS BE MULTIPLICATION - I THINK WE SHOULD GET THEM TO JUST DO THE FACTORISATION TO BE THE ACTUAL TASK 6 AND CRT MULTIPLICATION TO BE AN EXTRA. ESPECIALLY BECAUSE WE HAVEN&#39;T BEEN ABLE TO SPEED UP POLYNOMIAL BIG INT MULTIPLICATION</p>
-<p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
-<ul>
-<li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
-</li>
-</ul>
-<ul>
-<li><p>Implement multiplication using the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; for <code>PolynomialSparseBI</code> as presented in the lecture. Here the product of two <code>PolynomialSparseBI</code>s will be computed by doing sufficiently many multiplications of their <code>PolynomialModP</code> counterparts.</p>
-</li>
-</ul>
-<ul>
-<li><p>Create tests for <code>PolynomialSparseBI</code> CRT multiplication and ensure your implementation passes them.</p>
-</li>
-</ul>
-<ul>
-<li><p>Benchmark <code>PolynomialSparseBI</code> CRT multiplication and contrast your results against the old multiplication &#40;it is recommended to keep the old form of multiplication in another function or method&#41;.  Find examples that demonstrate the CRT based approach is faster.</p>
-</li>
-</ul>
-<h4>Factoring TODO</h4>
-<ul>
+<h3>Task 7 &#40;20pts&#41; - Factoring with Chinese Remainder Theorem</h3>
+<p>TODO - CAN WE MOVE ONE OR TWO POINTS TO THE PREVIOUS TWO TASKS? ASK ALISTAIR HIS THOUGHTS</p>
+<p><em>Note:</em> This is a mastery level task that need only be attempted by those students targeting a seven.  Sufficient marks have been allocated by this point to earn a six.</p>
+<h4>Factoring</h4>
+<p>TODO - I don&#39;t know if much at all of the caveats are true. We also definitely need to demonstrate factoring some polynomials over BigInt as the final part. I don&#39;t know how feasible that is in the time constraints - but otherwise the task doesn&#39;t provide any new functionality &#40;for int, just take a large enough prime and run factor on that - it will be ridiculously slow but correct&#41;.</p>
+<ol>
 <li><p>Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples.</p>
 </li>
-</ul>
-<ul>
-<li><p>Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.</p>
-</li>
-</ul>
-<ul>
-<li><p>Benchmark your factorization algorithm by factoring a database of problems &#40;e.g. generated by you via <code>rand</code>&#41;.  Do not use more than 120 seconds of local compute time.</p>
-</li>
-</ul>
-<ul>
-<li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial.</p>
-</li>
-</ul>
-<h3><strong>Bonus Tasks &#40;12 points&#41;</strong></h3>
-<p><strong>Note:</strong> <em>no help will be given via the Ed discussion board or otherwise for bonus tasks.</em> Bonus tasks may not increase your final mark beyond 100&#37;. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
-<h4>1. Factorisation &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
-<p>Use factorization of polynomials over <span class="math">$Z_p$</span> &#40;this was given to you&#41; and CRT to write a factorization algorithm for polynomials over <span class="math">$Z$</span>. See Unit 6 for details.</p>
-<h4>2. FFT/DFT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
-<p>The naive multiplication algorithm that we have provided &#40;and likely any optimised version you have written&#41; is an <span class="math">$O(n^2)$</span>. Modern computer systems use the <a href="">Discrete Fast Fourier Transform</a> &#40;DFFT&#41; to multiply both polynomials and integers. This is one of the most important algorithms ever developed in both applied and pure mathematics.</p>
-<ol>
-<li><p>Refactor the existing multiplication of polynomials to use the DFFT. In particular, ensure your multiplication uses the 2 different implementations of DFFT to not repeat the bit permutation.  </p>
-</li>
-<li><p><em>In your PDF submission include an annotated copy of your code, and a description of the technical details of your implementation.</em></p>
+</ol>
+<ol start="2">
+<li><p>Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of irreducible polynomials so your factorization is predictable &#40;though some of the irreducible factors should be repeated&#41;.  </p>
 </li>
 </ol>
-<p>Note: no marks are awarded for 2 if your implementation does not work correctly.</p>
+<p>&#91;TODO:  I&#39;m not sure this is the case anymore. Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.&#93;</p>
+<ol start="3">
+<li><p>Benchmark your factorization algorithm by factoring a database of problems &#40;e.g. generated by you via <code>rand</code>&#41;.  Do not use more than 120 seconds of local compute time.</p>
+</li>
+</ol>
+<ol start="4">
+<li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial. &#40;TODO what does this mean???&#41;</p>
+</li>
+</ol>
+<h3><strong>Bonus Tasks &#40;12 points&#41;</strong></h3>
+<p><strong>Note:</strong> <em>no help will be given via the Ed discussion board or otherwise for bonus tasks.</em> Bonus tasks may not increase your final mark beyond 100&#37;. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
+<h4>1. CRT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
+<p>START MOVE The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>PolynomialSparseBI</code> via cheaper products of <code>PolynomialSparse</code>.</p>
+<ol>
+<li><p>Implement multiplication for <code>PolynomialModP</code> &#40;if you haven&#39;t done so yet in Task 4&#41;.</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>Implement multiplication using the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; for <code>PolynomialSparseBI</code> as presented in the lecture. Here the product of two <code>PolynomialSparseBI</code>s will be computed by doing sufficiently many multiplications of their <code>PolynomialModP</code> counterparts.</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>Create tests for <code>PolynomialSparseBI</code> CRT multiplication and ensure your implementation passes them.</p>
+</li>
+</ol>
+<ol start="4">
+<li><p>Benchmark <code>PolynomialSparseBI</code> CRT multiplication and contrast your results against the old multiplication &#40;it is recommended to keep the old form of multiplication in another function or method&#41;.  Find examples that demonstrate the CRT based approach is faster.</p>
+</li>
+</ol>
+<p>END MOVE - TODO FIX THIS&#33;</p>
+<h4>2. FFT/DFT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
+<p>The naive multiplication algorithm that we have provided &#40;and likely any optimised version you have written&#41; is an <span class="math">$O(n^2)$</span> algorithm. Modern computer systems use the <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> &#40;FFT&#41; to compute the <a href="https://en.wikipedia.org/wiki/Discrete_Fourier_transform">Discrete Fourier Transform</a>. This is utilised to multiply both polynomials and &#40;large&#41; integers. This is one of the <em>most important algorithms ever developed</em> in both applied and pure mathematics.</p>
+<ol>
+<li><p>Refactor the existing multiplication of polynomials to use FFT. In particular, ensure your multiplication uses 2 different implementations of FFT to avoid the bit reversal permutation entirely.</p>
+</li>
+<li><p><em>In your PDF submission</em> include an annotated copy of your code, and a description of the technical details of your implementation.</p>
+</li>
+<li><p>Create <code>example_script_bonus_task_2.jl</code>. Benchmark using <code>BenchmarkTools</code> the speed of your FFT polynomial multiplication algorithm against the naive ones provided.</p>
+</li>
+</ol>
+<p><em>Note: no marks are awarded for 2/3 if your implementation does not work correctly.</em></p>
+<p><em>Note: you do not need to learn/implement the truncated FFT &#40;TFFT&#41;. FFT over <span class="math">$2^n$</span> terms is sufficient. For those curious, see <a href="https://arxiv.org/abs/1602.04562">Paul&#39;s</a> <a href="https://arxiv.org/pdf/1602.04562">paper</a> for an explanation of &#40;TFFT&#41;.</em></p>
 <h4>3. Pseudo-Division in Rings that are <em>NOT</em> Euclidean Domains &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
-<p>As you may have discovered, implementing division over <span class="math">$Z[x]$</span> is not possible. In particular, we cannot determine a quotient and remainder as <span class="math">$Z[x]$</span> is not a <a href="">Euclidean domain</a>. Instead, we have the notion of <em>pseudo-division</em>. <em>Write all examples for this task in a script called <code>example_script_bonus_task_3.jl</code> and include the output in your PDF submission.</em></p>
+<p>As you may have discovered, implementing division over <span class="math">$Z[x]$</span> is not possible. In particular, we cannot determine a quotient and remainder as <span class="math">$Z[x]$</span> is not a Euclidean domain. Instead, we have the notion of <em>pseudo-division</em>. <em>Write all examples for this task in a script called <code>example_script_bonus_task_3.jl</code> and include the output in your PDF submission.</em></p>
 <ol>
 <li><p>Write a function <code>pseudo_div_rem</code> which returns the <em>pseudo-quotient</em> and <em>pseudo-remainder</em> of <code>f</code> pseudo-divided by <code>g</code>. The type signature of the function should be: </p>
 </li>
 </ol>
 <pre><code>pseudo_div_rem&#40;f::P, g::P&#41;::Tuple&#123;P, P&#125; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125; </code></pre>
 <ol start="2">
-<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-div-rem property &#40;this is similar to the definition of integer division&#41; holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;<em>hint - create polynomials in product form</em>&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.</p>
+<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-div-rem property &#40;this is similar to the definition of integer division&#41; holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;<em>hint - create polynomials in by taking products of irreducible polynomials</em>&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than <em>5 minutes</em> to run.</p>
 </li>
 <li><p><em>In your PDF submission</em> provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided &#40;and why&#41; if we computed this over <span class="math">$\mathbb{Q}[x]$</span> rather than <span class="math">$\mathbb{Z}[x]$</span> using exact division over <span class="math">$\mathbb{Q}$</span>.</p>
 </li>
 </ol>
+<h3>Secret Math Easter Egg -</h3>
+<p>The upshot of the bonus tasks, is that ... TALK ABOUT USING MULTIPLE ALGORITHMS TOGETHER TODO  Ben-Or/Tiwari algorithm or Zippel&#39;s algorithm  talk about as well for sparse polynomials.</p>
 
 
         <HR/>

@@ -7,12 +7,11 @@
 #############################################################################
 
 
-# TODO - Make it 10^3 again
 """
 Test product of polynomials.
 """
 function prod_test_poly(::Type{P};
-    N::Int = 10^2, N_prods::Int = 20, seed::Int = 0
+    N::Int = 3 * 10^2, N_prods::Int = 20, seed::Int = 0
     ) where {P <: Polynomial}
     Random.seed!(seed)
     for _ in 1:N

@@ -17,7 +17,7 @@ Returns quotient and remainder (q, r)
 """
 function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
     f, g = mod(num,prime), mod(den,prime)
-    degree(f) < degree(num) && return nothing # FIXME - This breaks factor - why would we return nothing in place of a Tuple? - Mittun
+    degree(f) < degree(num) && return nothing # FIXME - Mittun
     iszero(g) && throw(DivideError())
     q = PolynomialDense()
     prev_degree = degree(f)

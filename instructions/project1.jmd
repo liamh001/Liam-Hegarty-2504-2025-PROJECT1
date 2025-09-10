@@ -193,13 +193,11 @@ At the moment the code-base has implemented functions named `div_mod_p`, `gcd_mo
 x = x_poly(PolynomialSparse{Int, Int})
 f = (x + 5)^3 * x^2 * (x + 1)^2
 g = (x - 1) * (x + 5) * (x + 1)^4
-@show gcd_mod_p(f, g, 7) # output:
-@show factor_mod_p(f, g, 7) # output: 
-
-TODO: MITTUN GIVE AN EXAMPLE OF ^ 
+@show gcd_mod_p(f, g, 7) 
+# output: 5⋅x^0 + 4⋅x^1 + 1⋅x^3 = (x + 5) * (x + 1)^2
 ```
  
-This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.  In this task we implement this improvement.
+This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.  In this task we implement this improvement. *Note: you should aim to implement all functions in this section as efficiently as you can.*
  
 ##### Constructors
 
@@ -288,7 +286,11 @@ end
 **Note:** you may make as many additional convenience/helper functions as you wish.
 
 #### Checking that it works 
-TODO
+10.  Create `example_script_task_5.jl` and in this file, demonstrate a series of examples of basic modular arithmetic operations working correctly.
+
+11.  Create `tests/z_mod_p.jl` containing tests which run *all* operations on `ZModP`.  Your tests must run on at least 10^3 randomly generated integers in the range -10^4 to 10^4 inclusive. Utilise the in-built `mod` function on integers to verify correctness of your operations. Ensure your implementations pass these tests.
+
+12. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your operations on `ZModP`. *Screenshot (or copy/paste) the output of this and your `example_script_task_5.jl` and add it to your PDF submission.*
 
 ### **Task 6 (X pts) - Creating $\mathbb{Z}_p[x]$**
 #### Constructing $\mathbb{Z}_p[x]$
@@ -380,7 +382,7 @@ The naive multiplication algorithm that we have provided (and likely any optimis
   
 *Note: no marks are awarded for 2/3 if your implementation does not work correctly.*
 
-*Note: you do not need to learn/implement the truncated FFT (TFFT). FFT over $2^n$ terms is sufficient. For those curious, see [Paul's paper](TODO) for an explanation of (TFFT).*
+*Note: you do not need to learn/implement the truncated FFT (TFFT). FFT over $2^n$ terms is sufficient. For those curious, see [Paul's](https://arxiv.org/abs/1602.04562) [paper](https://arxiv.org/pdf/1602.04562) for an explanation of (TFFT).*
 
 #### 3. Pseudo-Division in Rings that are *NOT* Euclidean Domains (*4 **bonus** points*)
 As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a Euclidean domain. Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
