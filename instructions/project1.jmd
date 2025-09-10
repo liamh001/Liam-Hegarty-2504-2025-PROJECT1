@@ -39,7 +39,7 @@ Feedback will be given by the teaching staff by annotating **selected parts** of
  
 * *90 points* are allocated for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code.
  
-* *X points* are allocated for the *bonus tasks*. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.
+* *12 points* are allocated for the *bonus tasks*. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.
  
 * In general, points **will be** deducted for sloppy coding style. Make sure your code is properly indented, uses sensible and consistent variable names and write code that is in general clean and consistent.
  
@@ -180,12 +180,17 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 
 4. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions. *Screenshot (or copy/paste) the output and add it to your PDF submission`*
   
-### **Task 5 (13pts) - A new coefficient type**
-#### Creating $\mathbb{Z}_p$ and $\mathbb{Z}_p[x]$
+### **Task 5 (13pts) - $\mathbb{Z}_p$ and $\mathbb{Z}_p[x]$**
   
-# TODO
-Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. It is for this reason that those functions are named `divide_mod_p`, `gcd_mod_p`, and `factor_mod_p`.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
- 
+Notice all your implementations of polynomials so far integer data-types as their coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided. It is for this reason that those functions are named `divide_mod_p`, `gcd_mod_p`, and `factor_mod_p`.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated, as well as having simply `gcd`, `factor` etc. functions which work on the original type.
+
+#### Constructing $\mathbb{Z}_p$
+
+- Create a file `src/z_mod_p.jl`. Inside of this, create a struct with the following type signature:
+```
+struct ZModP{T, N}
+```
+
 - [WITH ABSTRACTION] Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations. 
  
 - Create tests for `PolynomialModP` and associated functions and ensure your implementation passes them.
@@ -220,18 +225,27 @@ The current multiplication implementation is not efficient for `PolynomialSparse
  
 -  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
  
-### **Bonus Tasks**
-***Note:*** no help will be given via the Ed discussion board or otherwise for bonus tasks. Bonus tasks may add to your marks, although you are still capped at 100%. I.e., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 (*not 101/100*).
+### **Bonus Tasks (12 points)** 
+**Note:** *no help will be given via the Ed discussion board or otherwise for bonus tasks.* Bonus tasks may not increase your final mark beyond 100%. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 (*not 101/100*).
 
-#### Factorisation (4 bonus points)
+#### 1. Factorisation (*4 **bonus** points*)
 Use factorization of polynomials over $Z_p$ (this was given to you) and CRT to write a factorization algorithm for polynomials over $Z$. See Unit 6 for details.
 
-#### FFT/DFT Multiplication (4 bonus points)
+#### 2. FFT/DFT Multiplication (*4 **bonus** points*)
 The naive multiplication algorithm that we have provided (and likely any optimised version you have written) is an $O(n^2)$. Modern computer systems use the [Discrete Fast Fourier Transform]() (DFFT) to multiply both polynomials and integers. This is one of the most important algorithms ever developed in both applied and pure mathematics.
 1. Refactor the existing multiplication of polynomials to use the DFFT. In particular, ensure your multiplication uses the 2 different implementations of DFFT to not repeat the bit permutation.  
 2. *In your PDF submission include an annotated copy of your code, and a description of the technical details of your implementation.*
   
 Note: no marks are awarded for 2 if your implementation does not work correctly.
 
-#### Pseudo-Division in Rings that are *NOT* Euclidean Domains (2 bonus points) TODO
-As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a [Euclidean domain](). Instead, we have the notion of *pseudo-division*. In 
+#### 3. Pseudo-Division in Rings that are *NOT* Euclidean Domains (*4 **bonus** points*)
+As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a [Euclidean domain](). Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
+
+1. Write a function which returns the *pseudo-quotient* and *pseudo-remainder* of `f` pseudo-divided by `g`. The type signature of the function should be: 
+```
+pseudo_divide(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}} 
+```
+
+2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. Show that the pseudo-division property holds as well as the pseudo-gcd property. In addition, show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (hint - create polynomials in product form). Finally, show using at least 5 hard-coded examples that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)` using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.
+
+3. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be averted if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$ and why.

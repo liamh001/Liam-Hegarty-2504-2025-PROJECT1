@@ -702,7 +702,7 @@ div.title {text-align: center;}
 </li>
 </ul>
 <ul>
-<li><p><em>X points</em> are allocated for the <em>bonus tasks</em>. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.</p>
+<li><p><em>12 points</em> are allocated for the <em>bonus tasks</em>. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.</p>
 </li>
 </ul>
 <ul>
@@ -917,14 +917,32 @@ div.title {text-align: center;}
 <li><p>Using a compute budget of approximately 120 seconds &quot;stress test&quot; your factorization implementation by factoring something substantial.</p>
 </li>
 </ul>
-<h3><strong>Bonus Tasks</strong></h3>
-<p>***Note:*** no help will be given via the Ed discussion board or otherwise for bonus tasks. Bonus tasks may add to your marks, although you are still capped at 100&#37;. I.e., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
-<h4>Factorisation &#40;5 bonus points&#41; TODO</h4>
-<p>Use factorization of <code>PolynomialModP</code> and CRT to write a factorization algorithm for <code>PolynomialSparseBI</code>.</p>
-<h4>FFT Multiplication &#40;5 bonus points&#41; TODO</h4>
-<p>TODO - Write stuff here about FFT.</p>
-<h4>Pseudo-Division in Rings that are <em>NOT</em> Euclidean Domains &#40;2 bonus points&#41; TODO</h4>
-<p>TODO - Write stuff here about Pseudo division.</p>
+<h3><strong>Bonus Tasks &#40;12 points&#41;</strong></h3>
+<p><strong>Note:</strong> <em>no help will be given via the Ed discussion board or otherwise for bonus tasks.</em> Bonus tasks may not increase your final mark beyond 100&#37;. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
+<h4>1. Factorisation &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
+<p>Use factorization of polynomials over <span class="math">$Z_p$</span> &#40;this was given to you&#41; and CRT to write a factorization algorithm for polynomials over <span class="math">$Z$</span>. See Unit 6 for details.</p>
+<h4>2. FFT/DFT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
+<p>The naive multiplication algorithm that we have provided &#40;and likely any optimised version you have written&#41; is an <span class="math">$O(n^2)$</span>. Modern computer systems use the <a href="">Discrete Fast Fourier Transform</a> &#40;DFFT&#41; to multiply both polynomials and integers. This is one of the most important algorithms ever developed in both applied and pure mathematics.</p>
+<ol>
+<li><p>Refactor the existing multiplication of polynomials to use the DFFT. In particular, ensure your multiplication uses the 2 different implementations of DFFT to not repeat the bit permutation.  </p>
+</li>
+<li><p><em>In your PDF submission include an annotated copy of your code, and a description of the technical details of your implementation.</em></p>
+</li>
+</ol>
+<p>Note: no marks are awarded for 2 if your implementation does not work correctly.</p>
+<h4>3. Pseudo-Division in Rings that are <em>NOT</em> Euclidean Domains &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
+<p>As you may have discovered, implementing division over <span class="math">$Z[x]$</span> is not possible. In particular, we cannot determine a quotient and remainder as <span class="math">$Z[x]$</span> is not a <a href="">Euclidean domain</a>. Instead, we have the notion of <em>pseudo-division</em>. <em>Write all examples for this task in a script called <code>example_script_bonus_task_3.jl</code> and include the output in your PDF submission.</em></p>
+<ol>
+<li><p>Write a function which returns the <em>pseudo-quotient</em> and <em>pseudo-remainder</em> of <code>f</code> pseudo-divided by <code>g</code>. The type signature of the function should be: </p>
+</li>
+</ol>
+<pre><code>pseudo_divide&#40;f::P, g::P&#41;::Tuple&#123;P, P&#125; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125; </code></pre>
+<ol start="2">
+<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-division property holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;hint - create polynomials in product form&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than 5 minutes to run.</p>
+</li>
+<li><p><em>In your PDF submission</em> provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be averted if we computed this over <span class="math">$\mathbb{Q}[x]$</span> rather than <span class="math">$\mathbb{Z}[x]$</span> using exact division over <span class="math">$\mathbb{Q}$</span> and why.</p>
+</li>
+</ol>
 
 
         <HR/>
