@@ -860,10 +860,10 @@ div.title {text-align: center;}
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions. <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
 </li>
 </ol>
-<h3><strong>Task 5 &#40;13-Xpts&#41; - Creating <span class="math">$\mathbb{Z}_p$</span></strong></h3>
-<p>Notice your polynomial implementation has assumed integer coefficients and &#40;fatally&#41; <span class="math">$\mattbb{Z}$</span> is <em>not</em> a <a href="https://en.wikipedia.org/wiki/Euclidean_domain">euclidean domain</a>. This means we do not yet have access to <code>gcd</code> on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a <em><a href="https://en.wikipedia.org/wiki/Field_&#40;mathematics&#41;">field</a></em> like <span class="math">$\mathbb{Z}_p$</span>, for <span class="math">$p$</span> a prime, then the resulting <span class="math">$\mathbb{Z}_p[x]$</span> <em>is</em> a Euclidean domain. We therefore need to implement some way to work with <span class="math">$\mathbb{Z}_p[x]$</span>.</p>
+<h3><strong>Task 5 &#40;7pts&#41; - Implementing <span class="math">$\mathbb{Z}_p$</span></strong></h3>
+<p>Notice your polynomial implementation has assumed integer coefficients and &#40;fatally&#41; <span class="math">$\mathbb{Z}$</span> is <em>not</em> a <a href="https://en.wikipedia.org/wiki/Euclidean_domain">euclidean domain</a>. This means we do not yet have access to <code>gcd</code> on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a <em><a href="https://en.wikipedia.org/wiki/Field_&#40;mathematics&#41;">field</a></em> like <span class="math">$\mathbb{Z}_p$</span>, for <span class="math">$p$</span> a prime, then the resulting <span class="math">$\mathbb{Z}_p[x]$</span> <em>is</em> a Euclidean domain. We therefore need to implement some way to work with <span class="math">$\mathbb{Z}_p[x]$</span>.</p>
 <p>Notice your implementations of polynomials have so far assumed integer coefficients and thereby <code>divide</code>, <code>gcd</code>, <code>factor</code> and so on, <em>require</em> the coefficient arithmetic be done modulo <span class="math">$p$</span> because this makes the coefficient <em><a href="https://en.wikipedia.org/wiki/Ring_&#40;mathematics&#41;">ring</a></em> a <em>field</em>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. </p>
-<p>At the moment the code-base has implemented functions named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code> that return a <em>function</em> which needs to be given a prime before returning an answer. </p>
+<p>At the moment the code-base has implemented functions named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code> that require a prime as input before returning an answer. </p>
 <pre><code># Example usage
 x &#61; x_poly&#40;PolynomialSparse&#123;Int, Int&#125;&#41;
 f &#61; &#40;x &#43; 5&#41;^3 * x^2 * &#40;x &#43; 1&#41;^2
@@ -871,7 +871,7 @@ g &#61; &#40;x - 1&#41; * &#40;x &#43; 5&#41; * &#40;x &#43; 1&#41;^4
 @show gcd_mod_p&#40;f, g, 7&#41; 
 # output: 5⋅x^0 &#43; 4⋅x^1 &#43; 1⋅x^3 &#61; &#40;x &#43; 5&#41; * &#40;x &#43; 1&#41;^2</code></pre>
 <p>This is a cumbersome interface and it would be much cleaner to have a polynomial datatype where the &quot;mod p&quot; behavior is &quot;baked in&quot; and automated.  In this task we implement this improvement. <em>Note: you should aim to implement all functions in this section as efficiently as you can.</em></p>
-<h5>Constructors</h5>
+<h5>Constructors &#40;<em>2 points</em>&#41;</h5>
 <ol>
 <li><p>Create <code>src/z_mod_p.jl</code> and inside of this file create a <code>struct</code> with the following type signature:</p>
 </li>
@@ -898,7 +898,7 @@ end</code></pre>
 <li><p>Ensure the constructors in Task 5.2 &#40;above&#41; fail when attempting to create an object of type <code>ZModP&#123;T, N&#125;</code> when <code>N</code> is <em>not</em> a prime. <em>Use the Primes.jl package that is included in the repository.</em></p>
 </li>
 </ol>
-<h5>Field operations and miscellaneous functions</h5>
+<h5>Field operations and miscellaneous functions &#40;<em>4 points</em>&#41;</h5>
 <ol start="4">
 <li><p>Implement the following convenience and query operations:</p>
 </li>
@@ -926,7 +926,7 @@ end</code></pre>
     function ÷&#40;a::ZModP&#123;T, N&#125;, b::S&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;
     function ÷&#40;a::S, b::ZModP&#123;T, N&#125;&#41;::ZModP&#123;T, N&#125; where &#123;T &lt;: Integer, S &lt;: Integer, N&#125;</code></pre>
 <p><em>Hint: Recall division in a field is simply multiplication by the inverse. See <code>int_inverse_mod</code> in <code>src/utils/general_alg.jl</code>.</em></p>
-<p><em>Note: All the above operations should act as they do in <span class="math">$\mathbb{Z}_p$</span>. E.g., <span class="math">$3 * 2 = 6 = 1 (\text{mod} 5)$</span> should correspond to the code:</em></p>
+<p><em>Note: All the above operations should act as they do in <span class="math">$\mathbb{Z}_p$</span>. E.g., <span class="math">$3 * 2 = 6 = 1\, (\text{mod}\, 5)$</span> should correspond to the code:</em></p>
 <pre><code>    a &#61; ZModP&#40;3, 5&#41;
     @show a * 2 # should print 1</code></pre>
 <ol start="6">
@@ -947,24 +947,24 @@ end</code></pre>
 </li>
 </ol>
 <p><strong>Note:</strong> you may make as many additional convenience/helper functions as you wish.</p>
-<h4>Checking that it works</h4>
+<h4>Checking that it works &#40;<em>2 points</em>&#41;</h4>
 <ol start="10">
 <li><p>Create <code>example_script_task_5.jl</code> and in this file, demonstrate a series of examples of basic modular arithmetic operations working correctly.</p>
 </li>
-<li><p>Create <code>tests/z_mod_p.jl</code> containing tests which run <em>all</em> operations on <code>ZModP</code>.  Your tests must run on at least 10^3 randomly generated integers in the range -10^4 to 10^4 inclusive. Utilise the in-built <code>mod</code> function on integers to verify correctness of your operations. Ensure your implementations pass these tests.</p>
+<li><p>Create <code>tests/z_mod_p.jl</code> containing tests which run <em>all</em> operations on <code>ZModP</code>.  Your tests must run on at least 10^3 randomly generated integers in the range -10^4 to 10^4 inclusive and using at least 10 different primes. Utilise the in-built <code>mod</code> function on integers to verify correctness of your operations. Ensure your implementations pass these tests.</p>
 </li>
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your operations on <code>ZModP</code>. <em>Screenshot &#40;or copy/paste&#41; the output of this and your <code>example_script_task_5.jl</code> and add it to your PDF submission.</em></p>
 </li>
 </ol>
-<h3><strong>Task 6 &#40;X pts&#41; - Creating <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
-<h4>Constructing <span class="math">$\mathbb{Z}_p[x]$</span></h4>
+<h3><strong>Task 6 &#40;7pts&#41; - Implementing <span class="math">$\mathbb{Z}_p[x]$</span></strong></h3>
+<h4>Constructing <span class="math">$\mathbb{Z}_p[x]$</span> &#40;<em>5 points</em>&#41;</h4>
 <p>Now that we have <code>ZModP</code> as a subtype of <code>Integer</code>, we can use this as the coefficient type of our polynomials. E.g., <code>PolynomialSparse&#123;ZModP&#123;Int, 5&#125;, Int&#125;</code>. <em>Try experimenting in the REPL with this before attempting the rest of this section.</em></p>
 <p>Additionally, since we have a baked-in version of <span class="math">$\mathbb{Z}_p$</span>, it is better to re-implement all our functions that were previously named with the suffix <code>_mod_p</code>.</p>
 <p>We also have several functions that are not yet implemented at the abstract level. These are stored in the file <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code>. Your next task is to implement these:</p>
 <ol>
 <li><p>Create a folder <code>src/basic_polynomial_operations/mod_p</code> and duplicate <code>src/basic_polynomial_operations/abstract/polynomial_field_ops.jl</code> as <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code>.</p>
 </li>
-<li><p>Each function in <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code> takes <code>::Type&#123;C&#125;</code> as its first argument. Modify the type signature to contain <code>&#123;T, N, C &lt;: ZMod&#123;T, N&#125;&#125;</code> &#40;i.e., so we can override it specifically for polynomials over <span class="math">$\mathbb{Z}_p$</span>&#41;.</p>
+<li><p>Each function in <code>src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl</code> takes <code>::Type&#123;C&#125;</code> as its first argument. Modify the type signature such that <code>C</code> is of type <code>ZModP&#123;T, N&#125;</code> &#40;i.e., so we can override it specifically for polynomials over <span class="math">$\mathbb{Z}_p$</span>&#41;.</p>
 </li>
 <li><p>Reimplement each function in <code>polynomial_field_ops.jl</code> by refactoring the corresponding <code>_mod_p</code> version to use your new &#40;better&#41; <span class="math">$\mathbb{Z}_p[x]$</span> polynomials. <em>Note: these functions no longer require a prime to be given as input as this is now baked into the type.</em></p>
 </li>
@@ -988,10 +988,12 @@ end</code></pre>
     function dd_factor_mod_p&#40;f::P, prime::Int&#41;::Array&#123;P&#125; where &#123;P &lt;: Polynomial&#125;
     function dd_split_mod_p&#40;f::P, d::Int, prime::Int&#41;::Vector&#123;P&#125; where &#123;P &lt;: Polynomial&#125;</code></pre>
 <p><em>Note: Any other functions with suffix <code>_mod_p</code> do not need to be refactored as they depend on the functions in Task 6.5.</em></p>
-<h4>Checking that it works</h4>
-<p>TODO</p>
+<h4>Checking that it works &#40;<em>2 points</em>&#41;</h4>
+<ol start="6">
+<li><p>Verify the correctness of your implementations to the rest of task 6 by using <code>tests/runtests.jl</code> on polynomials with coefficients of type <code>ZModP&#123;T, N&#125;</code> for <code>T</code> <em>both</em> <code>Int</code> and <code>BigInt</code> and at least 3 primes &#40;and at least 1 prime must be larger than 1000&#41;. <em>Include the output of the tests in your PDF submission.</em></p>
+</li>
+</ol>
 <h3>Task 7 &#40;20pts&#41; - Factoring with Chinese Remainder Theorem</h3>
-<p>TODO - CAN WE MOVE ONE OR TWO POINTS TO THE PREVIOUS TWO TASKS? ASK ALISTAIR HIS THOUGHTS</p>
 <p><em>Note:</em> This is a mastery level task that need only be attempted by those students targeting a seven.  Sufficient marks have been allocated by this point to earn a six.</p>
 <ol>
 <li><p>Create <code>example_script_task_7.jl</code>. All <em>examples</em> you provide in the remainder of task 7 must be included in this script, and the output of the script at the end of task 7 &#40;or however much you are able to accomplish&#41; should be <em>included in your PDF submission</em>.</p>
@@ -999,7 +1001,7 @@ end</code></pre>
 <li><p>Create <code>src/crt.jl</code>. All functions you implement in task 7 should be written in this file unless explicitly stated otherwise.</p>
 </li>
 </ol>
-<h4>Integer CRT</h4>
+<h4>Integer CRT &#40;<em>5 points</em>&#41;</h4>
 <ol start="2">
 <li><p>Implement a function with the following type signature which applies the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; over a list of remainders <span class="math">$r1,\ldots,rk$</span> and &#40;coprime&#41; moduli <span class="math">$m1,\ldots,mk$</span>:</p>
 </li>
@@ -1008,7 +1010,7 @@ end</code></pre>
 # The output has a different type as you may wish to output a &#96;BigInt&#96; even if &#96;Int&#96;&#39;s are inputted to avoid overflow.</code></pre>
 <h6>TODO: checking it works &amp; make sure to do it for big ints</h6>
 <h6>TODO: write a short summary/description of the CRT theorem for integers</h6>
-<h4>Factorisation with CRT</h4>
+<h4>Factorisation with CRT &#40;<em>14 points</em>&#41;</h4>
 <p>TODO - I don&#39;t know if much at all of the caveats are true. We also definitely need to demonstrate factoring some polynomials over BigInt as the final part. I don&#39;t know how feasible that is in the time constraints - but otherwise the task doesn&#39;t provide any new functionality &#40;for int, just take a large enough prime and run factor on that - it will be ridiculously slow but correct&#41;.</p>
 <h6>TODO: implement CRT for polynomial factorisation using lecture pseudocode</h6>
 <h6>TODO: test that it works</h6>
