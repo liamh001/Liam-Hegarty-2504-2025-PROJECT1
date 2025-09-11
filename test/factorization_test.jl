@@ -20,10 +20,7 @@ function factor_mod_p_test_poly(::Type{P};
             print(".")
 
             # Ensure our random polynomial does not have vanishing leading term mod prime
-            p = rand(P)
-            while degree(p) != degree(mod(p, prime))
-                p = rand(P)
-            end
+            p = rand(P; monic = true)
 
             factorization = factor_mod_p(p, prime)
             pr = mod(expand_factorization(factorization),prime)

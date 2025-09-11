@@ -35,7 +35,7 @@ include("polynomials_test.jl")
 polynomial_types = [PolynomialDense] # The types of polynomials to unit test
 println("---BEGIN POLYNOMIAL UNIT TESTS---\n")
 for poly in polynomial_types
-    println("Type of `Polynomial``: $(poly)")
+    println("Type of `Polynomial`: $(poly)")
     prod_test_poly(poly)
     prod_derivative_test_poly(poly)
     ext_euclid_test_poly(poly)

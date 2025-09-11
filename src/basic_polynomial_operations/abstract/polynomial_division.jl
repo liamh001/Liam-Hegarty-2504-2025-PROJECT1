@@ -18,6 +18,8 @@ Returns quotient and remainder (q, r)
 Precondition: 
     1) degree(num) == degree(mod(num, prime))
     2) mod(den, prime) != 0
+
+Note: clearly a monic polynomial will satisfy 1) in Zp for any field.
 """
 function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
     f, g = mod(num,prime), mod(den,prime)
