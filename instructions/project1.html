@@ -848,7 +848,7 @@ div.title {text-align: center;}
 </li>
 </ol>
 <h3><strong>Task 4 &#40;7pts&#41; - Optimising an algorithm</strong></h3>
-<h4>Fixing power</h4>
+<h4>Fixing power &#40;<em>7 points</em>&#41;</h4>
 <p>As discussed in class, if you have a polynomial <code>f</code> and raise it to the power <code>2^n</code> then instead of doing about <code>2^n</code> multiplications you can do about <code>n</code> using <strong>repeated squaring</strong>.</p>
 <ol>
 <li><p>Re-factor <code>pow_mod</code> and <code>^</code> into something more efficient by using repeated squaring.  Your implementation should be implemented at the abstract level &#40;i.e.,<code>Polynomial&#123;C, D&#125;</code>&#41; and should therefore  work for both <code>PolynomialDense</code> and <code>PolynomialSparse</code>.</p>
@@ -860,7 +860,7 @@ div.title {text-align: center;}
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions. <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
 </li>
 </ol>
-<h3><strong>Task 5 &#40;7pts&#41; - Implementing <span class="math">$\mathbb{Z}_p$</span></strong></h3>
+<h3><strong>Task 5 &#40;8pts&#41; - Implementing <span class="math">$\mathbb{Z}_p$</span></strong></h3>
 <p>Notice your polynomial implementation has assumed integer coefficients and &#40;fatally&#41; <span class="math">$\mathbb{Z}$</span> is <em>not</em> a <a href="https://en.wikipedia.org/wiki/Euclidean_domain">euclidean domain</a>. This means we do not yet have access to <code>gcd</code> on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a <em><a href="https://en.wikipedia.org/wiki/Field_&#40;mathematics&#41;">field</a></em> like <span class="math">$\mathbb{Z}_p$</span>, for <span class="math">$p$</span> a prime, then the resulting <span class="math">$\mathbb{Z}_p[x]$</span> <em>is</em> a Euclidean domain. We therefore need to implement some way to work with <span class="math">$\mathbb{Z}_p[x]$</span>.</p>
 <p>Notice your implementations of polynomials have so far assumed integer coefficients and thereby <code>divide</code>, <code>gcd</code>, <code>factor</code> and so on, <em>require</em> the coefficient arithmetic be done modulo <span class="math">$p$</span> because this makes the coefficient <em><a href="https://en.wikipedia.org/wiki/Ring_&#40;mathematics&#41;">ring</a></em> a <em>field</em>.  Consequently, the aforementioned functions must be performed in <span class="math">$\mathbb{Z}_p[x]$</span> and not in <span class="math">$\mathbb{Q}[x]$</span> and worse yet can only do so once a prime <span class="math">$p$</span> is provided. </p>
 <p>At the moment the code-base has implemented functions named <code>div_mod_p</code>, <code>gcd_mod_p</code>, and <code>factor_mod_p</code> that require a prime as input before returning an answer. </p>
@@ -993,7 +993,7 @@ end</code></pre>
 <li><p>Verify the correctness of your implementations to the rest of task 6 by using <code>tests/runtests.jl</code> on polynomials with coefficients of type <code>ZModP&#123;T, N&#125;</code> for <code>T</code> <em>both</em> <code>Int</code> and <code>BigInt</code> and at least 3 primes &#40;and at least 1 prime must be larger than 1000&#41;. <em>Include the output of the tests in your PDF submission.</em></p>
 </li>
 </ol>
-<h3>Task 7 &#40;20pts&#41; - Factoring with Chinese Remainder Theorem</h3>
+<h3><strong>Task 7 &#40;18pts&#41; - Factoring with Chinese Remainder Theorem</strong></h3>
 <p><em>Note:</em> This is a mastery level task that need only be attempted by those students targeting a seven.  Sufficient marks have been allocated by this point to earn a six.</p>
 <ol>
 <li><p>Create <code>example_script_task_7.jl</code>. All <em>examples</em> you provide in the remainder of task 7 must be included in this script, and the output of the script at the end of task 7 &#40;or however much you are able to accomplish&#41; should be <em>included in your PDF submission</em>.</p>
@@ -1001,7 +1001,7 @@ end</code></pre>
 <li><p>Create <code>src/crt.jl</code>. All functions you implement in task 7 should be written in this file unless explicitly stated otherwise.</p>
 </li>
 </ol>
-<h4>Integer CRT &#40;<em>5 points</em>&#41;</h4>
+<h4>Integer CRT &#40;<em>4 points</em>&#41;</h4>
 <ol start="2">
 <li><p>Implement a function with the following type signature which applies the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; over a list of remainders <span class="math">$r1,\ldots,rk$</span> and &#40;coprime&#41; moduli <span class="math">$m1,\ldots,mk$</span>:</p>
 </li>
@@ -1039,7 +1039,7 @@ end</code></pre>
 <p><strong>Note:</strong> <em>no help will be given via the Ed discussion board or otherwise for bonus tasks.</em> Bonus tasks may not increase your final mark beyond 100&#37;. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 &#40;<em>not 101/100</em>&#41;.</p>
 <p>Each bonus task can be completed independent of the others, the order presented here is arbitrary.</p>
 <h4>1. CRT Multiplication &#40;<em>4 <strong>bonus</strong> points</em>&#41;</h4>
-<p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>Polynomial&#123;BigInt, T&#125;</code> via cheaper products of <code>Polynomial&#123;BigInt, T&#125;</code>. <em>Note: <code>BigInt</code> arithmetic is highly optimised in Julia &#40;built on <a href="TODO">GMP</a>&#41;. It is unlikely you will be able to show CRT is faster until bonus task 2 is implemented and you use large <code>BigInt</code>&#39;s &#40;i.e., spanning numerous words&#41; and contrived examples of polynomials for your benchmarks.</em></p>
+<p>The current multiplication implementation is not efficient for any concrete subtype of <code>Polynomial&#123;BigInt, Int&#125;</code> or <code>Polynomial&#123;BigInt, BigInt&#125;</code> because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of <code>Polynomial&#123;BigInt, T&#125;</code> via cheaper products of <code>Polynomial&#123;BigInt, T&#125;</code>. <em>Note: <code>BigInt</code> arithmetic is highly optimised in Julia &#40;built on <a href="https://gmplib.org">GMP</a>&#41;. It is unlikely you will be able to show CRT is faster until bonus task 2 is implemented and you both use large <code>BigInt</code>&#39;s &#40;i.e., spanning numerous words&#41; and contrived examples of polynomials for your benchmarks.</em></p>
 <ol>
 <li><p>Create <code>example_script_bonus_task_1.jl</code>. All test cases and benchmarking in the remainder of this section must be included in this script. <em>Include the output of this script in your PDF submission.</em></p>
 </li>
@@ -1076,7 +1076,7 @@ end</code></pre>
 </ol>
 <pre><code>pseudo_div_rem&#40;f::P, g::P&#41;::Tuple&#123;P, P&#125; where &#123;C, D, P &lt;: Polynomial&#123;C, D&#125;&#125; </code></pre>
 <ol start="2">
-<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-div-rem property &#40;this is similar to the definition of integer division&#41; holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;<em>hint - create polynomials in by taking products of irreducible polynomials</em>&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than <em>5 minutes</em> to run.</p>
+<li><p>Use the provided <code>pseudo_gcd</code> and <code>square_free</code> functions &#40;that are currently commented out&#41; in <code>src/basic_polynomial_operations/polynomial_pseudo_operations.jl</code> to test that your implementations work. Show that the pseudo-div-rem property &#40;this is similar to the definition of integer division&#41; holds as well as the pseudo-gcd property. In addition, show that the function <code>square_free</code> for at least 5 hard-coded examples returns a square free version of your original polynomial &#40;<em>hint - create polynomials by taking products of irreducibles</em>&#41;. Finally, show using at least 5 hard-coded examples that the function <code>square_free_mod_p&#40;f, prime&#41;</code> returns the same as <code>mod&#40;square_free&#40;f&#41;, prime&#41;</code> using at least 3 different primes. Ensure your script takes no longer than <em>5 minutes</em> to run.</p>
 </li>
 <li><p><em>In your PDF submission</em> provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue would be avoided &#40;and why&#41; if we computed this over <span class="math">$\mathbb{Q}[x]$</span> rather than <span class="math">$\mathbb{Z}[x]$</span> using exact division over <span class="math">$\mathbb{Q}$</span>.</p>
 </li>
