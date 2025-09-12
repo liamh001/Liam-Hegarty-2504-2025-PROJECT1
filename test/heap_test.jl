@@ -37,6 +37,17 @@ function test_heap(;N::Int = 10^4)
     @assert isempty(h)
     # println("test_heap - push!/pop!/peek/isempty - PASSED")
 
+    # non-destructive pop all
+    v = rand(1:N, N)
+    h = Heap(v)
+    heap_sorted = popall(h)
+    sort!(v, rev=true)
+    v != heap_sorted && error("Popping all from heap should return vector in sorted order")
+    @assert length(h) == N
+    @assert first(v) == peek(h)
+    @assert !isempty(h)
+    println("test_heap - popall non-destructive vector constructor - PASSED")
+
     # non-destructive safe vector constructor
     v = rand(1:N, N)
     h = Heap(v)

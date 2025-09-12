@@ -9,7 +9,7 @@
 """
 Add a polynomial and a term.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
 function +(p::Polynomial, t::Term)
     not_implemented_error(p, "Polynomial + Term")
@@ -33,5 +33,5 @@ end
 """
 Add a polynomial and an integer.
 """
-+(p::Polynomial, n::Int) = p + Term(n,0)
-+(n::Int, p::Polynomial) = p + Term(n,0)
++(p::Polynomial, n::Integer) = p + Term(n,0)
++(n::Integer, p::Polynomial) = p + Term(n,0)

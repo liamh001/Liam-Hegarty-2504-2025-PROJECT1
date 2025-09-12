@@ -21,7 +21,7 @@ end
 """
 Power of a polynomial.
 """
-function ^(p::Polynomial, n::Int)
+function ^(p::P, n::Integer)::P where {P <: Polynomial}
     n < 0 && error("No negative power")
     out = one(p)
     for _ in 1:n

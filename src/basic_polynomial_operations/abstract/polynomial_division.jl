@@ -21,7 +21,7 @@ Precondition:
 
 Note: clearly a monic polynomial will satisfy 1) in Zp for any field.
 """
-function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
+function div_rem_mod_p(num::P, den::P, prime::Integer)::Tuple{P, P} where {P <: Polynomial}
     f, g = mod(num,prime), mod(den,prime)
     @assert degree(num) == degree(mod(num, prime))
     iszero(g) && throw(DivideError())
@@ -42,9 +42,9 @@ end
 """
 The quotient from polynomial division modulo a prime. 
 """
-div_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = first(div_rem_mod_p(num, den, prime))
+div_mod_p(num::P, den::P, prime::Integer) where {P <: Polynomial} = first(div_rem_mod_p(num, den, prime))
 
 """
 The remainder from polynomial division modulo a prime.
 """
-rem_mod_p(num::P, den::P, prime::Int) where {P <: Polynomial} = last(div_rem_mod_p(num, den, prime))
+rem_mod_p(num::P, den::P, prime::Integer) where {P <: Polynomial} = last(div_rem_mod_p(num, den, prime))

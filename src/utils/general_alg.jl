@@ -9,7 +9,7 @@
 """
 The quotient between two numbers
 """
-function quo(a::T,b::T) where T <: Integer
+function quo(a::Integer,b::Integer)
     a < 0 && return -quo(-a,b)
     a < b && return 0
     return 1 + quo(a-b, b)
@@ -31,8 +31,7 @@ euclid_alg(a...) = foldl((a,b)->euclid_alg(a,b), a; init = 0)
 """
 Euclid's algorithm on a vector.
 """
-euclid_alg(a::Vector{T}) where T <: Integer = euclid_alg(a...)
-
+euclid_alg(a::Vector{Integer}) = euclid_alg(a...)
 
 """
 The extended Euclidean algorithm.
@@ -53,8 +52,9 @@ pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times +
 """
 Integer inverse symmetric mod
 """
-function int_inverse_mod(a::Int, m::Int)::Int 
-    if mod(a, m) == 0
+function int_inverse_mod(a::Integer, m::Integer)::Integer 
+    a = mod(a, m)
+    if a == 0
         error("Can't find inverse of $a mod $m because $m divides $a") 
     end
     return mod(ext_euclid_alg(a,m)[2],m)

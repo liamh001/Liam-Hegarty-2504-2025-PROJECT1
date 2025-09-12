@@ -801,7 +801,7 @@ div.title {text-align: center;}
 <pre><code>struct PolynomialDense&#123;C, D&#125; &lt;: Polynomial&#123;C, D&#125;
     terms::Vector&#123;Term&#123;C, D&#125;&#125;</code></pre>
 <ol start="6">
-<li><p>Refactor all methods in <code>src/polynomial_definitions/polynomial_dense.jl</code> to account for these new parameters.</p>
+<li><p>Refactor all methods in <code>src/polynomial_definitions/polynomial_dense.jl</code> to account for these new parameters. &#40;<em>Hint: you should use the functions <code>zero&#40;::Type&#41;, one&#40;::Type&#41;</code> to create 0 and 1</em>&#41;. </p>
 </li>
 <li><p>Refactor all functions in the directory <code>src/dense</code> to account for these new parameters.</p>
 </li>
@@ -855,7 +855,7 @@ div.title {text-align: center;}
 </li>
 <li><p>Refactor your algorithms for <code>pow_mod</code> and <code>^</code> such that <code>0^n</code>, <code>1^n</code> and <code>x^n</code> are constructed without multiplications &#40;i.e., run in O&#40;1&#41;&#41;.</p>
 </li>
-<li><p>Create <code>tests/power_test.jl</code> containing tests for <code>pow_mod</code> and <code>^</code> which run on at least 10^2 randomly generated polynomials &#40;<em>make sure this can be run on your computer in less than 30s</em>&#41;. Ensure your implementations pass these tests.</p>
+<li><p>Create <code>tests/power_test.jl</code> containing tests for <code>pow_mod</code> and <code>^</code> which run on at least <span class="math">$10^2$</span> randomly generated polynomials &#40;<em>make sure this can be run on your computer in less than 30s</em>&#41;. Ensure your implementations pass these tests.</p>
 </li>
 <li><p>Add this test file to the <code>test/runtests.jl</code> file and have your tests print some output demonstrating the correctness of your <code>pow_mod</code> and <code>^</code> functions. <em>Screenshot &#40;or copy/paste&#41; the output and add it to your PDF submission&#96;</em></p>
 </li>
@@ -1090,7 +1090,7 @@ end</code></pre>
           </center>
           <p>
             Published from <a href="project1.jmd">project1.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-09-11.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-09-12.
           </p>
         </div>
       </div>

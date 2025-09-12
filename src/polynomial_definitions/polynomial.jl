@@ -41,22 +41,6 @@ than the leading term (ie, we do not store 1 + 2x + x^2 + 0x^3 + 0x^7)
 """
 abstract type Polynomial end
 
-""" 
-A generic error message for functionality that should be implemented by concrete subtypes.
-
-This provides a fallback method if you forget to implement a function - ie, if Julia determines
-that it cannot find the relevant function for your Polynomial subtype, it will fallback to calling
-a function that throws an error.
-
-p: 
-    The polynomial for which the method cannot be applied
-method: 
-    The name of the unimplemented method
-"""
-function not_implemented_error(p::Polynomial, methodName::String)
-    error("The method '$(methodName)' is not yet implemented for a polynomial of type $(typeof(p))")
-end
-
 """
 This function maintains the invariant of the Polynomial type so that there are no zero terms beyond the highest
 non-zero term.
@@ -90,7 +74,7 @@ end
 """
 Construct a polynomial of the form x-n.
 """
-function linear_monic_polynomial(::Type{P})::P where {P <: Polynomial} 
+function linear_monic_polynomial(::Type{P}, n)::P where {P <: Polynomial} 
     return P([Term(1,1), Term(-n,0)])
 end
 
@@ -114,7 +98,7 @@ zero(p::P) where {P <: Polynomial} = zero(P)
 Creates the unit polynomial.
 """
 function one(::Type{P})::P where {P <: Polynomial} 
-    return P(one(Term))
+    return P(one(Term{Int, Int}))
 end
 one(p::P) where {P <: Polynomial} = one(P)
 
@@ -152,7 +136,7 @@ function show(io::IO, p::Polynomial)
     if iszero(p)
         print(io,"0")
     else
-        n = length(p.terms)
+        n = length(p)
         for (i,t) in enumerate(p)
             if !iszero(t)
                 print(io, t, i != n ? " + " : "")
@@ -166,11 +150,14 @@ end
 ##############################################
 
 """
-Allows to do iteration over the non-zero terms of the polynomial. This implements the iteration interface.
+Allows to do iteration over the (non-zero) terms of the polynomial in ascending order. 
+This implements the iteration interface.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
-iterate(p::Polynomial, state=1) = not_implemented_error(p, "iterate")
+function iterate(p::Polynomial, state=1)
+    not_implemented_error(p, "iterate")
+end
 
 ##############################
 # Queries about a polynomial #
@@ -179,38 +166,44 @@ iterate(p::Polynomial, state=1) = not_implemented_error(p, "iterate")
 """
 The number of (non-zero) terms of the polynomial.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
 length(p::Polynomial) = not_implemented_error(p, "length")
 
 """
 The term of smallest degree in this polynomial.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
 last(p::Polynomial) = not_implemented_error(p, "last")
 
 """
 The leading term of the polynomial.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
 leading(p::Polynomial) = not_implemented_error(p, "leading")
 
 """
 Returns the coefficients of the polynomial.
 """
-coeffs(p::Polynomial)::Vector{Int} = [t.coeff for t in p]
+function coeffs(p::Polynomial)::Vector{Integer} 
+    [t.coeff for t in p]
+end
 
 """
 The degree of the polynomial.
 """
-degree(p::Polynomial)::Int = leading(p).degree 
+function degree(p::Polynomial)::Integer 
+    leading(p).degree 
+end
 
 """
 The content of the polynomial is the GCD of its coefficients.
 """
-content(p::Polynomial)::Int = euclid_alg(coeffs(p))
+function content(p::Polynomial)::Integer 
+    euclid_alg(coeffs(p))
+end
 
 """
 Evaluate the polynomial at a point `x`.
@@ -228,9 +221,11 @@ This should modify the existing polynomial p in place (ie, no new polynomials sh
 Note: you may wish to throw an error if pushing a term of degree that is already in the 
 polynomial. However, the exact implementation details are up to you.
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
-push!(p::Polynomial, t::Term) = not_implemented_error(p, "push!")
+function push!(p::Polynomial, t::Term) 
+    not_implemented_error(p, "push!")
+end
 
 """
 Pop the leading term out of the polynomial. When polynomial is 0, keep popping out 0.
@@ -238,14 +233,18 @@ Pop the leading term out of the polynomial. When polynomial is 0, keep popping o
 Note - this should modify the existing polynomial p in place (ie, no new polynomials should be 
 created).
 
-This must be overriden by concrete subtypes.
+This must be overridden by concrete subtypes.
 """
-pop!(p::Polynomial)::Term = not_implemented_error(p, "pop")
+function pop!(p::Polynomial)::Term 
+    not_implemented_error(p, "pop")
+end
 
 """
 Check if the polynomial is zero.
 """
-iszero(p::Polynomial)::Bool = iszero(leading(p)) && (degree(p) == 0)
+function iszero(p::Polynomial)::Bool 
+    iszero(leading(p)) && (degree(p) == 0)
+end
 
 #################################################################
 # Transformation of the polynomial to create another polynomial #
@@ -254,7 +253,9 @@ iszero(p::Polynomial)::Bool = iszero(leading(p)) && (degree(p) == 0)
 """
 The negative of a polynomial.
 """
--(p::P) where {P <: Polynomial} = P(map((pt)->-pt, p.terms))
+function -(p::P) where {P <: Polynomial} 
+    P(map((pt)->-pt, p))
+end
 
 """
 Create a new polynomial which is the derivative of the polynomial.
@@ -283,7 +284,7 @@ end
 """
 A square free polynomial modulo a prime.
 """
-function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
+function square_free_mod_p(f::P, prime::Integer) where {P <: Polynomial}
     fmod_p = mod(f, prime)
 
     min_deg = last(fmod_p).degree
@@ -313,7 +314,7 @@ end
 """
 Check if two polynomials are the same.
 """
-function ==(p1::Polynomial, p2::Polynomial)::Bool 
+function ==(p1::P, p2::P)::Bool where {P <: Polynomial}
     if length(p1) != length(p2)
         return false
     end
@@ -343,24 +344,24 @@ end
 """
 Multiplication of polynomial and term.
 """
-function *(t::Term, p1::P)::P where {P <: Polynomial} 
-    return iszero(t) ? P() : P(map((pt)->t*pt, p1.terms))
+function *(t::Term, p::P)::P where {P <: Polynomial} 
+    return iszero(t) ? P() : P(map((pt)->t*pt, p))
 end
-*(p1::Polynomial, t::Term)::Polynomial = t*p1
+*(p::Polynomial, t::Term)::Polynomial = t*p
 
 """
 Multiplication of polynomial and an integer.
 """
-*(p::Polynomial, n::Int)::Polynomial = Term(n,0)*p
-*(n::Int, p::Polynomial)::Polynomial = p*n
+*(p::Polynomial, n::Integer)::Polynomial = Term(n,0)*p
+*(n::Integer, p::Polynomial)::Polynomial = p*n
 
 """
 Integer division of a polynomial by an integer modulo a prime.
 
 Warning this may not make sense if n does not divide all the coefficients of p.
 """
-function div_mod_p(p::P, n::Int, prime::Int) where {P <: Polynomial}
-    P( map((pt)->(div_mod_p(pt, n, prime)), p.terms) )
+function div_mod_p(p::P, n::Integer, prime::Integer) where {P <: Polynomial}
+    P( map((pt)->(div_mod_p(pt, n, prime)), p) )
 end
 
 """
@@ -382,7 +383,6 @@ function pow_mod(p::P, n::Int, prime::Int) where {P <: Polynomial}
     n < 0 && error("No negative power")
 
     out = one(p)
-    base = p
     for _ in 1:n
         out *= p
         out = mod(out, prime)

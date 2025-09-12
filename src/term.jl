@@ -27,10 +27,6 @@ struct Term{C <: Integer, D <: Integer} #structs are immutable by default
     end
 end
 
-function not_yet_implemented_error(t::Term, methodName::String)
-    error("The method '$(methodName)' is not yet implemented for a term of type $(typeof(t))")
-end
-
 ######################
 # Outer Constructors #
 ######################
@@ -47,7 +43,6 @@ function zero(::Type{Term{C, D}})::Term{C, D} where {C, D}
     Term(zero(C), zero(D))
 end
 zero(t::Term) = zero(typeof(t))
-zero(::Type{Term}) = zero(Term{Int, Int}) # Default constructor
 
 """
 Creates the unit term.
@@ -56,7 +51,6 @@ function one(::Type{Term{C, D}})::Term{C, D} where {C, D}
     Term(one(C), zero(D))
 end
 one(t::Term) = one(typeof(t))
-one(::Type{Term}) = one(Term{Int, Int}) # Default constructor
 
 ###########
 # Display #
@@ -147,7 +141,7 @@ end
 """
 Compute the symmetric mod of a term with an integer.
 """
-function mod(t::Term{C, D}, p::Int)::Term{C, D} where {C <: Integer, D}
+function mod(t::Term{C, D}, p::Integer)::Term{C, D} where {C <: Integer, D}
     Term(mod(t.coeff, p), t.degree)
 end
 
@@ -175,16 +169,16 @@ Returns a function of an integer.
 Note: You will need to override this for division where the coefficients are of type ZModP (Task 5)
 There we can do exact division, so we can simply do `t1.coeff ÷ t2.coeff`.
 """
-function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::C) where {C, D}
+function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::Integer) where {C, D}
     @assert t1.degree ≥ t2.degree
-    new_coeff = mod((t1.coeff * int_inverse_mod(t2.coeff, prime)), prime)
+    new_coeff = mod((mod(t1.coeff, prime) * int_inverse_mod(t2.coeff, prime)), prime)
     return Term(new_coeff, t1.degree - t2.degree)
 end
 
 """
 Integer divide a term by an integer.
 """
-function div_mod_p(t::Term{C, D}, n::C, prime::C) where {C <: Integer, D} 
+function div_mod_p(t::Term{C, D}, n::Integer, prime::Integer) where {C <: Integer, D} 
     return div_mod_p(t, Term(C(n), zero(D)), prime)
 end
 

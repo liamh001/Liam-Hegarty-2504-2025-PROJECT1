@@ -40,7 +40,7 @@ leading coefficient.
 
 NOTE: Override this in Task 6 for Zp[x] and in Task 7 for Z[x].
 """
-function factor(::Type{C}, f::P)::Vector{Tuple{P, Int}} where {C, P <: Polynomial}
+function factor(::Type{C}, f::P)::Vector{Tuple{P, Integer}} where {C, P <: Polynomial}
     not_implemented_error(f, "factor")
 end
 
@@ -75,7 +75,7 @@ that list is the polynomial `f`.
 
 NOTE: Override this in Task 6 for Zp[x].
 """
-function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {C, P <: Polynomial}
+function dd_split(::Type{C}, f::P, d::Integer)::Vector{P} where {C, P <: Polynomial}
     not_implemented_error(f, "dd_split")
 end
 
@@ -83,13 +83,13 @@ end
 Returns the quotient of num divided by den (where num/den have the 
 same concrete type) 
 """
-div(::Type{C}, num::P, den::P) where {C, P <: Polynomial} = first(div_rem(num, den))
+div(::Type{C}, num::P, den::P) where {C, P <: Polynomial} = first(div_rem(C, num, den))
 
 """ 
 Returns the remainder of num divided by den (where num/den have the 
 same concrete type) 
 """
-rem(::Type{C}, num::P, den::P) where {C, P <: Polynomial} = last(div_rem(num, den))
+rem(::Type{C}, num::P, den::P) where {C, P <: Polynomial} = last(div_rem(C, num, den))
 
 """
 The extended euclid algorithm for polynomials (of the same concrete subtype).
@@ -101,7 +101,7 @@ end
 """
 The greatest common divisor of two polynomials (of the same concrete subtype).
 """
-gcd(::Type{C}, f::P, g::P) where {C, P <: Polynomial} = extended_euclid_alg(f, g) |> first
+gcd(::Type{C}, f::P, g::P) where {C, P <: Polynomial} = extended_euclid_alg(C, f, g) |> first
 
 """
 Yun's algorithm to compute a square free polynomial can be performed over any so-called
@@ -131,7 +131,7 @@ function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
 
     # Compute the gcd of f, f'
     der_f = derivative(f)
-    sqr_part = gcd(f, der_f)
+    sqr_part = gcd(C, f, der_f)
 
     iszero(sqr_part) && return f * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
 
@@ -149,7 +149,7 @@ end
 """
 Compute the number of times g divides f.
 """
-function multiplicity(::Type{C}, f::P, g::P)::Int where {C, P <: Polynomial}
-    degree(gcd(f, g)) == 0 && return 0
-    return 1 + multiplicity(div(f, g), g)
+function multiplicity(::Type{C}, f::P, g::P)::Integer where {C, P <: Polynomial}
+    degree(gcd(C, f, g)) == 0 && return 0
+    return 1 + multiplicity(C, div(f, g), g)
 end

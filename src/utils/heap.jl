@@ -147,7 +147,7 @@ Pops all elements from the heap, and returns a vector (in sorted order).
 
 Note: the original heap will be empty at the end of this operation.
 """
-function popall!(h::Heap{T}) where {T}
+function popall!(h::Heap{T})::Vector{T} where {T}
     n = length(h)
     v = Vector{T}()
     for _ in 1:n
@@ -156,6 +156,16 @@ function popall!(h::Heap{T}) where {T}
     @assert isempty(h)
     return v
 end
+
+"""
+Pops all elements from the heap, and returns a vector (in sorted order).
+
+Note: the original heap will unaffected.
+"""
+function popall(h::Heap{T})::Vector{T} where {T}
+    return popall!(deepcopy(h))
+end
+
 
 """
 Returns the maximum element from the heap without removing it.

@@ -18,6 +18,7 @@ include("src/term.jl")
 include("src/utils/general_alg.jl")
 include("src/utils/sample_primes.jl")
 include("src/utils/heap.jl")
+include("src/utils/misc.jl")
 
 # Polynomial
 include("src/polynomial_definitions/polynomial.jl")

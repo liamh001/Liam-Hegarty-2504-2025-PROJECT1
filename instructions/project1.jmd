@@ -125,7 +125,7 @@ struct PolynomialDense{C, D} <: Polynomial{C, D}
     terms::Vector{Term{C, D}}
 ``` 
 
-6. Refactor all methods in `src/polynomial_definitions/polynomial_dense.jl` to account for these new parameters.
+6. Refactor all methods in `src/polynomial_definitions/polynomial_dense.jl` to account for these new parameters. (*Hint: you should use the functions `zero(::Type), one(::Type)` to create 0 and 1*). 
 
 7. Refactor all functions in the directory `src/dense` to account for these new parameters.
   
@@ -176,7 +176,7 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 
 2. Refactor your algorithms for `pow_mod` and `^` such that `0^n`, `1^n` and `x^n` are constructed without multiplications (i.e., run in O(1)).
 
-3. Create `tests/power_test.jl` containing tests for `pow_mod` and `^` which run on at least 10^2 randomly generated polynomials (*make sure this can be run on your computer in less than 30s*). Ensure your implementations pass these tests.
+3. Create `tests/power_test.jl` containing tests for `pow_mod` and `^` which run on at least $10^2$ randomly generated polynomials (*make sure this can be run on your computer in less than 30s*). Ensure your implementations pass these tests.
 
 4. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions. *Screenshot (or copy/paste) the output and add it to your PDF submission`*
   

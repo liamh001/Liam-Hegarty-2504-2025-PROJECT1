@@ -20,7 +20,7 @@ E.g, for x^3 + 2x we store in memory:
     [Term(0, 0), Term(2, 1), Term(0, 2), Term(1, 3)]
 """
 struct PolynomialDense <: Polynomial
-
+    # FIXME in future make storing correct degree for zero terms an invariant - Mittun
     #A zero packed vector of terms
     #Terms are assumed to be in order with first term having degree 0, second degree 1, and so fourth
     #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
@@ -28,7 +28,7 @@ struct PolynomialDense <: Polynomial
     terms::Vector{Term{Int, Int}}   
     
     #Inner constructor of 0 polynomial
-    PolynomialDense() = new([zero(Term)])
+    PolynomialDense() = new([zero(Term{Int, Int})])
 
     #Inner constructor of polynomial based on arbitrary list of terms
     function PolynomialDense(vt::Vector{Term{Int, Int}})
@@ -36,11 +36,11 @@ struct PolynomialDense <: Polynomial
         #Filter the vector so that there is not more than a single zero term
         vt = filter((t)->!iszero(t), vt)
         if isempty(vt)
-            vt = [zero(Term)]
+            vt = [zero(Term{Int, Int})]
         end
 
         max_degree = maximum((t)->t.degree, vt)
-        terms = [zero(Term) for i in 0:max_degree] #First set all terms with zeros
+        terms = [zero(Term{Int, Int}) for i in 0:max_degree] #First set all terms with zeros
 
         #now update based on the input terms
         for t in vt
@@ -78,7 +78,9 @@ length(p::PolynomialDense) = length(p.terms)
 """
 The leading term of the polynomial.
 """
-leading(p::PolynomialDense)::Term = isempty(p.terms) ? zero(Term) : last(p.terms) 
+function leading(p::PolynomialDense)::Term
+    isempty(p.terms) ? zero(Term{Int, Int}) : last(p.terms) 
+end
 
 """
 The term of smallest degree in this polynomial.
@@ -102,7 +104,7 @@ function push!(p::PolynomialDense, t::Term)
     elseif iszero(p) && iszero(t.degree) # New constant polynomial
          p.terms[1] = t
     else
-        append!(p.terms, zeros(Term, t.degree - degree(p)-1))
+        append!(p.terms, zeros(Term{Int, Int}, t.degree - degree(p)-1))
         push!(p.terms, t)
     end
     return p        
@@ -119,7 +121,7 @@ function pop!(p::PolynomialDense)::Term
     end
 
     if isempty(p.terms)
-        push!(p.terms, zero(Term))
+        push!(p.terms, zero(Term{Int, Int}))
     end
 
     return popped_term
