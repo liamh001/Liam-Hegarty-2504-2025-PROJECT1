@@ -1,37 +1,3 @@
-"""
-using Pkg
-Pkg.activate(".")
-
-include("poly_factorization_project.jl")
-
-Pkg.instantiate();
-
-
-
-
-######## Task 1.1
-x = x_poly(PolynomialDense)
-
-f = x^4 + 4x^2 +(-1)x + 11
-
-g = x^6 + x +(-1)
-
-h = 34x^2 +(-1)x +(-1)
-
-#1.2
-sum_fg = +(f,g)
-prod_fh = *(f,h)
-prod_gh = *(g,h)
-
-#1.3
-#product rule manually
-product_rule = +(*(f, derivative(g)), *(g,derivative(f)))
-
-@assert ==(derivative(*(f,g)), product_rule)
-
-#1.4
-h_inverse(p::Int)  = 
-"""
 
 using Pkg
 Pkg.activate(".")
@@ -44,7 +10,7 @@ Pkg.instantiate();
 x = x_poly(PolynomialDense)
 f = x^4 + 4x^2 + (-1)x + 11
 g = x^6 + x + (-1)
-h = 34x^2 + (-1)x + (-1)
+h = 32x^2 + (-1)x + (-1)
 
 # -----------Task 1.2----------
 sum_fg = f + g
@@ -68,56 +34,20 @@ product_rule_result = f_prime * g + f * g_prime
 
 println("Are they equal? ", derivative_fg == product_rule_result)
 
-# --------- Task 1.4
-h_inverse(p::Int) = x -> int_inverse_mod(x, p)
-
-function manual_poly_mod(poly::PolynomialDense, n::Integer)
-    result_terms = Term{Int,Int}[]
+# --------- Task 1.4 --------------
+product = f * h
+for p in [5, 17, 101]
+    quotient = div_mod_p(product, h, p)
     
-    for term in poly
-        new_coeff = term.coeff % n
-        
-        if new_coeff < 0
-            new_coeff = new_coeff + n
-        end
-        
-        if new_coeff != 0
-            push!(result_terms, Term(new_coeff, term.degree))
-        end
-    end
+    f_mod_p = mod(f, p)
     
-    # Create new polynomial from modified terms
-    return PolynomialDense(result_terms)
+    println("\nModulo $p:")
+    println("  (f * h) ÷ h mod $p = ", quotient)
+    println("  f mod $p = ", f_mod_p)
+    println("  Equal? ", quotient == f_mod_p)
 end
 
-
-
-# Test the implementation
-inv_mod_17 = h_inverse(17)
-
-# Compute some inverse values
-inv_5 = inv_mod_17(5)   # Should be 7
-inv_3 = inv_mod_17(3)   # Should be 6
-inv_10 = inv_mod_17(10) # Should be 12
-
-# Test some values
-println("Testing h_inverse with prime 17:")
-println("Inverse of 5 mod 17: ", inv_5)
-println("Inverse of 3 mod 17: ", inv_3)
-println("Inverse of 10 mod 17: ", inv_10)
-
-# Verify the inverse property
-check_5 = mod(5 * inv_5, 17)
-check_3 = mod(3 * inv_3, 17)
-check_10 = mod(10 * inv_10, 17)
-
-println("\nVerifying inverse property:")
-println("5 * ", inv_5, " mod 17 = ", check_5)  # Should be 1
-println("3 * ", inv_3, " mod 17 = ", check_3)  # Should be 1
-println("10 * ", inv_10, " mod 17 = ", check_10)  
-
 # --------------------Task 1.5------------------------
-println("=== Task 1.5: Modular GCD ===")
 fh = f * h
 gh = g * h
 
@@ -139,7 +69,7 @@ function pretty_print(p::PolynomialDense)
                
             deg = i - 1
                
-            # Term string
+            # Term str
             term = abs(coeff) == 1 && deg > 0 ? "" : string(abs(coeff))
             term *= deg == 0 ? "" : deg == 1 ? "x" : "x^$deg"
                
@@ -153,6 +83,8 @@ function pretty_print(p::PolynomialDense)
            
         println(isempty(result) ? "0" : result)
 end
+
+
 
         
         
