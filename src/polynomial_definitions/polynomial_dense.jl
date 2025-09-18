@@ -19,28 +19,31 @@ zero terms with degree less than the degree of the polynomial are stored.
 E.g, for x^3 + 2x we store in memory:
     [Term(0, 0), Term(2, 1), Term(0, 2), Term(1, 3)]
 """
-struct PolynomialDense <: Polynomial
-    # FIXME in future make storing correct degree for zero terms an invariant - Mittun
+struct PolynomialDense{C, D} <: Polynomial{C, D}
+    terms::Vector{Term{C, D}}   
+    # FIXME in future make storing correct degree for zero terms an invariant - Mittun      ----Fixed ? (Liam)
     #A zero packed vector of terms
     #Terms are assumed to be in order with first term having degree 0, second degree 1, and so fourth
     #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
     #for the zero polynomial where the vector is of length 1.
-    terms::Vector{Term{Int, Int}}   
     
     #Inner constructor of 0 polynomial
-    PolynomialDense() = new([zero(Term{Int, Int})])
+
+    function PolynomialDense{C,D}() where {C,D}
+        new([zero(Term{C, D})])
+    end
 
     #Inner constructor of polynomial based on arbitrary list of terms
-    function PolynomialDense(vt::Vector{Term{Int, Int}})
+    function PolynomialDense{C, D}(vt::Vector{Term{C, D}}) where {C, D}
 
         #Filter the vector so that there is not more than a single zero term
         vt = filter((t)->!iszero(t), vt)
         if isempty(vt)
-            vt = [zero(Term{Int, Int})]
+            vt = [zero(Term{C, D})]
         end
 
         max_degree = maximum((t)->t.degree, vt)
-        terms = [zero(Term{Int, Int}) for i in 0:max_degree] #First set all terms with zeros
+        terms = [zero(Term{C, D}) for i in 0:max_degree] #First set all terms with zeros
 
         #now update based on the input terms
         for t in vt
@@ -78,8 +81,8 @@ length(p::PolynomialDense) = length(p.terms)
 """
 The leading term of the polynomial.
 """
-function leading(p::PolynomialDense)::Term
-    isempty(p.terms) ? zero(Term{Int, Int}) : last(p.terms) 
+function leading(p::PolynomialDense{C,D})::Term{C,D} where {C,D}
+    isempty(p.terms) ? zero(Term{C, D}) : last(p.terms) 
 end
 
 """
@@ -98,13 +101,13 @@ end
 """
 Push a new leading term into the polynomial (note - a constant can be pushed onto the zero polynomial).
 """
-function push!(p::PolynomialDense, t::Term)
+function push!(p::PolynomialDense{C,D}, t::Term{C,D}) where {C,D}
     if t.degree < degree(p) || (t.degree == degree(p) && !iszero(p))
         error("Cannot push a term $(t) that is not a new leading term (the polynomial had degree $(degree(p)))")
     elseif iszero(p) && iszero(t.degree) # New constant polynomial
          p.terms[1] = t
     else
-        append!(p.terms, zeros(Term{Int, Int}, t.degree - degree(p)-1))
+        append!(p.terms, zeros(Term{C, D}, t.degree - degree(p)-1))
         push!(p.terms, t)
     end
     return p        
@@ -113,17 +116,14 @@ end
 """
 Pop the leading term out of the polynomial. When polynomial is 0, keep popping out 0.
 """
-function pop!(p::PolynomialDense)::Term 
-    popped_term = pop!(p.terms) #last element popped is leading coefficient
-
+function pop!(p::PolynomialDense{C,D})::Term{C,D} where {C,D}
+    popped_term = pop!(p.terms)
     while !isempty(p.terms) && iszero(last(p.terms))
         pop!(p.terms)
     end
-
     if isempty(p.terms)
-        push!(p.terms, zero(Term{Int, Int}))
+        push!(p.terms, zero(Term{C, D}))  # Now C and D are defined
     end
-
     return popped_term
 end
 

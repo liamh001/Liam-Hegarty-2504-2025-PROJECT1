@@ -45,7 +45,7 @@ abstract type Polynomial{C, D} end
 This function maintains the invariant of the Polynomial type so that there are no zero terms beyond the highest
 non-zero term.
 """
-function trim!(p::Polynomial{C,D})::Polynomial{C, D}
+function trim!(p::Polynomial{C,D})::Polynomial{C, D} where {C,D}
     # We stop if the leading term has a non-zero coefficient or the polynomial is the zero polynomial
     while iszero(leading(p)) && !iszero(p)
         pop!(p)

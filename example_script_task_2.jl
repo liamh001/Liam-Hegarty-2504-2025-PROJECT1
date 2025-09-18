@@ -1,5 +1,13 @@
-p1 = PolynomialDense([typemax(Int), 0])
-q1 = PolynomialDense([1, 0])
+using Pkg
+Pkg.activate(".")  # Activate the project in current directory
+Pkg.instantiate()
+
+include("poly_factorization_project.jl")
+
+
+
+p1 = PolynomialDense{Int,Int}([Term(typemax(Int), 0), Term(0, 1)])
+q1 = PolynomialDense{Int,Int}([Term(1, 0)])
 println("Example 1: $(typemax(Int)) + 1 = $((p1 + q1).terms[1].coeff)")
 
 
