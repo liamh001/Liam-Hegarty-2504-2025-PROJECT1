@@ -40,7 +40,7 @@ leading coefficient.
 
 NOTE: Override this in Task 6 for Zp[x] and in Task 7 for Z[x].
 """
-function factor(::Type{C}, f::P)::Vector{Tuple{P, Integer}} where {C, P <: Polynomial}
+function factor(::Type{C}, f::P)::Vector{Tuple{P, Int}} where {C, P <: Polynomial}
     not_implemented_error(f, "factor")
 end
 
@@ -123,7 +123,7 @@ Given F a characteristic zero or finite field and f a polynomial in F[x],
 https://en.wikipedia.org/wiki/Square-free_polynomial
 https://en.wikipedia.org/wiki/Perfect_field
 """
-function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
+function square_free(::Type{C}, f::P) where {C,D, P <: Polynomial}
     # Remove minimum degree (in case char(C) != 0)
     min_deg = last(f).degree
     vt = filter(t -> !iszero(t), collect(f))
@@ -139,7 +139,7 @@ function square_free(::Type{C}, f::P) where {C, P <: Polynomial}
     sqr_free = div(f, sqr_part)
 
     # Add one factor of `x` back in if necessary
-    if min_deg > zero(min_deg) 
+    if min_deg > zero(D) 
         sqr_free *= x_poly(P)
     end
 

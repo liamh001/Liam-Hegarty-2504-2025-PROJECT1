@@ -86,7 +86,7 @@ end
 x_poly(p::P) where {P <: Polynomial} = x_poly(P)
 
 """
-Creates the zero polynomial. ----------------------up to here rn
+Creates the zero polynomial.
 """
 function zero(::Type{P})::P where {P <: Polynomial} 
     return P()
@@ -96,30 +96,30 @@ zero(p::P) where {P <: Polynomial} = zero(P)
 """
 Creates the unit polynomial.
 """
-function one(::Type{P})::P where {P <: Polynomial} 
-    return P(one(Term{Int, Int}))
+function one(::Type{P})::P where {C,D, P <: Polynomial{C,D}} 
+    return P(Term(one(C), zero(D)))
 end
 one(p::P) where {P <: Polynomial} = one(P)
 
 """
 Generates a random polynomial.
 """
-function rand(::Type{P} ; 
-                degree::Int = -1, 
-                terms::Int = -1, 
-                max_coeff::Int = 100, 
-                mean_degree::Float64 = 5.0,
-                prob_term::Float64  = 0.7,
+function rand(::Type{P}; 
+                degree::Int = -1,                    
+                terms::Int = -1,                     
+                max_coeff::Int = 100,                
+                mean_degree::Float64 = 5.0,          
+                prob_term::Float64 = 0.7,            
                 monic = false,
-                condition = (p)->true) where {P <: Polynomial}
+                condition = (p)->true) where {C,D, P <: Polynomial{C,D}}
         
     while true 
         _degree = degree == -1 ? rand(Poisson(mean_degree)) : degree
-        _terms = terms == -1 ? rand(Binomial(_degree,prob_term)) : terms
-        degrees = vcat(sort(sample(0:_degree-1,_terms,replace = false)),_degree)
-        coeffs = rand(1:max_coeff,_terms+1)
+        _terms = terms == -1 ? rand(Binomial(_degree, prob_term)) : terms
+        degrees = vcat(sort(sample(0:_degree-1, _terms, replace=false)), _degree)
+        coeffs = rand(1:max_coeff, _terms+1)
         monic && (coeffs[end] = 1)
-        p = P( [Term(coeffs[i],degrees[i]) for i in 1:length(degrees)] )
+        p = P([Term(C(coeffs[i]), D(degrees[i])) for i in 1:length(degrees)])
         condition(p) && return p
     end
 end
@@ -186,21 +186,21 @@ leading(p::Polynomial) = not_implemented_error(p, "leading")
 """
 Returns the coefficients of the polynomial.
 """
-function coeffs(p::Polynomial)::Vector{Integer} 
+function coeffs(p::Polynomial{C,D})::Vector{C} where {C,D}
     [t.coeff for t in p]
 end
 
 """
 The degree of the polynomial.
 """
-function degree(p::Polynomial)::Integer 
+function degree(p::Polynomial{C, D})::D where {C,D}
     leading(p).degree 
 end
 
 """
 The content of the polynomial is the GCD of its coefficients.
 """
-function content(p::Polynomial)::Integer 
+function content(p::Polynomial{C,D})::C where {C,D}
     euclid_alg(coeffs(p))
 end
 
@@ -241,8 +241,8 @@ end
 """
 Check if the polynomial is zero.
 """
-function iszero(p::Polynomial)::Bool 
-    iszero(leading(p)) && (degree(p) == 0)
+function iszero(p::Polynomial{C,D})::Bool where {C,D}
+    iszero(leading(p)) && (degree(p) == zero(D))
 end
 
 #################################################################
@@ -283,26 +283,26 @@ end
 """
 A square free polynomial modulo a prime.
 """
-function square_free_mod_p(f::P, prime::Integer) where {P <: Polynomial}
-    fmod_p = mod(f, prime)
 
+function square_free_mod_p(f::P, prime::Integer) where {C,D, P <: Polynomial{C,D}}
+    fmod_p = mod(f, prime)
+    
     min_deg = last(fmod_p).degree
     vt = filter(t -> !iszero(t), collect(fmod_p))
     fmod_p = P( map(t -> Term(t.coeff, t.degree - min_deg), vt) )
-
+    
     # Now compute the gcd modulo a prime
     der_fmod_p = mod(derivative(fmod_p), prime)
     gcd_f_der_f = gcd_mod_p(fmod_p, der_fmod_p, prime)
-
-    iszero(gcd_f_der_f) && return fmod_p * (min_deg > zero(min_deg) ? x_poly(P) : one(P))
-
+    
+    iszero(gcd_f_der_f) && return fmod_p * (min_deg > zero(D) ? x_poly(P) : one(P))  # Changed zero(min_deg) to zero(D)
+    
     sqr_free = div_mod_p(fmod_p, gcd_f_der_f, prime)
-
+    
     # Add the factor of `x` back in if there was one
-    if min_deg > zero(min_deg) 
+    if min_deg > zero(D)  # Changed zero(min_deg) to zero(D)
         sqr_free *= x_poly(P)
     end
-
     return sqr_free
 end
 
@@ -324,8 +324,8 @@ end
 """
 Check if a polynomial is equal to a constant `n`.
 """
-function ==(p::Polynomial, n::T) where T <: Number
-    degree(p) != 0 && return false
+function ==(p::Polynomial{C,D}, n::T) where {C,D, T <: Number}
+    degree(p) != zero(D) && return false  # Changed 0 to zero(D)
     return leading(p).coeff == n
 end
 
@@ -341,18 +341,20 @@ function -(p1::P, p2::P)::P where {P <: Polynomial}
 end
 
 """
+Multiplication of polynomial and integer.
+"""
+function *(p::Polynomial{C,D}, n::Integer)::Polynomial{C,D} where {C,D}
+    Term(C(n), zero(D)) * p 
+end
+*(n::Integer, p::Polynomial) = p * n
+
+"""
 Multiplication of polynomial and term.
 """
 function *(t::Term, p::P)::P where {P <: Polynomial} 
     return iszero(t) ? P() : P(map((pt)->t*pt, p))
 end
 *(p::Polynomial, t::Term)::Polynomial = t*p
-
-"""
-Multiplication of polynomial and an integer.
-"""
-*(p::Polynomial, n::Integer)::Polynomial = Term(n,0)*p
-*(n::Integer, p::Polynomial)::Polynomial = p*n
 
 """
 Integer division of a polynomial by an integer modulo a prime.

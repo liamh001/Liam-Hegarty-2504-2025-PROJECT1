@@ -11,10 +11,10 @@ Add a polynomial and a term.
 
 This must be overridden by concrete subtypes.
 """
-function +(p::Polynomial, t::Term)
+function +(p::Polynomial{C, D}, t::Term{C, D}) where {C,D}
     not_implemented_error(p, "Polynomial + Term")
 end
-+(t::Term, p::Polynomial) = p + t
++(t::Term{C,D}, p::Polynomial{C, D}) where {C,D} = p + t
 
 """
 Add two polynomials of the same concrete subtype.
@@ -33,5 +33,5 @@ end
 """
 Add a polynomial and an integer.
 """
-+(p::Polynomial, n::Integer) = p + Term(n,0)
-+(n::Integer, p::Polynomial) = p + Term(n,0)
++(p::Polynomial{C,D}, n::Integer) where {C,D} = p + Term(C(n), zero(D))
++(n::Integer, p::Polynomial{C,D}) where {C,D} = p + Term(C(n), zero(D))
