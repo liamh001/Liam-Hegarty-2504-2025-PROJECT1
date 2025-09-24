@@ -11,6 +11,8 @@ using Distributions, StatsBase, Random, Primes, StaticArrays
 import Base: %, gcd
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last, isempty
 import Base: +, -, *, mod, %, ÷, ==, ^, rand, div, rem, zero, one
+# ZModP
+include("src/z_mod_p.jl")
 
 include("src/term.jl")
 
@@ -36,6 +38,14 @@ include("src/polynomial_definitions/polynomial_dense.jl")
     include("src/basic_polynomial_operations/dense/polynomial_division.jl")
     include("src/basic_polynomial_operations/dense/polynomial_gcd.jl")
 
+#Sparse
+include("src/polynomial_definitions/polynomial_sparse.jl")
+    include("src/basic_polynomial_operations/sparse/polynomial_addition.jl")
+    include("src/basic_polynomial_operations/sparse/polynomial_multiplication.jl")
+    include("src/basic_polynomial_operations/sparse/polynomial_division.jl")
+    include("src/basic_polynomial_operations/sparse/polynomial_gcd.jl")
+
 include("src/polynomial_factorization/factor.jl")
+
 
 nothing

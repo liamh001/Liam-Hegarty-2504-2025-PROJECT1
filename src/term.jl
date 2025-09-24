@@ -188,3 +188,31 @@ end
 
 """ Enable broadcasting an operation on a term """
 broadcastable(t::Term) = Ref(t)
+
+
+
+
+"""
+Exact division for terms with ZModP coefficients.
+"""
+function div(t1::Term{ZModP{T, N}, D}, t2::Term{ZModP{T, N}, D}) where {T, N, D}
+    @assert t1.degree ≥ t2.degree
+    Term(t1.coeff ÷ t2.coeff, t1.degree - t2.degree)
+end
+
+"""
+Refactored div_mod_p using ZModP conversion.
+"""
+function div_mod_p(t1::Term{C, D}, t2::Term{C, D}, prime::Integer) where {C <: Integer, D}
+    @assert t1.degree ≥ t2.degree
+    
+    # Convert to ZModP terms
+    t1_mod = Term(ZModP{C, prime}(t1.coeff), t1.degree)
+    t2_mod = Term(ZModP{C, prime}(t2.coeff), t2.degree)
+    
+    # Perform division in Zp
+    result_mod = div(t1_mod, t2_mod)
+    
+    # Convert back
+    return Term(C(result_mod.coeff), result_mod.degree)
+end

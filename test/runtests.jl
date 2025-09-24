@@ -32,7 +32,7 @@ println("---END HEAP UNIT TESTS---\n")
 # # Execute unit tests for polynomials
 # ####
 include("polynomials_test.jl")
-polynomial_types = [PolynomialDense] # The types of polynomials to unit test
+polynomial_types = [PolynomialDense{Int,Int}, PolynomialDense{BigInt,Int}] ## changed after parametrising
 println("---BEGIN POLYNOMIAL UNIT TESTS---\n")
 for poly in polynomial_types
     println("Type of `Polynomial`: $(poly)")
@@ -48,7 +48,7 @@ println("---END POLYNOMIAL UNIT TESTS---\n")
 # Execute unit tests for polynomial factorization
 ####
 include("factorization_test.jl")
-polynomial_types = [PolynomialDense] # The types of polynomials to unit test factorisation
+polynomial_types = [PolynomialDense{Int,Int}, PolynomialDense{BigInt,Int}] ## changed after parametrising
 println("---BEGIN FACTORIZATION UNIT TESTS---\n")
 for poly in polynomial_types
     println("Type of `Polynomial``: $(poly)")
@@ -56,3 +56,12 @@ for poly in polynomial_types
     println("")
 end
 println("---END FACTORISATION UNIT TESTS---")
+
+
+####
+# Execute unit tests for power functions
+####
+include("power_test.jl")
+println("---BEGIN POWER FUNCTION TESTS---\n")
+test_power_functions()
+println("\n---END POWER FUNCTION TESTS---")

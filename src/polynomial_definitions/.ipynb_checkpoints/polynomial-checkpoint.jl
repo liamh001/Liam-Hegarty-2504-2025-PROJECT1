@@ -222,7 +222,7 @@ polynomial. However, the exact implementation details are up to you.
 
 This must be overridden by concrete subtypes.
 """
-function push!(p::Polynomial, t::Term) 
+function push!(p::Polynomial{C,D}, t::Term{C,D}) where {C,D}
     not_implemented_error(p, "push!")
 end
 
@@ -382,11 +382,29 @@ Power of a polynomial mod prime.
 """
 function pow_mod(p::P, n::Int, prime::Int) where {P <: Polynomial}
     n < 0 && error("No negative power")
-
-    out = one(p)
-    for _ in 1:n
-        out *= p
-        out = mod(out, prime)
+    n == 0 && return one(p)
+    n == 1 && return mod(p, prime)
+    
+    # Special cases
+    iszero(mod(p, prime)) && return zero(p)
+    mod(p, prime) == one(p) && return one(p)
+    
+    # Check if p is just x
+    if length(p) == 1 && leading(p).coeff == 1 && degree(p) == 1
+        return P([Term(one(leading(p).coeff), n * degree(p))])
     end
-    return out
+    
+    # Repeated squaring with modular reduction
+    result = one(p)
+    base = mod(p, prime)
+    
+    while n > 0
+        if n % 2 == 1
+            result = mod(result * base, prime)
+        end
+        base = mod(base * base, prime)
+        n ÷= 2
+    end
+    
+    return result
 end
