@@ -32,7 +32,14 @@ println("---END HEAP UNIT TESTS---\n")
 # # Execute unit tests for polynomials
 # ####
 include("polynomials_test.jl")
-polynomial_types = [PolynomialDense{Int,Int}, PolynomialDense{BigInt,Int}] ## changed after parametrising
+polynomial_types = [
+    PolynomialDense{Int,Int}, 
+    PolynomialDense{BigInt,Int},
+    PolynomialDense{ZModP{Int, 5}, Int},
+    PolynomialDense{ZModP{BigInt, 5}, Int},
+    PolynomialDense{ZModP{Int, 11}, Int},
+    PolynomialDense{ZModP{BigInt, 11}, Int},
+    PolynomialDense{ZModP{Int, 1009}, Int}] ### added task 6
 println("---BEGIN POLYNOMIAL UNIT TESTS---\n")
 for poly in polynomial_types
     println("Type of `Polynomial`: $(poly)")

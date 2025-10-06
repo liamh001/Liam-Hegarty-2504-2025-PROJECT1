@@ -47,5 +47,6 @@ include("src/polynomial_definitions/polynomial_sparse.jl")
 
 include("src/polynomial_factorization/factor.jl")
 
+include("src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl")
 
 nothing
