@@ -12,6 +12,7 @@ Factors a polynomial over the field Z_p.
 Returns a vector of tuples of (irreducible polynomials (mod p), multiplicity) such that their product of the list (mod p) is f. 
 Irreducibles are fixed points on the function `factor`.
 """
+#=
 function factor_mod_p(f::P, prime::Integer)::Vector{Tuple{P,Integer}} where {P <: Polynomial}
     # Cantor Zassenhaus factorization
 
@@ -52,11 +53,12 @@ function factor_mod_p(f::P, prime::Integer)::Vector{Tuple{P,Integer}} where {P <
 
     return ret_val
 end
+=#
 
 """
 Expand a factorization.
 """
-function expand_factorization(factorization::Vector{Tuple{P, Integer}})::P where {P <: Polynomial}
+function expand_factorization(factorization::Vector{Tuple{P, T}})::P where {P <: Polynomial, T <: Integer}
     length(factorization) == 1 && return first(factorization[1])^last(factorization[1])
     return *([first(tt)^last(tt) for tt in factorization]...)
 end

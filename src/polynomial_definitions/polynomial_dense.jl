@@ -21,7 +21,7 @@ E.g, for x^3 + 2x we store in memory:
 """
 struct PolynomialDense{C, D} <: Polynomial{C, D}
     terms::Vector{Term{C, D}}   
-    # FIXME in future make storing correct degree for zero terms an invariant - Mittun      ----Fixed ? (Liam)
+    # FIX ME in future make storing correct degree for zero terms an invariant - Mittun      ----Fixed ? (Liam)
     #A zero packed vector of terms
     #Terms are assumed to be in order with first term having degree 0, second degree 1, and so fourth
     #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
@@ -43,7 +43,7 @@ struct PolynomialDense{C, D} <: Polynomial{C, D}
         end
 
         max_degree = maximum((t)->t.degree, vt)
-        terms = [zero(Term{C, D}) for i in 0:max_degree] #First set all terms with zeros
+        terms = [Term(zero(C), D(i)) for i in 0:max_degree]
 
         #now update based on the input terms
         for t in vt
@@ -76,13 +76,21 @@ iterate(p::PolynomialDense, state=1) = iterate(p.terms, state)
 """
 The number of terms of the polynomial.
 """
-length(p::PolynomialDense) = length(p.terms) 
+length(p::PolynomialDense) = length(p.terms)
+
 
 """
 The leading term of the polynomial.
 """
 function leading(p::PolynomialDense{C,D})::Term{C,D} where {C,D}
-    isempty(p.terms) ? zero(Term{C, D}) : last(p.terms) 
+    isempty(p.terms) && return zero(Term{C, D})
+    # Find last non-zero term
+    for i in length(p.terms):-1:1
+        if !iszero(p.terms[i].coeff)
+            return p.terms[i]
+        end
+    end
+    return zero(Term{C, D})
 end
 
 """
@@ -107,8 +115,11 @@ function push!(p::PolynomialDense{C,D}, t::Term{C,D}) where {C,D}
     elseif iszero(p) && iszero(t.degree) # New constant polynomial
          p.terms[1] = t
     else
-        append!(p.terms, zeros(Term{C, D}, t.degree - degree(p)-1))
-        push!(p.terms, t)
+        current_deg = degree(p)
+	for d in (current_deg + 1):(t.degree - 1)
+		push!(p.terms, Term(zero(C), D(d)))
+	end
+	push!(p.terms, t)
     end
     return p        
 end
@@ -143,8 +154,32 @@ Check if two polynomials are the same.
 Note - even though this is done for `Polynomial`, we can override it for `PolynomialDense`
 to leverage Julia's speed with vectors.
 """
-==(p1::PolynomialDense, p2::PolynomialDense)::Bool = p1.terms == p2.terms
-
+function ==(p1::PolynomialDense{C,D}, p2::PolynomialDense{C,D})::Bool where {C,D}
+    # Find last non-zero position in each
+    last1 = findlast(t -> !iszero(t.coeff), p1.terms)
+    last2 = findlast(t -> !iszero(t.coeff), p2.terms)
+    
+    # Both zero
+    last1 === nothing && last2 === nothing && return true
+    
+    # One zero, one not
+    last1 === nothing && return false
+    last2 === nothing && return false
+    
+    # Different degrees
+    last1 != last2 && return false
+    
+    # Compare coefficients up to the last non-zero
+    # Handle case where arrays have different lengths
+    for i in 1:last1
+        coeff1 = i <= length(p1.terms) ? p1.terms[i].coeff : zero(C)
+        coeff2 = i <= length(p2.terms) ? p2.terms[i].coeff : zero(C)
+        if coeff1 != coeff2
+            return false
+        end
+    end
+    return true
+end
 ##################################################################
 # Operations with two objects where at least one is a polynomial #
 ##################################################################

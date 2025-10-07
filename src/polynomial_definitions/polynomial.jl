@@ -135,11 +135,17 @@ function show(io::IO, p::Polynomial)
     if iszero(p)
         print(io,"0")
     else
-        n = length(p)
-        for (i,t) in enumerate(p)
-            if !iszero(t)
-                print(io, t, i != n ? " + " : "")
+        # Collect non-zero terms up to the actual degree
+        terms_to_show = []
+        for t in p
+            if !iszero(t.coeff) && t.degree <= degree(p)
+                push!(terms_to_show, t)
             end
+        end
+        
+        n = length(terms_to_show)
+        for (i,t) in enumerate(terms_to_show)
+            print(io, t, i != n ? " + " : "")
         end
     end
 end
@@ -225,7 +231,6 @@ This must be overridden by concrete subtypes.
 function push!(p::Polynomial{C,D}, t::Term{C,D}) where {C,D}
     not_implemented_error(p, "push!")
 end
-
 """
 Pop the leading term out of the polynomial. When polynomial is 0, keep popping out 0.
 
@@ -253,19 +258,21 @@ end
 The negative of a polynomial.
 """
 function -(p::P) where {P <: Polynomial} 
-    P(map((pt)->-pt, p))
+    return trim!(P(map((pt)->-pt, p)))
 end
 
 """
 Create a new polynomial which is the derivative of the polynomial.
 """
-function derivative(p::P)::P where {P <: Polynomial} 
-    der_p = P()
+function derivative(p::P)::P where {C,D, P <: Polynomial{C,D}} 
+    der_terms = Term{C,D}[]
     for term in p
         der_term = derivative(term)
-        !iszero(der_term) && push!(der_p, der_term)
+        if !iszero(der_term)
+            push!(der_terms, der_term)
+        end
     end
-    return trim!(der_p)
+    return trim!(P(der_terms))
 end
 
 """
@@ -337,7 +344,7 @@ end
 Subtraction of two polynomials (of the same concrete subtype).
 """
 function -(p1::P, p2::P)::P where {P <: Polynomial} 
-    return p1 + (-p2)
+    return trim!(p1 + (-p2))
 end
 
 """
@@ -378,33 +385,22 @@ function mod(f::P, p::Int)::P where {P <: Polynomial}
 end
 
 """
+Mod operation for polynomials with ZModP coefficients - return unchanged since already in Z_p
+"""
+function mod(f::P, p::Int)::P where {T <: Integer, N, D, P <: Polynomial{ZModP{T, N}, D}}
+    return f  # Already in Z_p, return as-is
+end
+
+"""
 Power of a polynomial mod prime.
 """
 function pow_mod(p::P, n::Int, prime::Int) where {P <: Polynomial}
     n < 0 && error("No negative power")
-    n == 0 && return one(p)
-    n == 1 && return mod(p, prime)
-    
-    # Special cases
-    iszero(mod(p, prime)) && return zero(p)
-    mod(p, prime) == one(p) && return one(p)
-    
-    # Check if p is just x
-    if length(p) == 1 && leading(p).coeff == 1 && degree(p) == 1
-        return P([Term(one(leading(p).coeff), n * degree(p))])
+
+    out = one(p)
+    for _ in 1:n
+        out *= p
+        out = mod(out, prime)
     end
-    
-    # Repeated squaring with modular reduction
-    result = one(p)
-    base = mod(p, prime)
-    
-    while n > 0
-        if n % 2 == 1
-            result = mod(result * base, prime)
-        end
-        base = mod(base * base, prime)
-        n ÷= 2
-    end
-    
-    return result
+    return out
 end

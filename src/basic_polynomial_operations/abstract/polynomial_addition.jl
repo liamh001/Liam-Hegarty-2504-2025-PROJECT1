@@ -27,7 +27,7 @@ function +(p1::P, p2::P)::P where {P <: Polynomial}
     for t in p2
         p += t
     end
-    return p
+    return trim!(p)
 end
 
 """

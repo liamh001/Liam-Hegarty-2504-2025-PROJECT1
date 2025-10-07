@@ -37,7 +37,7 @@ euclid_alg(a::Vector{Integer}) = euclid_alg(a...)
 The extended Euclidean algorithm.
 """
 function ext_euclid_alg(a, b, rem_function = %, div_function = ÷)
-    a == 0 && return b, 0, 1
+    a == 0 && return b, zero(b), one(b)
     g, t, s = ext_euclid_alg(rem_function(b,a), a, rem_function, div_function)
     s = s - div_function(b,a)*t
     @assert g == a*s + b*t

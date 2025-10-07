@@ -97,9 +97,11 @@ Add two terms of the same degree (with the same coefficient/degree types).
 """
 function +(t1::Term{C, D},t2::Term{C, D})::Term{C, D} where {C, D}
     @assert t1.degree == t2.degree
-    Term(t1.coeff + t2.coeff, t1.degree)
+    new_coeff = t1.coeff + t2.coeff
+    # Canonicalize zero terms to degree 0
+    iszero(new_coeff) && return Term(new_coeff, zero(D))
+    return Term(new_coeff, t1.degree)
 end
-
 """
 Negate a term.
 """
@@ -118,7 +120,10 @@ end
 Multiply two terms (with the same coefficient/degree types).
 """
 function *(t1::Term{C, D}, t2::Term{C, D})::Term{C, D} where {C, D}
-    Term(t1.coeff * t2.coeff, t1.degree + t2.degree)
+    coeff = t1.coeff * t2.coeff
+    # If coefficient is zero, always return zero term with degree 0
+    iszero(coeff) && return Term(coeff, zero(D))
+    return Term(coeff, t1.degree + t2.degree)
 end
 
 """
@@ -143,6 +148,13 @@ Compute the symmetric mod of a term with an integer.
 """
 function mod(t::Term{C, D}, p::Integer)::Term{C, D} where {C <: Integer, D}
     Term(mod(t.coeff, p), t.degree)
+end
+
+"""
+Mod operation for terms with ZModP coefficients - return unchanged since already in Z_p
+"""
+function mod(t::Term{ZModP{T, N}, D}, p::Integer) where {T, N, D}
+    return t
 end
 
 """

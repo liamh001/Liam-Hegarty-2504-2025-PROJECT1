@@ -13,6 +13,11 @@ end
 # Outer constructors
 ZModP(a::T, ::Val{N}) where {T <: Integer, N} = ZModP{T, N}(a)
 
+# Allow conversion from different integer types
+function ZModP{T, N}(a::S) where {T <: Integer, S <: Integer, N}
+    ZModP{T, N}(T(a))  # Convert to type T first
+end
+
 # Zero and one
 zero(::Type{ZModP{T, N}}) where {T <: Integer, N} = ZModP{T, N}(zero(T))
 one(::Type{ZModP{T, N}}) where {T <: Integer, N} = ZModP{T, N}(one(T))

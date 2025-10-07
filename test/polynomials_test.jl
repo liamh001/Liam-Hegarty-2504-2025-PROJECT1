@@ -39,17 +39,39 @@ function prod_derivative_test_poly(::Type{P};
     N::Int = 10^2,  seed::Int = 0
     ) where {C,D, P <: Polynomial{C,D}}
     Random.seed!(seed)
-    for _ in 1:N
+    for i in 1:N
         p1 = rand(P)
         p2 = rand(P)
         p1d = derivative(p1)
         p2d = derivative(p2)
-        @assert (p1d*p2) + (p1*p2d) == derivative(p1*p2)
+        
+        lhs = p1d * p2 + p1 * p2d
+        rhs = derivative(p1 * p2)
+        
+        if lhs != rhs
+            println("FAILED on iteration $i")
+            println("p1 = $p1")
+            println("p2 = $p2")
+            println("lhs = $lhs")
+            println("rhs = $rhs")
+            
+            # ADD THIS DEBUG CODE:
+            println("\nLHS terms structure:")
+            for (j, t) in enumerate(lhs.terms)
+                println("  Position $j (degree $(j-1)): coeff=$(t.coeff), stored_degree=$(t.degree)")
+            end
+            
+            println("\nRHS terms structure:")
+            for (j, t) in enumerate(rhs.terms)
+                println("  Position $j (degree $(j-1)): coeff=$(t.coeff), stored_degree=$(t.degree)")
+            end
+            
+            println("\nlhs - rhs = $(lhs - rhs)")
+            @assert false
+        end
     end
     println("prod_derivative_test_poly for $(P) - PASSED")
 end
-
-
 """
 Test division of polynomials modulo p.
 """

@@ -49,4 +49,5 @@ include("src/polynomial_factorization/factor.jl")
 
 include("src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl")
 
+include("src/crt.jl")
 nothing
